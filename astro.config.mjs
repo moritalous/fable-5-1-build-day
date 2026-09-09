@@ -54,10 +54,22 @@ export default defineConfig({
 			],
 			sidebar: [
 				{ label: 'トップ', link: '/' },
-				{ label: 'APIクレジットの受け取り方', slug: 'credits' },
-				{ label: 'アンケート', slug: 'survey' },
+				{
+					label: '事前準備',
+					items: [{ autogenerate: { directory: 'preparation/' } }],
+				},
+				{
+					label: 'イベント当日',
+					items: [
+						{ label: 'APIクレジットの受け取り方', slug: 'credits' },
+						{ label: 'アンケート', slug: 'survey' },
+					],
+				},
+				{
+					label: '参考',
+					items: [{ autogenerate: { directory: 'reference/' } }],
+				},
 			],
-			pagination: false,
 		}),
 	],
 });

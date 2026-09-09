@@ -1,6 +1,6 @@
 ---
 title: APIクレジットの受け取り方
-description: Build Dayで配布するAPIクレジットの申請手順と、Claude Codeでの使い方。
+description: Build Dayで配布するAPIクレジットの申請手順と、受け取ったあとの確認方法。
 sidebar:
   order: 1
 ---
@@ -8,25 +8,21 @@ sidebar:
 import { Aside, Steps, LinkButton } from '@astrojs/starlight/components';
 import { CREDIT_FORM_URL } from '../../consts.ts';
 
-Build Dayの参加者には、**Claude Codeで使用できるAPIクレジット**を配布予定です。当日会場で申請用のURLをご案内しますので、この手順に沿って申請してください。
+Build Dayの参加者には、**Claude Codeで使えるAPIクレジット**を配布予定です。当日会場で申請用のURLをご案内しますので、この手順で申請してください。
 
 <Aside type="caution" title="クレジットが配布できない場合">
-	何らかの事情で配布できない場合は、各自でクレジットの購入をお願いします。購入手順はこのページの下部に記載しています。
+	何らかの事情で配布できない場合は、各自でクレジットの購入をお願いします。手順はこのページの[自分でクレジットを購入する](#自分でクレジットを購入する)にあります。
 </Aside>
 
-## 1. Claude Platformのアカウントを作成する
+## 事前にやっておくこと
 
-クレジットの受け取りには[Claude Platform](https://platform.claude.com)のアカウントが必要です。**イベント前に作成をお願いします**。Googleアカウントまたはメールアドレスで登録できます。
+[Claude Platformのアカウント](/preparation/account/)を作成しておいてください。クレジットはこのアカウントに付与されます。
 
-<Aside type="note" title="claude.aiのアカウントとは別物です">
-	チャットサービスの[claude.ai](https://claude.ai)のサブスクリプションアカウント（Pro/Maxプラン含む）ではAPIは利用できません。開発者向けの**Claude Platform**のアカウントが必要です。
-</Aside>
-
-## 2. クレジットを申請する
+## クレジットを申請する
 
 <Steps>
 
-1. Claude Platformにログイン済みであることを確認します。
+1. [Claude Platform](https://platform.claude.com)にログイン済みであることを確認します。
 
 1. イベント当日に提示されるURLにアクセスします。
 
@@ -50,46 +46,25 @@ Build Dayの参加者には、**Claude Codeで使用できるAPIクレジット*
 
 </Steps>
 
-## 3. Claude Codeで使う
-
-APIキーを発行し、Claude Codeから使用します。
-
-<Steps>
-
-1. Claude Platformの「APIキー」メニューからAPIキーを作成します。作成時にしか表示されないので、控えておきます。
-
-1. 環境変数に設定してClaude Codeを起動します。
-
-    ```sh
-    export ANTHROPIC_API_KEY=sk-ant-...
-    claude
-    ```
-
-1. Claude Codeの中で`/status`を実行し、APIキー経由（Claude API）で接続されていることを確認します。
-
-</Steps>
-
-<Aside type="tip" title="サブスクリプションと併用している場合">
-	claude.aiのPro/Maxプランでログイン済みの場合、`ANTHROPIC_API_KEY`を設定した環境で起動するとAPIキー側が使われます。どちらで動いているかは`/status`で確認できます。元に戻すときは環境変数を外して起動し直してください。
+<Aside type="note" title="付与までに少し時間がかかります">
+	申請してすぐに反映されるわけではありません。当日は早めに申請を済ませておくとスムーズです。
 </Aside>
 
-## 利用上限を設定する
+## 受け取れたか確認する
 
-予期せぬ課金を防ぐため、利用上限を設定しておくことをおすすめします。
+Claude Platformの左下（または「請求」メニュー）に残高が表示されます。Claude Code側では、起動中に `/usage` を実行するとそのセッションで使った量の目安が確認できます。
 
-<Steps>
+クレジットを使い切ると、Claude Codeで `Credit balance is too low` のようなエラーが出ます。その場合は下の手順で購入するか、スタッフに声をかけてください。
 
-1. 「組織の設定」の中にある「請求」メニューをクリックします。
+## Claude Codeで使う
 
-1. 「月額支出上限」の「制限を調整」をクリックし、制限をセットします。
+クレジットを受け取ったあと、Claude Codeを**Claude Consoleアカウントでログイン**して使えば、そのクレジットが消費されます。特別な設定は不要です。手順は[3. 初回起動とログイン](/preparation/first-run/)にあります。
 
-    ![](images/2026-08-10-03-37-26.png)
-
-</Steps>
+すでにPro/Maxプランでログインしている場合は、起動中に `/login` でConsoleアカウントに切り替えられます。APIキーを使う方法もあります（[APIキーの発行と設定](/reference/apikey/)）。
 
 ## 自分でクレジットを購入する
 
-配布分が使い切れた場合や、事前に試しておきたい場合はこちら。
+配布分を使い切った場合や、事前に試しておきたい場合はこちら。
 
 <Steps>
 
@@ -100,3 +75,7 @@ APIキーを発行し、Claude Codeから使用します。
 1. クレジットカードを登録し、クレジットを購入します。
 
 </Steps>
+
+<Aside type="tip" title="使いすぎが心配な方へ">
+	支出の上限をあらかじめ設定できます。[利用上限とコストの確認](/reference/costs/)を参照してください。
+</Aside>

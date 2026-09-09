@@ -1,0 +1,133 @@
+---
+title: 2. Claude Codeをインストールする
+description: macOS / Windows それぞれのClaude Codeインストール手順。ターミナルを使ったことがない方向けの説明つき。
+sidebar:
+  order: 2
+---
+
+import { Aside, Steps, Tabs, TabItem, LinkButton, Card, CardGrid } from '@astrojs/starlight/components';
+
+**Claude Code**は、ターミナル（黒い画面）で動くClaudeです。「こういうものを作って」と日本語で書くだけで、Claudeがファイルを作り、コードを書き、実行して、動くところまで進めてくれます。Build Dayではこれをメインの道具として使います。
+
+<Aside type="tip" title="ターミナルが苦手な方へ">
+	この手順で打ち込むのは**コピペで済むコマンド1行だけ**です。それでも不安な方は、公式の[ターミナルガイド](https://code.claude.com/docs/ja/terminal-guide)に画面つきの説明があります。どうしてもターミナルを使いたくない方は、このページの最後の[デスクトップアプリ](#ターミナルを使いたくない方へデスクトップアプリ)を使ってください。
+</Aside>
+
+## 動作環境
+
+- **OS**: macOS 13以上 / Windows 10（1809以上）
+- **メモリ**: 4GB以上
+- **ネットワーク**: インターネット接続（当日は会場のWi-Fiを使います）
+
+## ターミナルを開く
+
+<Tabs syncKey="os">
+
+<TabItem label="macOS">
+
+`command`キー + `スペース`キーでSpotlightを開き、`ターミナル`と入力してEnterを押します。白または黒のウィンドウが開けば成功です。
+
+</TabItem>
+
+<TabItem label="Windows">
+
+スタートボタンを右クリックして「**ターミナル**」または「**Windows PowerShell**」を選びます。`PS C:\Users\あなたの名前>` のような表示が出れば成功です。
+
+</TabItem>
+
+</Tabs>
+
+## インストールする
+
+下のコマンドをコピーして、ターミナルに貼り付けてEnterを押します。数十秒で終わります。
+
+<Tabs syncKey="os">
+
+<TabItem label="macOS">
+
+```sh
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+<Aside type="note" title="Homebrewを使っている方">
+	`brew install --cask claude-code` でもインストールできます。ただしHomebrew版は自動更新されないため、ときどき `brew upgrade claude-code` を実行してください。上のインストーラー（推奨）はバックグラウンドで自動更新されます。
+</Aside>
+
+</TabItem>
+
+<TabItem label="Windows">
+
+**PowerShellの場合**（`PS C:\` と表示されている）:
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+**コマンドプロンプト（CMD）の場合**（`PS` がつかない `C:\`）:
+
+```batch
+curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+```
+
+管理者として実行する必要はありません。
+
+<Aside type="note" title="どちらか分からないときの見分け方">
+	`The token '&&' is not a valid statement separator` と出たらPowerShellです。`'irm' is not recognized...` と出たらCMDです。表示に合わせてもう一方のコマンドを試してください。
+
+	`winget install Anthropic.ClaudeCode` でもインストールできます（こちらは自動更新されないため、`winget upgrade Anthropic.ClaudeCode` を定期的に実行してください）。
+</Aside>
+
+</TabItem>
+
+</Tabs>
+
+<Aside type="caution" title="Windowsの方へ：Git for Windowsの導入をおすすめします">
+	[Git for Windows](https://git-scm.com/downloads/win)を入れておくと、Claude Codeがコマンド実行にGit Bashを使えるようになり、動かせることが増えます。入っていない場合はPowerShellで代替されるので、必須ではありません。
+
+	WSLを普段使っている方は、WSLのターミナルの中でmacOS/Linux版のコマンドを実行してください（この場合Git for Windowsは不要です）。
+</Aside>
+
+## インストールできたか確認する
+
+<Steps>
+
+1. **ターミナルを一度閉じて、開き直します**（PATHを反映させるため）。
+
+1. 次のコマンドを実行します。
+
+    ```sh
+    claude --version
+    ```
+
+    `2.1.x (Claude Code)` のようにバージョンが表示されればインストール成功です。
+
+1. うまくいかないときは、次のコマンドで環境をチェックできます。
+
+    ```sh
+    claude doctor
+    ```
+
+</Steps>
+
+<Aside type="caution" title="command not found / 認識されません と出たら">
+	ほとんどの場合、ターミナルの開き直しで解決します。それでもだめな場合は[困ったときは](/reference/troubleshooting/)を確認してください。
+</Aside>
+
+## ターミナルを使いたくない方へ：デスクトップアプリ
+
+Claude Codeには、同じことがGUIでできる**デスクトップアプリ**もあります。ターミナルに抵抗がある方はこちらでも参加できます。
+
+<CardGrid>
+	<Card title="ダウンロード" icon="laptop">
+		[claude.com/download](https://claude.com/download)からmacOS版・Windows版をダウンロードできます。
+	</Card>
+	<Card title="使い方" icon="open-book">
+		公式の[デスクトップ版クイックスタート](https://code.claude.com/docs/ja/desktop-quickstart)を参照してください。ログイン方法はターミナル版と同じです。
+	</Card>
+</CardGrid>
+
+## 次のステップ
+
+<LinkButton href="../first-run/" icon="right-arrow">
+	次へ：初回起動とログイン
+</LinkButton>
