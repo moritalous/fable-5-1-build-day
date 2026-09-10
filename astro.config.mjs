@@ -4,7 +4,7 @@ import starlight from '@astrojs/starlight';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeExternalLinks from 'rehype-external-links';
 
-import { EVENT_URL } from './src/consts.ts';
+import { EVENT_URL, SLIDO_URL } from './src/consts.ts';
 
 const base = '/fable-5-1-build-day';
 
@@ -48,8 +48,12 @@ export default defineConfig({
 				'@fontsource/line-seed-jp/700.css',
 				'./src/styles/custom.css',
 			],
+			components: {
+				SocialIcons: './src/components/SocialIcons.astro',
+			},
 			social: [
 				{ icon: 'rocket', label: 'イベントページ (Luma)', href: EVENT_URL },
+				{ icon: 'comment-alt', label: 'Slido', href: SLIDO_URL },
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/moritalous' },
 			],
 			sidebar: [
