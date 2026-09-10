@@ -1,0 +1,109 @@
+---
+title: Fable 5.1 Build Day
+description: Fable 5.1公開記念のBuild Day。新モデルを実際に触って、その場で何かを作るハンズオンイベントです。
+template: splash
+hero:
+  title: Osaka | Fable 5.1 Build Day
+  tagline: リリースされたばかりの新モデル「Fable 5.1」を、その場で触って何かを作る。<br />2026年9月19日(土) 14:00〜16:00、大阪開催のClaude Community Eventです。
+  image:
+    file: ../../assets/build-day-cover.jpg
+    alt: Claude Community Osaka
+  actions:
+    - text: 事前準備を始める
+      link: preparation/account/
+      icon: right-arrow
+    - text: イベントページ(Luma)
+      link: https://luma.com/claude-oec1
+      icon: external
+      variant: minimal
+---
+
+import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="非公式コンテンツについて">
+	本サイトはAnthropic公式のコンテンツではありません。有志([moritalous](https://github.com/moritalous))が運営する、イベント参加者向けの案内ページです。
+</Aside>
+
+## Build Dayとは
+
+Build Dayは、**新しいモデルを実際に手を動かして体験する回**です。世界中の人がFable 5.1を試しているこのタイミングで、集まって、作って、見せ合いましょう。
+
+作るものは自由です。「これまで作れなかったもの」「日々の困りごとを解決するもの」「びっくりするもの」など、どんな方向でも歓迎です。エンジニア・開発者の方はもちろん、Claudeでのものづくりに関心がある方であれば経験は問いません。**Claude Codeを使ったことがない方でも大丈夫です。**[事前準備](/preparation/account/)のページに、インストールからログインまで手順を用意しました。
+
+<CardGrid>
+	<Card title="タイムテーブル" icon="clock">
+		- 13:30 受付
+		- 14:00 オープニング・Fable 5.1の新機能紹介
+		- 14:10 ビルドタイム（ソロ・チームどちらも可）
+		- 15:30 成果発表会
+		- 15:55 フィードバック・集合写真・クロージング
+
+		※プログラム・時間は変更になる場合があります。
+	</Card>
+	<Card title="持ち物・事前準備" icon="laptop">
+		- ノートパソコン（電源の用意はありますが数に限りがあります。事前の充電にご協力ください）
+		- [Claude Platform](https://platform.claude.com)のアカウント（**事前作成をお願いします**）
+		- [Claude Code](/preparation/install/)のインストール
+
+		APIクレジットはイベントで配布予定です。事前の購入は不要です。
+	</Card>
+	<Card title="会場" icon="setting">
+		大阪市内（会場は調整中です。決まり次第[イベントページ](https://luma.com/claude-oec1)でお知らせします）
+
+		完全オフラインでの開催です。オンライン配信はありません。席数に限りがあるため、参加をご希望の方はお早めにお申し込みください。
+	</Card>
+	<Card title="参加後のお願い" icon="pencil">
+		イベント終了後、**SNS等で当日の写真や作ったものをぜひ共有してください**。これはBuild Dayを開催する上での唯一のお願いです。
+
+		ハッシュタグは `#ClaudeCommunityOsaka` `#ClaudeCommunity` を使ってください。
+	</Card>
+</CardGrid>
+
+## 当日までにやっておくこと
+
+イベント当日は作る時間をたっぷり取りたいので、**セットアップは事前に済ませておいてください**。3ステップ、合わせて15分ほどです。
+
+<LinkCard
+	title="1. Claude Platformアカウントを作る"
+	description="APIクレジットを受け取るための、開発者向けコンソールのアカウントを作成します。"
+	href="preparation/account/"
+/>
+<LinkCard
+	title="2. Claude Codeをインストールする"
+	description="macOS / Windows それぞれの手順。ターミナルを使ったことがない方向けの説明つき。"
+	href="preparation/install/"
+/>
+<LinkCard
+	title="3. 初回起動とログイン"
+	description="実際に起動してログインし、最初の1つを作ってみるところまで。"
+	href="preparation/first-run/"
+/>
+
+## 当日・参考
+
+<LinkCard
+	title="APIクレジットの受け取り方"
+	description="会場で配布するAPIクレジットの申請手順と、受け取ったあとの確認方法。"
+	href="credits/"
+/>
+<LinkCard
+	title="利用上限とコストの確認"
+	description="支出上限の設定と、Claude Codeで使った金額の確認方法。"
+	href="reference/costs/"
+/>
+<LinkCard
+	title="困ったときは"
+	description="インストール・ログイン・実行でつまずいたときの対処法。"
+	href="reference/troubleshooting/"
+/>
+<LinkCard
+	title="アンケート"
+	description="イベント終了後にご協力をお願いします。今後の運営の参考にします。"
+	href="survey/"
+/>
+
+## 注意事項
+
+- 完全オフラインでの開催です。オンライン配信はありません。
+- 参加申し込み後のキャンセルはお早めにお願いします。
+- 当日のイベント風景を写真撮影させていただきます。内容は後日レポート記事やSNSへ掲載される場合がありますのでご了承ください。他の参加者の顔など、個人が特定される写真・動画の撮影はご配慮ください。

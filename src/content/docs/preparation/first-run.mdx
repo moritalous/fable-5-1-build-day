@@ -1,0 +1,107 @@
+---
+title: 3. 初回起動とログイン
+description: Claude Codeを初めて起動してログインし、最初の1つを作ってみるまで。
+sidebar:
+  order: 3
+---
+
+import { Aside, Steps, Tabs, TabItem, LinkButton } from '@astrojs/starlight/components';
+
+インストールができたら、実際に起動してログインします。ここまでできていれば当日は作るだけです。
+
+## 作業用のフォルダを作る
+
+Claude Codeは「いま開いているフォルダ」を作業場所にします。散らからないよう、専用のフォルダを作っておきましょう。
+
+<Tabs syncKey="os">
+
+<TabItem label="macOS">
+
+```sh
+mkdir -p ~/build-day
+cd ~/build-day
+```
+
+</TabItem>
+
+<TabItem label="Windows">
+
+```powershell
+mkdir $HOME\build-day
+cd $HOME\build-day
+```
+
+</TabItem>
+
+</Tabs>
+
+## 起動してログインする
+
+<Steps>
+
+1. `claude` と入力してEnterを押します。
+
+    ```sh
+    claude
+    ```
+
+1. 初回はログインを求められます。**Claude Console**（＝[1. Claude Platformアカウントを作る](../account/)で作ったアカウント）を選び、ブラウザで認証を完了します。
+
+    <Aside type="note" title="Pro/Maxプランを契約している方">
+    	claude.aiのPro/Max/Team/Enterpriseプランでもログインできます。その場合はサブスクリプションの枠で動くので、配布するAPIクレジットは使いません（どちらでも参加できます）。あとから切り替えたいときは、起動中に `/login` と入力します。
+    </Aside>
+
+1. ログインが終わるとClaude Codeのプロンプトが表示されます。バージョン・使用中のモデル・作業ディレクトリが上部に出ていれば準備完了です。
+
+</Steps>
+
+<Aside type="tip" title="Consoleでログインすると専用ワークスペースができます">
+	Claude ConsoleのアカウントでClaude Codeに初めてログインすると、コンソール側に「**Claude Code**」という名前のワークスペースが自動で作られます。Claude Codeの利用料はここに集計されるので、使った金額の確認や上限の設定はこのワークスペースに対して行います。詳しくは[利用上限とコストの確認](/reference/costs/)へ。
+</Aside>
+
+## 最初の1つを作ってみる
+
+プロンプトに日本語でそのまま書いて、Enterを押します。
+
+```text
+このフォルダに、今日の日付を表示するだけのHTMLファイルを作って
+```
+
+Claudeがファイルを作り、変更内容を見せて、実行の許可を求めてきます。承認すると作業が進みます。**ファイルを変更する前には必ず許可を求める**ので、勝手に壊されることはありません。
+
+慣れてきたら、こんな頼み方も試してみてください。
+
+```text
+作ったHTMLをブラウザで開いて見せて
+```
+
+```text
+背景をグラデーションにして、時計も表示するようにして
+```
+
+## 覚えておくコマンド
+
+Claude Codeを起動したあと、`/` から始まるコマンドが使えます。全部覚える必要はありません。
+
+| コマンド | 何をするか |
+| :--- | :--- |
+| `/help` | 使えるコマンドの一覧 |
+| `/login` | ログインし直す・アカウントを切り替える |
+| `/usage` | いまのセッションで使った量・金額の目安 |
+| `/clear` | 会話をリセットする（別の作業に移るとき） |
+| `/model` | 使うモデルを切り替える |
+| `/exit` | 終了する（`Ctrl+D`でも可） |
+
+キー操作では、`Shift+Tab`で許可モードの切り替え、`Escape`で実行中の中断ができます。「違う方向に進みだしたな」と思ったら遠慮なく`Escape`を押してください。
+
+<Aside type="tip" title="困ったらClaude自身に聞く">
+	Claude Codeの使い方は、Claude Codeに聞くのが一番早いです。`できることを教えて` `さっきのエラーはどういう意味？` のように、そのまま日本語で聞いてください。
+</Aside>
+
+## 次のステップ
+
+当日の流れはこちらです。
+
+<LinkButton href="../../credits/" icon="right-arrow">
+	APIクレジットの受け取り方
+</LinkButton>

@@ -1,0 +1,48 @@
+---
+title: 困ったときは
+description: Claude Codeのインストール・ログイン・実行でつまずいたときの対処法。
+sidebar:
+  order: 3
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+当日は会場スタッフに声をかけてもらえれば一緒に見ます。ここでは、よくあるつまずきどころをまとめておきます。
+
+## `claude: command not found` / `'claude' は認識されていません`
+
+インストールは終わっているのに見つからないパターンです。多くはPATHの反映待ちなので、まず**ターミナルを一度閉じて開き直して**ください。
+
+それでも直らない場合は、インストールしたときと同じ手順をもう一度実行するか、公式の[インストールのトラブルシューティング](https://code.claude.com/docs/ja/troubleshoot-install)を確認してください。
+
+## Windowsでインストールコマンドがエラーになる
+
+シェルの取り違えがほとんどです。
+
+- `The token '&&' is not a valid statement separator` → **PowerShell**です。`irm https://claude.ai/install.ps1 | iex` を使ってください。
+- `'irm' is not recognized as an internal or external command` → **CMD**です。`curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd` を使ってください。
+
+プロンプトが `PS C:\` ならPowerShell、`PS` がつかない `C:\` ならCMDです。
+
+## ログインできない / どのアカウントで動いているか分からない
+
+Claude Codeの起動中に `/login` を実行すると、ログインし直したりアカウントを切り替えたりできます。`/usage` でも現在の状態を確認できます。
+
+環境変数 `ANTHROPIC_API_KEY` が設定されていると、**ログイン情報より優先されます**。以前に設定した古いキーが残っていると意図しない方で動くので、その場合は環境変数を削除してターミナルを開き直してください（[APIキーの発行と設定](/reference/apikey/)）。
+
+## `Credit balance is too low` と表示される
+
+APIクレジットの残高が足りていません。クレジットの申請がまだであれば[APIクレジットの受け取り方](/credits/)を確認してください。申請済みでも付与には少し時間がかかります。急ぐ場合は[自分でクレジットを購入する](/credits/#自分でクレジットを購入する)か、スタッフに声をかけてください。
+
+## 会話が長くなって動きが重い・高くつく
+
+`/clear` で会話をリセットしてください。別のテーマの作業に移るときは特に効果があります。詳しくは[利用上限とコストの確認](/reference/costs/)へ。
+
+## そのほか
+
+<Aside type="tip" title="まずClaude Codeに聞いてみてください">
+	エラーメッセージをそのまま貼り付けて `このエラーはどういう意味？どう直せばいい？` と聞くのが、たいてい一番速い解決策です。
+</Aside>
+
+- 公式ドキュメント: [code.claude.com/docs/ja](https://code.claude.com/docs/ja/overview)
+- 環境まわりの自己診断: ターミナルで `claude doctor`

@@ -1,0 +1,20 @@
+{
+  "name": "fable-5-1-build-day",
+  "type": "module",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.41.3",
+    "@fontsource/line-seed-jp": "^5.2.2",
+    "astro": "^7.0.2",
+    "rehype-external-links": "^3.0.0",
+    "sharp": "^0.34.5"
+  }
+}
