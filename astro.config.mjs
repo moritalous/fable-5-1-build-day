@@ -55,20 +55,25 @@ export default defineConfig({
 			sidebar: [
 				{ label: 'トップ', link: '/' },
 				{
-					label: '事前準備',
-					items: [{ autogenerate: { directory: 'preparation/' } }],
-				},
-				{
-					label: 'イベント当日',
+					label: 'セットアップ',
 					items: [
-						{ label: 'APIクレジットの受け取り方', slug: 'credits' },
-						{ label: 'アンケート', slug: 'survey' },
+						{ slug: 'preparation/account' },
+						{ slug: 'credits' },
+						{ slug: 'preparation/apikey' },
+						{ slug: 'preparation/install' },
+						{ slug: 'preparation/first-run' },
 					],
 				},
+				{
+					label: '作例集',
+					items: [{ autogenerate: { directory: 'showcase/' } }],
+				},
+				{ label: "Let's Build", slug: 'build' },
 				{
 					label: '参考',
 					items: [{ autogenerate: { directory: 'reference/' } }],
 				},
+				{ label: 'アンケート', slug: 'survey' },
 			],
 		}),
 	],

@@ -1,0 +1,44 @@
+---
+title: connpassグループのメンバーになる
+description: Claude Community(JP)のconnpassグループに参加して、日本各地のClaude Communityイベントの開催通知を受け取る方法。
+sidebar:
+  order: 1
+  label: connpassグループ
+---
+
+import { Aside, Steps, LinkButton } from '@astrojs/starlight/components';
+import { CONNPASS_URL } from '../../../consts.ts';
+
+**Claude Community(JP)** は、日本各地のClaude Community Ambassadorが主催するイベントの告知ハブです。ミートアップ、ハンズオン、ワークショップなど、日本で開催されるClaudeコミュニティイベントの情報がここにまとまっています。
+
+グループの「**メンバーになる**」を押してメール通知を設定しておくと、**新しいイベントが公開されたときに通知が届きます**。次の開催を見逃さずに済むので、ぜひ登録してください。
+
+{CONNPASS_URL ? (
+	<LinkButton href={CONNPASS_URL} target="_blank" rel="noopener noreferrer" icon="external">
+		Claude Community(JP) をconnpassで開く
+	</LinkButton>
+) : (
+	<Aside type="tip" title="グループのURLは当日ご案内します">
+		会場のスライドで表示します。connpassで「Claude Community(JP)」を検索しても見つかります。
+	</Aside>
+)}
+
+## メンバーになる手順
+
+<Steps>
+
+1. 上のリンクからグループページを開きます。
+
+1. 右上の「**メンバーになる**」をクリックします（connpassのアカウントが必要です）。
+
+1. メール通知の設定を確認します。これで新しいイベントが公開されたときにお知らせが届きます。
+
+</Steps>
+
+<Aside type="note" title="参加申し込みはconnpassではなくLumaから">
+	connpassは「日本でいつ・どこで開催されるか」を知るための**告知・通知の場**です。各イベントの参加申し込みは、Anthropicが運営するClaude CommunityのLumaカレンダーからのみ受け付けています。connpassの各イベントページにLumaへのリンクが載っているので、そちらから申し込んでください。
+</Aside>
+
+<Aside type="caution" title="非公式コンテンツについて">
+	Claude Community(JP)はClaude Community Ambassadorによる運営で、Anthropicの公式イベントではありません。
+</Aside>

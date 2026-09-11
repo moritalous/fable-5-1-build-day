@@ -1,0 +1,80 @@
+---
+title: Let's Build
+description: ビルドタイムの過ごし方。3つのトラック、チームの組み方、成果発表で話すこと。
+---
+
+import { Aside, Card, CardGrid, LinkCard, LinkButton } from '@astrojs/starlight/components';
+import { BUILD_SUBMISSION_URL } from '../../consts.ts';
+
+export const X_POST_URL = `https://x.com/intent/post?${new URLSearchParams({
+	text: 'Osaka | Fable 5.1 Build Day で作りました！',
+	hashtags: 'ClaudeCommunityOsaka,ClaudeCommunity',
+})}`;
+
+セットアップが終わったら、あとは作るだけです。**何を作るかはあなたが決めてください。** テーマも題材も指定しません。
+
+## 3つのトラック
+
+作るものの方向性として、3つのトラックがあります。**どの分野を作るかではなく、どんな質のものを作るか**を表しています。
+
+<CardGrid>
+	<Card title="Delight" icon="star">
+		**驚くもの、美しいもの、楽しいもの。**
+
+		基準は「これまでは、ここまでのものを、この速さでは作れなかった」と思えるかどうかです。
+	</Card>
+	<Card title="Breakthrough" icon="rocket">
+		**これまで作れなかったもの。**
+
+		前のモデルでは歯が立たなかった問題を持ち込んで、どこまで行けるか試してください。以前との比較そのものが成果です。
+	</Card>
+	<Card title="Everyday" icon="laptop">
+		**身のまわりの問題を解決するもの。**
+
+		自分が実際に困っていることを、実際に使えるかたちにしてください。
+	</Card>
+</CardGrid>
+
+## ひとりでも、チームでも
+
+その場で2〜4人のチームを組んでも、ひとりで黙々と作ってもかまいません。
+
+<Aside type="tip" title="手早く始めるなら">
+	[作例集](/showcase/)のプロンプトをそのままコピーして投げ、出てきたものを自分の好きな方向に変えていくのがいちばん速いスタートです。ゼロから考える必要はありません。
+</Aside>
+
+## 作ったあとに
+
+### 作ったものを提出する
+
+Anthropic公式の提出フォーム「Share what you built with Claude!」から送ると、**ClaudeのSNSアカウントなどで紹介される候補になります**。せっかく作ったので、ぜひ出してみてください。
+
+回答には7分ほどかかります。当日でなくてもかまわないので、落ち着いてから出しても大丈夫です。
+
+{BUILD_SUBMISSION_URL ? (
+	<LinkButton href={BUILD_SUBMISSION_URL} target="_blank" rel="noopener noreferrer" icon="external">
+		提出フォームを開く
+	</LinkButton>
+) : (
+	<Aside type="tip" title="提出フォームのURLは当日ご案内します">
+		会場のスライドで表示します。
+	</Aside>
+)}
+
+### アンケートに答える
+
+<LinkCard
+	title="アンケート"
+	description="イベント終了後にご協力をお願いします。今後の運営の参考にします。"
+	href="/survey/"
+/>
+
+### SNSでシェアする
+
+当日の写真や作ったものをぜひ共有してください。下のボタンを押すと、ハッシュタグ入りの投稿画面が開きます。本文は自由に書き換えてください。
+
+<LinkButton href={X_POST_URL} target="_blank" rel="noopener noreferrer" icon="external">
+	Xでポストする
+</LinkButton>
+
+ハッシュタグは `#ClaudeCommunityOsaka` `#ClaudeCommunity` です。
