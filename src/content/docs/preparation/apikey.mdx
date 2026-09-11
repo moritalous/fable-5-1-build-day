@@ -1,0 +1,44 @@
+---
+title: APIキーの発行
+description: Claude Platformで自分のAPIキーを発行する手順と、発行時の注意点。
+sidebar:
+  label: APIキーの発行
+---
+
+import { Aside, Steps, LinkButton } from '@astrojs/starlight/components';
+
+Build Dayでは、**ご自身のClaude Platformアカウントで発行したAPIキー**でClaude Codeを動かします。受け取ったAPIクレジットは、このキー経由で消費されます。
+
+<Aside type="tip" title="Pro/Maxプランをお使いの方">
+	claude.aiのPro/Max/Team/Enterpriseプランを契約している方は、APIキーを使わず、そのプランのままでも参加できます。その場合はサブスクリプションの枠で動くので、APIクレジットは消費されません。起動方法は[初回起動](../first-run/)にあります。
+</Aside>
+
+## APIキーを発行する
+
+<Steps>
+
+1. コンソールの「APIキー」メニューを選択し、「キーを作成」をクリックします。
+
+    ![](../images/2026-07-04-23-33-46.png)
+
+1. 名前を入力し、「追加」をクリックします。表示されたAPIキー（`sk-ant-`で始まる文字列）を控えます。**作成時にしか表示されません。**
+
+    ![](../images/2026-07-04-23-36-09.png)
+
+</Steps>
+
+<Aside type="caution" title="ワークスペースは「Default」を選んでください">
+	APIキーはワークスペース単位で発行され、そのワークスペースの残高・上限が適用されます。受け取ったクレジットを使うには`Default`で作成してください。
+</Aside>
+
+<Aside type="caution" title="キーの取り扱い">
+	APIキーはパスワードと同じものです。スクリプトのコードに直接書いたり、GitHubにコミットしたり、人に見せたりしないよう注意してください。控えるときはパスワードマネージャーなど安全な場所に保管してください。
+</Aside>
+
+## 次のステップ
+
+キーを発行したら、Claude Codeをインストールします。
+
+<LinkButton href="../install/" icon="right-arrow">
+	Claude Codeのインストール
+</LinkButton>
