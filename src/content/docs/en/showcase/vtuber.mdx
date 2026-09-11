@@ -1,0 +1,58 @@
+---
+title: 6. VTuber studio
+description: A VTuber studio that tracks head movement through a webcam and identifies the five Japanese vowels by FFT formant analysis to drive the avatar's mouth. The prompt, the result, and the measured time and cost.
+sidebar:
+  order: 6
+  label: 6. VTuber studio
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+import DemoLink from '../../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="Original" variant="tip" /><Badge text="$23.77" variant="success" /><Badge text="26 min 51 s" variant="tip" /><Badge text="Uses camera & mic" variant="caution" /></p>
+
+A VTuber studio that turns whoever sits in front of the laptop into a character on a virtual stage, with the head, eyes and mouth following in real time. The mouth does not simply open and close with the volume: an FFT finds the first two formants, identifies which of the five Japanese vowels is being spoken, and forms あ, い, う, え or お.
+
+<DemoLink
+	file="vtuber.html"
+	note={`Note: this uses your webcam and microphone. Allow access when prompted. If you would rather not use them, "Demo without camera" shows the animation on its own. All video and audio is processed inside the browser; nothing is sent anywhere.`}
+/>
+
+## What it does
+
+- **Head tracking**: estimates head position, yaw and tilt (roll and pitch) from frame differences in the webcam image
+- **Vowel detection**: runs an FFT on the microphone input and uses the first two formants to decide which of あ, い, う, え and お is being spoken. The avatar's mouth takes that shape
+- Tracking panel: yaw, pitch and roll in degrees, a blink counter, the detected vowel with its confidence, the input level, the tracking latency in milliseconds, and the frame rate
+- **Vowel chart**: plots the first and second formants as a point. The five vowel regions are marked, so you can see the point land in the right region as you speak
+- Your mirrored camera view with the tracking drawn over it
+- The character is drawn entirely in code (no images). Hair and clothing swing with physics, and it breathes and blinks on its own when you hold still
+- Stage lighting, a scrolling comment stream, and a reaction effect that fires when you open your mouth wide or tilt your head hard
+- Switchable character designs and backgrounds
+
+## The prompt
+
+```text wrap
+Create a VTuber studio that turns whoever sits in front of the laptop into an animated character on a virtual stage, stage-worthy and readable from across a room, with the avatar's head, eyes and mouth following the real person in real time.
+
+Use the webcam to track the head — its position, how far it is turned and how far it is tilted — by comparing successive frames and analysing the image yourself, and use the microphone to drive the mouth: run your own FFT, find the first two formants, and decide which of the five Japanese vowels is being spoken, so the character's mouth actually forms あ, い, う, え or お rather than simply opening and closing with the volume.
+
+Beside the stage show a live tracking panel: head yaw, pitch and roll in degrees, a blink counter, the detected vowel with your confidence in it, the input level, the tracking latency in milliseconds and the frame rate; also plot the first and second formants as a moving point on a vowel chart with the five Japanese vowel regions marked, so I can watch the point land in the right region as I speak, and show my mirrored webcam view with the tracking drawn over it.
+
+Draw the character entirely in code — no images, no external assets — as a soft two-dimensional avatar whose hair and clothing swing with a little physics as the head moves, breathing and blinking on its own when I hold still, and give me a stage with lighting, a comment stream scrolling across the screen, and a reaction effect that fires when I open my mouth wide or tilt my head hard. Let me switch between two or three character designs and change the background. Build it as one self-contained HTML file with no external libraries or assets, and keep it at 60 fps so the avatar never feels laggy.
+```
+
+## Measured results
+
+| Item | Tokens | Cost |
+| :--- | ---: | ---: |
+| Input | 1,830 | $0.02 |
+| Output | 329,159 | $16.46 |
+| Cache write | 394,886 | $4.94 |
+| Cache read | 9,423,921 | $2.36 |
+| **Total** | **10,149,796** | **$23.77** |
+
+Time taken **26 min 51 s** / model `claude-fable-5-1`
+
+<Aside type="note">
+	Each line is rounded, so the individual figures may not add up exactly to the total. Costs are estimates calculated from the session log.
+</Aside>

@@ -1,0 +1,53 @@
+---
+title: 3. Four-stroke engine
+description: A cutaway four-stroke engine that computes thermodynamics live and integrates the work per cycle from the area of the P-V diagram. The prompt, the result, and the measured time and cost.
+sidebar:
+  order: 3
+  label: 3. Four-stroke engine
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+import DemoLink from '../../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="Official demo 3" variant="note" /><Badge text="$14.57" variant="success" /><Badge text="29 min 01 s" variant="tip" /><Badge text="Plays audio" variant="caution" /></p>
+
+A cutaway four-stroke engine runs while the thermodynamics are computed on the spot. Fuel burns, pressure builds on the pistons, torque is produced, and the exhaust pulses become the engine sound itself. The P-V (pressure-volume) diagram drawn alongside integrates the enclosed area live to give the work per cycle.
+
+<DemoLink
+	file="engine.html"
+	note="Note: this plays engine sound. Watch your volume."
+/>
+
+## What it does
+
+- A large animated cutaway showing pistons, connecting rods, the crankshaft, valves opening and closing, and the spark plug firing and igniting the mixture
+- Combustion, pressure on the pistons and torque all computed live
+- Exhaust pulses converted into engine sound and played back
+- The P-V diagram drawn in real time, with the enclosed area integrated to give the work per cycle
+- A throttle slider, an RPM readout, and a switch between 1, 4 and 8 cylinders
+
+## The prompt
+
+```text wrap
+Build me an interactive, visually stunning simulation of a four-stroke car engine, from first principles.
+Compute the thermodynamics live: fuel burning, pressure on the pistons, torque, and the exhaust pulses turned into engine sound.
+Draw the engine as a big animated cutaway — pistons, connecting rods, crankshaft, valves opening and closing, the spark and the flame — and show the pressure–volume loop being drawn in real time next to it, with the work per cycle integrated live from the area inside the loop.
+Give me a throttle slider, an RPM readout, and a way to switch between 1, 4 and 8 cylinders, and make it beautiful.
+Build it as a single HTML file with no external libraries, make it run at 60 fps, and keep the code clean and correct so it works perfectly the first time it is opened.
+```
+
+## Measured results
+
+| Item | Tokens | Cost |
+| :--- | ---: | ---: |
+| Input | 1,834 | $0.02 |
+| Output | 208,615 | $10.43 |
+| Cache write | 211,667 | $2.65 |
+| Cache read | 5,884,710 | $1.47 |
+| **Total** | **6,306,826** | **$14.57** |
+
+Time taken **29 min 01 s** / model `claude-fable-5-1`
+
+<Aside type="note">
+	Each line is rounded, so the individual figures may not add up exactly to the total. Costs are estimates calculated from the session log.
+</Aside>

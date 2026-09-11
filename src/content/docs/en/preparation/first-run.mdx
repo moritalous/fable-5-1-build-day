@@ -1,0 +1,155 @@
+---
+title: First run
+description: Creating a working folder, setting your API key, starting Claude Code for the first time and building your first thing.
+sidebar:
+  label: First run
+---
+
+import { Aside, Steps, Tabs, TabItem, LinkButton } from '@astrojs/starlight/components';
+
+Create a working folder, set your API key, and get as far as actually starting it up. Once this is done, all that is left on the day is building.
+
+## Create a working folder
+
+Claude Code uses "the folder you currently have open" as its workspace. Create a dedicated folder so things stay tidy.
+
+<Tabs syncKey="os">
+
+<TabItem label="macOS">
+
+```sh
+mkdir -p ~/build-day
+cd ~/build-day
+```
+
+</TabItem>
+
+<TabItem label="Windows">
+
+```powershell
+mkdir $HOME\build-day
+cd $HOME\build-day
+```
+
+</TabItem>
+
+</Tabs>
+
+## Set your API key
+
+If you put a settings file inside the working folder, **your key stays even after you reopen the terminal**. You do not have to enter it every time.
+
+<Steps>
+
+1. Create the settings file and open it. Run this while you are in the working folder (`build-day`).
+
+    <Tabs syncKey="os">
+
+    <TabItem label="macOS">
+
+    ```sh
+    mkdir -p .claude && touch .claude/settings.json && open -e .claude/settings.json
+    ```
+
+    An empty file opens in TextEdit.
+
+    </TabItem>
+
+    <TabItem label="Windows">
+
+    ```powershell
+    New-Item -ItemType Directory -Force .claude | Out-Null; if (!(Test-Path .claude\settings.json)) { "" | Set-Content .claude\settings.json }; notepad .claude\settings.json
+    ```
+
+    An empty file opens in Notepad.
+
+    </TabItem>
+
+    </Tabs>
+
+1. Paste in the following, replace `YOUR_API_KEY_HERE` with [the key you created](../apikey/) (the string starting with `sk-ant-`), and save.
+
+    ```json
+    {
+      "env": {
+        "ANTHROPIC_API_KEY": "YOUR_API_KEY_HERE"
+      }
+    }
+    ```
+
+</Steps>
+
+<Aside type="caution" title="Do not hand this file to anyone">
+	`settings.json` contains your API key in plain text. **If you publish the working folder to GitHub or elsewhere, you publish the key along with it.** When you share what you built, share only the HTML file.
+</Aside>
+
+## Start it
+
+<Steps>
+
+1. Type `claude` and press Enter.
+
+    ```sh
+    claude
+    ```
+
+1. You are ready once the Claude Code prompt appears. The version, the model in use and the working directory are shown at the top. **If your API key is set, you will not be asked to log in.**
+
+</Steps>
+
+## Check which authentication is in use
+
+An API key takes **priority** over login credentials. While it is running, open `/usage` or `/login` to see which account and which authentication it is currently using.
+
+<Aside type="caution" title="A note for Pro/Max subscribers">
+	If you set an API key on a machine that is already logged in with a Pro/Max plan, **the key wins and API credits are consumed**. Conversely, if you want to use API credits but forget to set the key, it runs within your subscription. Decide which one you want before starting it.
+
+	To run within your subscription, start `claude` without creating `.claude/settings.json` and log in. If you already created it, delete that file to go back to login-based authentication.
+</Aside>
+
+## Build your first thing
+
+Write it at the prompt in plain language and press Enter.
+
+```text
+Create an HTML file in this folder that just shows today's date
+```
+
+Claude creates the file, shows you the changes, and asks permission to run it. Approve it and the work continues. **It always asks before changing a file**, so nothing gets broken behind your back.
+
+Once you get the hang of it, try asking for things like this.
+
+```text
+Open the HTML you made in a browser and show me
+```
+
+```text
+Make the background a gradient and add a clock
+```
+
+## Commands worth remembering
+
+Once Claude Code is running, you can use commands that start with `/`. You do not need to memorize them all.
+
+| Command | What it does |
+| :--- | :--- |
+| `/help` | List the available commands |
+| `/login` | Log in again or switch accounts |
+| `/usage` | A rough figure for usage and cost in the current session |
+| `/clear` | Reset the conversation (when moving on to something else) |
+| `/model` | Switch the model in use |
+| `/exit` | Quit (`Ctrl+D` also works) |
+
+For keyboard shortcuts, `Shift+Tab` switches permission modes and `Escape` interrupts whatever is running. If you feel it is heading in the wrong direction, do not hesitate to press `Escape`.
+
+<Aside type="tip" title="When stuck, ask Claude itself">
+	The fastest way to learn how to use Claude Code is to ask Claude Code. Just ask in plain language, like `Tell me what you can do` or `What did that error mean?`.
+</Aside>
+
+## Next step
+
+That is the whole setup. To give you ideas for what to build on the day, we have prepared real prompts and the things they produced.
+
+<LinkButton href="../../showcase/" icon="right-arrow">
+	Showcase: prompts and results
+</LinkButton>

@@ -1,0 +1,49 @@
+---
+title: 2. Orchestra conductor game
+description: A conductor simulator that reads your hand movements through a webcam and changes tempo with how fast you wave. The prompt, the result, and the measured time and cost.
+sidebar:
+  order: 2
+  label: 2. Orchestra conductor game
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+import DemoLink from '../../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="Official demo 2" variant="note" /><Badge text="$15.85" variant="success" /><Badge text="15 min 43 s" variant="tip" /><Badge text="Uses camera" variant="caution" /></p>
+
+Wave a baton at your webcam and the orchestra plays "Twinkle Twinkle Little Star". Wave faster and it speeds up, wave slower and it slows down, and lower your hands and it stops.
+
+<DemoLink
+	file="orchestra.html"
+	note={`Note: this uses your webcam. Allow access when prompted. If you would rather not use a camera, "NO CAMERA? USE THE MOUSE AS A BATON" lets you conduct with the mouse instead. All video is processed inside the browser; nothing is sent anywhere.`}
+/>
+
+## What it does
+
+- Detects hand movement in the webcam image and derives a tempo (BPM) from how fast you wave
+- Wave faster to speed up, slower to slow down. Lower your hands, or stop moving, and the orchestra stops
+- Shows a concert-hall stage where the sections that are playing light up
+- Shows your own camera view mirrored, with the detected motion drawn over it
+- A large BPM readout and the lyric line currently being sung
+
+## The prompt
+
+```text wrap
+Create an "orchestra conductor simulator game" in HTML/JS. I'd like for it to use the webcam to detect my hand movements to understand how I'm waving a conductor wand. I'd like to conduct the orchestra through the song Twinkle Twinkle little star. As I speed up my hand movements, the orchestra should speed up and vice versa if I slow down. When I put my hands down or motion is not detected, the orchestra should stop playing. Keep it to a single self-contained HTML file with no external libraries: detect the motion by comparing successive webcam frames, and synthesize the instruments with the Web Audio API. Make it beautiful and stage-worthy: show a concert-hall stage where each section of the orchestra visibly lights up as it plays its notes, my mirrored webcam view with the detected motion drawn over it, a big live tempo (BPM) display, and the current lyric line.
+```
+
+## Measured results
+
+| Item | Tokens | Cost |
+| :--- | ---: | ---: |
+| Input | 870 | $0.01 |
+| Output | 214,528 | $10.73 |
+| Cache write | 342,853 | $4.29 |
+| Cache read | 3,327,559 | $0.83 |
+| **Total** | **3,885,810** | **$15.85** |
+
+Time taken **15 min 43 s** / model `claude-fable-5-1`
+
+<Aside type="note">
+	Each line is rounded, so the individual figures may not add up exactly to the total. Costs are estimates calculated from the session log.
+</Aside>

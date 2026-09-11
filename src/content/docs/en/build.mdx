@@ -1,0 +1,80 @@
+---
+title: Let's Build
+description: How to spend the build time. The three tracks, forming a team, and what to talk about at the demos.
+---
+
+import { Aside, Card, CardGrid, LinkCard, LinkButton } from '@astrojs/starlight/components';
+import { BUILD_SUBMISSION_URL } from '../../../consts.ts';
+
+export const X_POST_URL = `https://x.com/intent/post?${new URLSearchParams({
+	text: 'Built this at Osaka | Fable 5.1 Build Day!',
+	hashtags: 'ClaudeCommunityOsaka,ClaudeCommunity',
+})}`;
+
+Once the setup is done, all that's left is to build. **What you build is up to you.** We don't set a theme or a subject.
+
+## The three tracks
+
+There are three tracks for the kind of thing you might build. They describe **not which field you build in, but what quality of thing you build**.
+
+<CardGrid>
+	<Card title="Delight" icon="star">
+		**Something surprising, beautiful, or fun.**
+
+		The test is whether you can say "I couldn't have built something this good, this fast, before."
+	</Card>
+	<Card title="Breakthrough" icon="rocket">
+		**Something you couldn't build before.**
+
+		Bring a problem the previous model couldn't handle and see how far you get. The comparison itself is the result.
+	</Card>
+	<Card title="Everyday" icon="laptop">
+		**Something that solves a problem around you.**
+
+		Take something that actually bothers you and turn it into something you can actually use.
+	</Card>
+</CardGrid>
+
+## Solo or in a team
+
+Form a team of 2–4 people on the spot, or build on your own — either is fine.
+
+<Aside type="tip" title="For a quick start">
+	The fastest way to start is to copy a prompt from the [Showcase](/en/showcase/), send it as it is, and steer the result in your own direction. You don't have to think one up from scratch.
+</Aside>
+
+## After you've built it
+
+### Submit what you built
+
+If you submit through Anthropic's official form, "Share what you built with Claude!", **your work becomes a candidate to be featured on Claude's social accounts and elsewhere**. You put the work in, so do send it.
+
+The form takes about 7 minutes. It doesn't have to be on the day — feel free to submit it once you've settled down.
+
+{BUILD_SUBMISSION_URL ? (
+	<LinkButton href={BUILD_SUBMISSION_URL} target="_blank" rel="noopener noreferrer" icon="external">
+		Open the submission form
+	</LinkButton>
+) : (
+	<Aside type="tip" title="We'll share the submission form URL on the day">
+		It will be shown on the slides at the venue.
+	</Aside>
+)}
+
+### Fill in the survey
+
+<LinkCard
+	title="Survey"
+	description="Please fill this in after the event. It helps us run better events."
+	href="../survey/"
+/>
+
+### Share on social media
+
+Please share photos from the day and what you built. The button below opens a post with the hashtags already filled in. Rewrite the text however you like.
+
+<LinkButton href={X_POST_URL} target="_blank" rel="noopener noreferrer" icon="external">
+	Post on X
+</LinkButton>
+
+The hashtags are `#ClaudeCommunityOsaka` and `#ClaudeCommunity`.

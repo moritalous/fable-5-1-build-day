@@ -1,0 +1,48 @@
+---
+title: Troubleshooting
+description: What to do when you get stuck installing, logging in, or running Claude Code.
+sidebar:
+  order: 3
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+On the day, just grab a staff member at the venue and we'll look at it together. Here are the common places people get stuck.
+
+## `claude: command not found` / `'claude' is not recognized`
+
+This is when the install finished but the command isn't found. Usually it's just waiting for PATH to take effect, so **close your terminal and open it again** first.
+
+If that doesn't fix it, run the same install steps again, or check the official [install troubleshooting guide](https://code.claude.com/docs/en/troubleshoot-install).
+
+## The install command errors on Windows
+
+Almost always the wrong shell.
+
+- `The token '&&' is not a valid statement separator` → this is **PowerShell**. Use `irm https://claude.ai/install.ps1 | iex`.
+- `'irm' is not recognized as an internal or external command` → this is **CMD**. Use `curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd`.
+
+If the prompt reads `PS C:\` it's PowerShell; if it's `C:\` with no `PS`, it's CMD.
+
+## Can't log in / not sure which account is in use
+
+Run `/login` while Claude Code is running to log in again or switch accounts. `/usage` also shows the current state.
+
+If an API key is set, **it takes priority over your login**. If you want to run with your login instead, delete `.claude/settings.json` in your working folder. If you've set the `ANTHROPIC_API_KEY` environment variable in the past, check that it isn't still there either ([First run](/en/preparation/first-run/)).
+
+## `Credit balance is too low`
+
+Your API credit balance is too low. If you haven't requested credits yet, see [How to get API credits](/en/credits/). Even after requesting, it takes a little while for them to be granted. If you're in a hurry, [buy credits yourself](/en/credits/#buying-credits-yourself) or ask a staff member.
+
+## The conversation is getting long, slow, and expensive
+
+Reset the conversation with `/clear`. It helps most when you move on to work on a different topic. See [Spending limits and costs](/en/reference/costs/) for details.
+
+## Anything else
+
+<Aside type="tip" title="Ask Claude Code first">
+	Pasting the error message as it is and asking `What does this error mean? How do I fix it?` is usually the fastest way to a solution.
+</Aside>
+
+- Official docs: [code.claude.com/docs](https://code.claude.com/docs/en/overview)
+- Self-diagnosis for your environment: run `claude doctor` in the terminal

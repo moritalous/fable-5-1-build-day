@@ -1,0 +1,44 @@
+---
+title: Creating an API key
+description: How to create your own API key on Claude Platform, and what to watch out for when you do.
+sidebar:
+  label: Creating an API key
+---
+
+import { Aside, Steps, LinkButton } from '@astrojs/starlight/components';
+
+At Build Day you will run Claude Code with **an API key created in your own Claude Platform account**. The API credits you receive are consumed through this key.
+
+<Aside type="tip" title="If you are on a Pro/Max plan">
+	If you subscribe to a claude.ai Pro/Max/Team/Enterprise plan, you can take part on that plan without using an API key. In that case it runs within your subscription, so no API credits are consumed. See [First run](../first-run/) for how to start it.
+</Aside>
+
+## Create an API key
+
+<Steps>
+
+1. Select the 「APIキー」 (API keys) menu in the console and click 「キーを作成」 (Create Key).
+
+    ![](../../images/2026-07-04-23-33-46.png)
+
+1. Enter a name and click 「追加」 (Add). Make a note of the API key that is shown (a string starting with `sk-ant-`). **It is only shown at creation time.**
+
+    ![](../../images/2026-07-04-23-36-09.png)
+
+</Steps>
+
+<Aside type="caution" title='Choose the "Default" workspace'>
+	API keys are created per workspace, and that workspace's balance and limits apply. To use the credits you received, create the key in `Default`.
+</Aside>
+
+<Aside type="caution" title="Handling your key">
+	An API key is the same as a password. Be careful not to write it directly in script code, commit it to GitHub, or show it to anyone. When you note it down, keep it somewhere safe such as a password manager.
+</Aside>
+
+## Next step
+
+Once you have created a key, install Claude Code.
+
+<LinkButton href="../install/" icon="right-arrow">
+	Installing Claude Code
+</LinkButton>

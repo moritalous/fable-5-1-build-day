@@ -1,0 +1,120 @@
+---
+title: Install Claude Code
+description: Installation steps for Claude Code on macOS and Windows, with notes for people who have never used a terminal.
+sidebar:
+  label: Installing Claude Code
+---
+
+import { Aside, Steps, Tabs, TabItem, LinkButton } from '@astrojs/starlight/components';
+
+**Claude Code** is Claude running in your terminal (the black window). Just write what you want built in plain language, and Claude creates the files, writes the code, runs it, and carries it through to something that works. It is the main tool we use at Build Day.
+
+<Aside type="tip" title="If terminals are not your thing">
+	All you type in these steps is **a single command you can copy and paste**. If you are still unsure, the official [terminal guide](https://code.claude.com/docs/en/terminal-guide) walks through it with screenshots. We will also help you at the venue on the day, so there is no need to worry if it does not work.
+</Aside>
+
+## Requirements
+
+- **OS**: macOS 13 or later / Windows 10 (1809 or later)
+- **Memory**: 4GB or more
+- **Network**: an internet connection (we use the venue Wi-Fi on the day)
+
+## Open a terminal
+
+<Tabs syncKey="os">
+
+<TabItem label="macOS">
+
+Press `command` + `space` to open Spotlight, type `Terminal` and press Enter. A white or black window opens if it worked.
+
+</TabItem>
+
+<TabItem label="Windows">
+
+Right-click the Start button and choose **Terminal** or **Windows PowerShell**. Something like `PS C:\Users\YourName>` means it worked.
+
+</TabItem>
+
+</Tabs>
+
+## Install
+
+Copy the command below, paste it into the terminal and press Enter. It takes a few dozen seconds.
+
+<Tabs syncKey="os">
+
+<TabItem label="macOS">
+
+```sh
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+<Aside type="note" title="If you use Homebrew">
+	You can also install with `brew install --cask claude-code`. The Homebrew version does not update itself, though, so run `brew upgrade claude-code` from time to time. The installer above (recommended) updates automatically in the background.
+</Aside>
+
+</TabItem>
+
+<TabItem label="Windows">
+
+**For PowerShell** (it shows `PS C:\`):
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+**For Command Prompt (CMD)** (`C:\` without the `PS`):
+
+```batch
+curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+```
+
+You do not need to run it as administrator.
+
+<Aside type="note" title="How to tell which one you have">
+	If you get `The token '&&' is not a valid statement separator`, you are in PowerShell. If you get `'irm' is not recognized...`, you are in CMD. Try the other command to match what you see.
+
+	You can also install with `winget install Anthropic.ClaudeCode` (this one does not update itself, so run `winget upgrade Anthropic.ClaudeCode` regularly).
+</Aside>
+
+<Aside type="caution" title="We recommend installing Git for Windows">
+	With [Git for Windows](https://git-scm.com/downloads/win) installed, Claude Code can use Git Bash to run commands, which lets it do more. It is not required — PowerShell is used instead if it is not installed.
+
+	If you normally use WSL, run the macOS/Linux command inside the WSL terminal (in that case Git for Windows is not needed).
+</Aside>
+
+</TabItem>
+
+</Tabs>
+
+## Check the installation
+
+<Steps>
+
+1. **Close the terminal once and open it again** (so the PATH is picked up).
+
+1. Run the following command.
+
+    ```sh
+    claude --version
+    ```
+
+    If a version such as `2.1.x (Claude Code)` appears, the installation worked.
+
+1. If something goes wrong, you can check your environment with this command.
+
+    ```sh
+    claude doctor
+    ```
+
+</Steps>
+
+<Aside type="caution" title='If you see "command not found" or "not recognized"'>
+	In most cases, reopening the terminal fixes it. If that still does not work, see [Troubleshooting](/en/reference/troubleshooting/).
+</Aside>
+
+## Next step
+
+<LinkButton href="../first-run/" icon="right-arrow">
+	Next: First run
+</LinkButton>

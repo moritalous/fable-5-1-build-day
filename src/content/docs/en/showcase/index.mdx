@@ -1,0 +1,78 @@
+---
+title: "Showcase: prompts and results"
+description: The prompts we actually gave Fable 5.1, the HTML that came out, and the time and cost involved. All six were generated in a single pass with no follow-up instructions.
+sidebar:
+  order: 0
+  label: About the showcase
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**These are the prompts we actually gave Fable 5.1, along with exactly what came out of them.** All six were produced from a single prompt, with no follow-up instructions at all. You can run the generated HTML for yourself in a new tab.
+
+<Aside type="tip" title="The prompts are yours to copy">
+	You can copy the prompt on each page exactly as it is. Sending it as-is and then steering the result in your own direction is the quickest way to get started on the day.
+</Aside>
+
+All six are **a single HTML file with no external libraries, images or network calls**. Download one and it still runs offline. Even the examples that use a camera or microphone (2 and 6) process the video and audio entirely inside the browser; nothing is sent anywhere.
+
+## Official demos (provided by Anthropic)
+
+Demo prompts provided by Anthropic.
+
+<CardGrid>
+	<LinkCard
+		title="1. Star system simulator"
+		description="A planetary system that checks its own work against Kepler's third law."
+		href="star-system/"
+	/>
+	<LinkCard
+		title="2. Orchestra conductor game"
+		description="Reads your hand movements through a webcam and changes tempo."
+		href="orchestra/"
+	/>
+	<LinkCard
+		title="3. Four-stroke engine"
+		description="Computes thermodynamics for real and integrates work from the P-V diagram."
+		href="engine/"
+	/>
+</CardGrid>
+
+## Original examples
+
+Prompts the organizer ([moritalous](https://github.com/moritalous)) came up with and sent himself.
+
+<CardGrid>
+	<LinkCard
+		title="4. Argon molecular dynamics"
+		description="Gas, liquid and solid phase transitions emerging from the physics."
+		href="molecular/"
+	/>
+	<LinkCard
+		title="5. Sengoku territory scroll"
+		description="Draws a map of Japan with no external map data and checks kokudaka totals."
+		href="sengoku/"
+	/>
+	<LinkCard
+		title="6. VTuber studio"
+		description="Identifies the five Japanese vowels with an FFT so the avatar's mouth forms あいうえお."
+		href="vtuber/"
+	/>
+</CardGrid>
+
+<Aside type="caution" title="The same prompt will not give you the same thing">
+	Generative AI output differs every time. Treat the times, costs and results on each page as rough guides. The same prompt will produce a different design and a different structure. That is part of the fun on the day.
+</Aside>
+
+## Related pages
+
+<LinkCard
+	title="Usage limits and cost tracking"
+	description="How to set a spend limit and check what you have spent in Claude Code."
+	href="../reference/costs/"
+/>
+<LinkCard
+	title="Getting your API credits"
+	description="How to apply for the API credits handed out at the venue."
+	href="../credits/"
+/>
