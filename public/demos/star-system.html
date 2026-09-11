@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ithra System</title>
+<style>
+  :root{
+    --bg:#050710; --ink:#ece6d8; --muted:#8f8a7b; --gold:#d8b36a; --gold-dim:rgba(216,179,106,.22);
+    --green:#5fd898; --green-bg:rgba(95,216,152,.10);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);
+    font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif;overflow:hidden}
+  #app{display:flex;height:100vh;width:100vw}
+  #view{position:relative;flex:1;min-width:0}
+  #c{display:block;width:100%;height:100%;cursor:crosshair}
+  #view .plaque{position:absolute;left:34px;bottom:28px;pointer-events:none;color:var(--muted);
+    font-size:13px;letter-spacing:.22em;text-transform:uppercase}
+  #view .plaque b{display:block;color:var(--gold);font-weight:normal;font-size:15px;margin-bottom:6px}
+
+  #panel{width:clamp(380px,40vw,520px);flex:none;display:flex;flex-direction:column;gap:22px;padding:30px 34px 26px;
+    border-left:1px solid var(--gold-dim);background:linear-gradient(180deg,#0b0e1b 0%,#070912 100%);overflow:auto}
+  .eyebrow{color:var(--gold);font-size:12px;letter-spacing:.32em;text-transform:uppercase}
+  h1{font-weight:normal;font-size:40px;line-height:1.05;margin:10px 0 10px;letter-spacing:.01em}
+  .lede{margin:0;color:var(--muted);font-size:15.5px;line-height:1.5;font-style:italic}
+
+  .clock{display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--gold-dim);
+    border-bottom:1px solid var(--gold-dim);padding:12px 0}
+  .clock #year{font-size:30px;font-variant-numeric:tabular-nums}
+  .clock .law{color:var(--gold);font-size:17px;font-style:italic;letter-spacing:.04em}
+  .clock .law sup{font-size:11px}
+
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  th{font-weight:normal;color:var(--muted);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
+    text-align:right;padding:0 6px 8px;line-height:1.35;vertical-align:bottom}
+  th:first-child{text-align:left;padding-left:8px}
+  td{padding:9px 6px;text-align:right;font-size:17.5px;border-top:1px solid rgba(255,255,255,.05);white-space:nowrap}
+  td:first-child{text-align:left;padding-left:8px}
+  tr.row{cursor:pointer;transition:background .4s}
+  tr.row:hover{background:rgba(255,255,255,.035)}
+  tr.row.agree{background:var(--green-bg);box-shadow:inset 3px 0 0 var(--green)}
+  tr.row.agree td.delta{color:var(--green)}
+  tr.row.followed td:first-child{color:var(--gold)}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:9px;vertical-align:-1px;
+    box-shadow:0 0 8px currentColor}
+  .measuring{color:var(--muted);font-style:italic;font-size:14px}
+  .measuring i{display:block;height:2px;background:linear-gradient(90deg,var(--gold) var(--p),rgba(255,255,255,.08) var(--p));margin-top:4px;border-radius:1px}
+  td.dash{color:var(--muted)}
+
+  .energy{display:grid;grid-template-columns:1fr 1fr;gap:18px;border-top:1px solid var(--gold-dim);padding-top:16px}
+  .lbl{color:var(--muted);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}
+  .val{font-size:24px;font-variant-numeric:tabular-nums}
+  .val small{font-size:13px;color:var(--muted);margin-left:6px}
+
+  .controls{border-top:1px solid var(--gold-dim);padding-top:16px;display:flex;flex-direction:column;gap:14px}
+  .speed{display:flex;align-items:center;gap:14px}
+  .speed .lbl{margin:0;white-space:nowrap}
+  .speed output{min-width:62px;font-size:18px;text-align:right;font-variant-numeric:tabular-nums}
+  input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:2px;background:rgba(216,179,106,.35);outline:none;border-radius:1px}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);
+    border:3px solid #0b0e1b;box-shadow:0 0 0 1px var(--gold),0 0 14px rgba(216,179,106,.5);cursor:grab}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--gold);border:3px solid #0b0e1b;cursor:grab}
+  .btns{display:flex;gap:10px;flex-wrap:wrap}
+  button{font:inherit;font-size:14.5px;letter-spacing:.06em;color:var(--ink);background:transparent;border:1px solid var(--gold-dim);
+    padding:9px 15px;border-radius:2px;cursor:pointer;transition:border-color .2s,background .2s}
+  button:hover{border-color:var(--gold);background:rgba(216,179,106,.08)}
+  button.primary{border-color:var(--gold);color:var(--gold)}
+  .hint{color:var(--muted);font-size:13px;line-height:1.6;margin-top:auto}
+  .hint em{color:var(--gold);font-style:normal}
+  @media (max-width:1200px){#panel{padding:22px 18px;gap:16px}h1{font-size:30px}.lede{font-size:13.5px}
+    th{font-size:10px;letter-spacing:.12em;padding:0 4px 6px}td{font-size:14px;padding:7px 3px}td:first-child{padding-left:6px}.sw{margin-right:6px}.clock #year{font-size:24px}.val{font-size:19px}
+    .measuring{font-size:12px}button{font-size:13px;padding:8px 11px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="view">
+    <canvas id="c"></canvas>
+    <div class="plaque"><b>Ithra · 1.2 solar masses</b>top-down view · velocity-Verlet integration</div>
+  </div>
+  <aside id="panel">
+    <header>
+      <div class="eyebrow">Orbital Mechanics · Exhibit IV</div>
+      <h1>The Ithra System</h1>
+      <p class="lede">Six worlds bound to a single star and moved by nothing but Newton's law of gravitation, one step at a time. Each orbit is timed as it happens and checked against Kepler's prediction.</p>
+    </header>
+    <div class="clock"><span id="year">Year 0.0</span><span class="law">T<sup>2</sup> = a<sup>3</sup> / M</span></div>
+    <table>
+      <thead><tr><th>Planet</th><th>a<br>(AU)</th><th>T measured<br>(yr)</th><th>T Kepler<br>(yr)</th><th>Δ</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="energy">
+      <div><div class="lbl">Total system energy</div><div class="val" id="energy">—</div></div>
+      <div><div class="lbl">Drift since start</div><div class="val" id="drift">—</div></div>
+    </div>
+    <div class="controls">
+      <div class="speed"><span class="lbl">Time</span><input type="range" id="speed" min="-1.5" max="1.5" step="0.01" value="0"><output id="speedVal">×1.00</output></div>
+      <div class="btns">
+        <button class="primary" id="add">＋ Add a wandering planet</button>
+        <button id="pause">Pause</button>
+        <button id="reset">Reset view</button>
+      </div>
+    </div>
+    <div class="hint" id="hint">Click a planet to follow it · scroll to zoom · drag the time slider · <em id="follow">free view</em></div>
+  </aside>
+</div>
+<script>
+(() => {
+  // ---------- Physics setup: units are AU, years, Earth masses; GM = 4π²·M(sol) ----------
+  const STAR = { name: 'Ithra', mass: 1.2 };
+  const GM = 4 * Math.PI * Math.PI * STAR.mass;
+  const TAU = Math.PI * 2;
+  const TRAIL_LEN = 240;          // samples kept per planet (~90 % of one orbit)
+  const SAMPLES_PER_ORBIT = 265;
+
+  const planetDefs = [
+    { name: 'Cinder',    color: '#ff9a5c', a: 1.00, e: 0.05, omega: 210, nu: 40,  mass: 0.4,  rad: 4.5 },
+    { name: 'Vesperine', color: '#f3e4b5', a: 1.55, e: 0.02, omega: 80,  nu: 300, mass: 0.9,  rad: 5.5 },
+    { name: 'Merrow',    color: '#5fd3ea', a: 2.30, e: 0.12, omega: 150, nu: 120, mass: 1.6,  rad: 6 },
+    { name: 'Oriel',     color: '#e872b0', a: 3.30, e: 0.55, omega: 35,  nu: 200, mass: 0.7,  rad: 5 },
+    { name: 'Halvard',   color: '#c9a9ff', a: 4.70, e: 0.08, omega: 290, nu: 15,  mass: 60,   rad: 10 },
+    { name: 'Nocturne',  color: '#7f9dff', a: 6.50, e: 0.18, omega: 120, nu: 250, mass: 15,   rad: 7.5 },
+  ];
+  const extraNames = ['Quillon','Serapha','Ondine','Kestrel','Halcyon','Vireo','Tamsin','Lorcan','Isolde','Peregrine','Sable','Marlow','Eirlys','Corvin'];
+
+  const planets = [];
+  let simT = 0, E0 = null, paused = false;
+
+  function accel(P) {
+    const r2 = P.x * P.x + P.y * P.y, r = Math.sqrt(r2), f = -GM / (r2 * r);
+    P.ax = f * P.x; P.ay = f * P.y;
+  }
+  function keplerPeriod(a) { return Math.sqrt(a * a * a / STAR.mass); }
+
+  function makePlanet(d) {
+    const { a, e } = d, om = d.omega * Math.PI / 180, nu = d.nu * Math.PI / 180;
+    const p = a * (1 - e * e), r = p / (1 + e * Math.cos(nu)), h = Math.sqrt(GM * p);
+    const xo = r * Math.cos(nu), yo = r * Math.sin(nu);
+    const vxo = -(GM / h) * Math.sin(nu), vyo = (GM / h) * (e + Math.cos(nu));
+    const c = Math.cos(om), s = Math.sin(om);
+    const P = {
+      name: d.name, color: d.color, mass: d.mass, rad: d.rad, a0: a, e0: e,
+      x: c * xo - s * yo, y: s * xo + c * yo, vx: c * vxo - s * vyo, vy: s * vxo + c * vyo, ax: 0, ay: 0,
+      born: simT, theta: 0, swept: 0, laps: 0, lastCross: simT, measured: null,
+      trail: [], trailInterval: keplerPeriod(a) / SAMPLES_PER_ORBIT, lastSample: -Infinity,
+    };
+    accel(P); P.theta = Math.atan2(P.y, P.x);
+    return P;
+  }
+
+  function energyOf(P) {
+    const v2 = P.vx * P.vx + P.vy * P.vy, r = Math.hypot(P.x, P.y);
+    return P.mass * (0.5 * v2 - GM / r);
+  }
+  function semiMajor(P) {
+    const v2 = P.vx * P.vx + P.vy * P.vy, r = Math.hypot(P.x, P.y);
+    return -GM / (2 * (0.5 * v2 - GM / r));
+  }
+
+  // One velocity-Verlet step for every planet, then bookkeeping (orbit timing, trails)
+  function step(dt) {
+    for (const P of planets) {
+      P.vx += 0.5 * dt * P.ax; P.vy += 0.5 * dt * P.ay;
+      P.x += dt * P.vx; P.y += dt * P.vy;
+      accel(P);
+      P.vx += 0.5 * dt * P.ax; P.vy += 0.5 * dt * P.ay;
+    }
+    simT += dt;
+    for (const P of planets) {
+      const th = Math.atan2(P.y, P.x);
+      let d = th - P.theta; if (d > Math.PI) d -= TAU; else if (d < -Math.PI) d += TAU;
+      P.theta = th;
+      const prev = Math.abs(P.swept); P.swept += d; const cur = Math.abs(P.swept);
+      const target = TAU * (P.laps + 1);
+      if (cur >= target && cur > prev) {
+        const frac = (target - prev) / (cur - prev);
+        const tCross = simT - dt + frac * dt;
+        P.laps++;
+        P.lastLap = tCross - P.lastCross; P.lastCross = tCross;
+        P.measured = (tCross - P.born) / P.laps;   // mean period over all completed laps
+      }
+      if (simT - P.lastSample >= P.trailInterval) {
+        P.trail.push(P.x, P.y);
+        if (P.trail.length > TRAIL_LEN * 2) P.trail.splice(0, 2);
+        P.lastSample = simT;
+      }
+    }
+  }
+
+  for (const d of planetDefs) planets.push(makePlanet(d));
+  E0 = planets.reduce((s, P) => s + energyOf(P), 0);
+
+  // Default time scale: outermost planet completes one orbit in ~30 real seconds
+  const outerT = Math.max(...planets.map(P => keplerPeriod(P.a0)));
+  const BASE_RATE = outerT / 30;   // simulated years per real second at ×1
+  let speedMul = 1;
+  function dtMax() { return Math.min(...planets.map(P => keplerPeriod(P.a0) * Math.pow(1 - P.e0, 1.5))) / 900; }
+  let DT_MAX = dtMax();
+
+  // ---------- Rendering ----------
+  const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+  let W = 0, H = 0, dpr = 1, starfield = null;
+  const cam = { x: 0, y: 0, zoom: 1, fit: 0, fitTarget: 0 };
+  let followed = null;
+
+  function maxApoapsis() { return Math.max(...planets.map(P => P.a0 * (1 + P.e0))); }
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const view = canvas.parentElement;
+    W = view.clientWidth; H = view.clientHeight;
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    buildStarfield();
+    cam.fitTarget = (Math.min(W, H) / 2) * 0.90 / maxApoapsis();
+    if (!(cam.fit > 0)) cam.fit = cam.fitTarget;   // first real layout: snap instead of easing in
+  }
+  function buildStarfield() {
+    starfield = document.createElement('canvas');
+    starfield.width = canvas.width; starfield.height = canvas.height;
+    const g = starfield.getContext('2d');
+    g.fillStyle = '#050710'; g.fillRect(0, 0, starfield.width, starfield.height);
+    const vg = g.createRadialGradient(starfield.width / 2, starfield.height / 2, 0, starfield.width / 2, starfield.height / 2, Math.max(starfield.width, starfield.height) * 0.75);
+    vg.addColorStop(0, 'rgba(24,28,52,0.55)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = vg; g.fillRect(0, 0, starfield.width, starfield.height);
+    let seed = 1234567;
+    const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+    const n = Math.floor(starfield.width * starfield.height / 1800);
+    for (let i = 0; i < n; i++) {
+      const x = rnd() * starfield.width, y = rnd() * starfield.height;
+      const m = rnd(); const r = (m < 0.9 ? 0.5 + rnd() * 0.7 : 1.2 + rnd() * 1.3) * dpr;
+      const tint = rnd();
+      const col = tint < 0.6 ? '255,255,255' : tint < 0.8 ? '200,215,255' : '255,225,190';
+      g.fillStyle = `rgba(${col},${(0.25 + rnd() * 0.7).toFixed(2)})`;
+      g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
+    }
+  }
+  window.addEventListener('resize', resize); resize();
+
+  function scale() { return cam.fit * cam.zoom; }
+  function toScreen(x, y) { const s = scale(); return [W / 2 + (x - cam.x) * s, H / 2 - (y - cam.y) * s]; }
+
+  function draw(realDt) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.drawImage(starfield, 0, 0, W, H);
+
+    // camera easing
+    const tx = followed ? followed.x : 0, ty = followed ? followed.y : 0;
+    const k = 1 - Math.exp(-6 * realDt);
+    cam.x += (tx - cam.x) * k; cam.y += (ty - cam.y) * k;
+    cam.fit += (cam.fitTarget - cam.fit) * (1 - Math.exp(-3 * realDt));
+
+    const s = scale();
+    const [sx, sy] = toScreen(0, 0);
+
+    // trails
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (const P of planets) {
+      const t = P.trail, n = t.length / 2; if (n < 2) continue;
+      const rgb = hexToRgb(P.color);
+      ctx.lineWidth = 1.3;
+      for (let i = 1; i < n; i++) {
+        const f = i / n, alpha = Math.pow(f, 1.6) * 0.9;
+        ctx.strokeStyle = `rgba(${rgb},${alpha.toFixed(3)})`;
+        ctx.beginPath();
+        const [x0, y0] = toScreen(t[2 * i - 2], t[2 * i - 1]);
+        const [x1, y1] = toScreen(t[2 * i], t[2 * i + 1]);
+        ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+      }
+      // connect last sample to the live position
+      const [x0, y0] = toScreen(t[2 * n - 2], t[2 * n - 1]); const [x1, y1] = toScreen(P.x, P.y);
+      ctx.strokeStyle = `rgba(${rgb},0.9)`; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    }
+
+    // star glow + core
+    const pulse = 1 + 0.04 * Math.sin(performance.now() / 900);
+    const glowR = 150 * pulse * Math.pow(cam.zoom, 0.25);
+    const gg = ctx.createRadialGradient(sx, sy, 0, sx, sy, glowR);
+    gg.addColorStop(0, 'rgba(255,236,190,0.75)'); gg.addColorStop(0.12, 'rgba(255,214,140,0.42)');
+    gg.addColorStop(0.35, 'rgba(255,190,110,0.12)'); gg.addColorStop(1, 'rgba(255,180,100,0)');
+    ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(sx, sy, glowR, 0, TAU); ctx.fill();
+    const coreR = 15 * Math.pow(cam.zoom, 0.3);
+    const cg = ctx.createRadialGradient(sx - coreR * 0.3, sy - coreR * 0.3, 0, sx, sy, coreR);
+    cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.5, '#fff1c8'); cg.addColorStop(1, '#f0b860');
+    ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(sx, sy, coreR, 0, TAU); ctx.fill();
+
+    // planets
+    ctx.font = '500 15px Georgia, serif'; ctx.textBaseline = 'middle';
+    for (const P of planets) {
+      const [px, py] = toScreen(P.x, P.y);
+      if (px < -60 || px > W + 60 || py < -60 || py > H + 60) continue;
+      const r = P.rad * Math.pow(cam.zoom, 0.3);
+      const rgb = hexToRgb(P.color);
+      const hg = ctx.createRadialGradient(px, py, r * 0.5, px, py, r * 3.2);
+      hg.addColorStop(0, `rgba(${rgb},0.35)`); hg.addColorStop(1, `rgba(${rgb},0)`);
+      ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(px, py, r * 3.2, 0, TAU); ctx.fill();
+      // lit side faces the star
+      const dx = sx - px, dy = sy - py, dl = Math.hypot(dx, dy) || 1;
+      const bg = ctx.createRadialGradient(px + dx / dl * r * 0.45, py + dy / dl * r * 0.45, r * 0.1, px, py, r * 1.05);
+      bg.addColorStop(0, '#ffffff'); bg.addColorStop(0.35, P.color); bg.addColorStop(1, shade(P.color, 0.35));
+      ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(px, py, r, 0, TAU); ctx.fill();
+      if (P === followed) {
+        ctx.strokeStyle = 'rgba(216,179,106,0.9)'; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.arc(px, py, r + 7, 0, TAU); ctx.stroke();
+      }
+      ctx.fillStyle = 'rgba(236,230,216,0.85)';
+      ctx.fillText(P.name.toUpperCase().split('').join(' '), px + r + 10, py);
+    }
+  }
+
+  function hexToRgb(h) { return `${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)}`; }
+  function shade(h, f) { const c = h.slice(1).match(/../g).map(v => Math.round(parseInt(v, 16) * f)); return `rgb(${c.join(',')})`; }
+
+  // ---------- Panel ----------
+  const rowsEl = document.getElementById('rows');
+  const rowFor = new Map();
+  function ensureRow(P) {
+    if (rowFor.has(P)) return rowFor.get(P);
+    const tr = document.createElement('tr'); tr.className = 'row';
+    tr.innerHTML = `<td><span class="sw" style="background:${P.color};color:${P.color}"></span>${P.name}</td><td class="a"></td><td class="tm"></td><td class="tk"></td><td class="delta"></td>`;
+    tr.addEventListener('click', () => setFollow(P));
+    rowsEl.appendChild(tr); rowFor.set(P, tr); return tr;
+  }
+  const fmt = (v, d = 3) => v.toFixed(d);
+  function updatePanel() {
+    document.getElementById('year').textContent = 'Year ' + simT.toFixed(1);
+    let E = 0;
+    for (const P of planets) {
+      const tr = ensureRow(P);
+      const a = semiMajor(P), Tk = keplerPeriod(a);
+      tr.querySelector('.a').textContent = fmt(a);
+      tr.querySelector('.tk').textContent = fmt(Tk);
+      const tm = tr.querySelector('.tm'), dl = tr.querySelector('.delta');
+      if (P.measured) {
+        tm.textContent = fmt(P.measured); tm.className = 'tm';
+        const pct = (P.measured - Tk) / Tk * 100;
+        dl.textContent = (pct >= 0 ? '+' : '−') + Math.abs(pct).toFixed(2) + ' %'; dl.className = 'delta';
+        tr.classList.toggle('agree', Math.abs(pct) < 1);
+      } else {
+        const prog = Math.min(99, Math.abs(P.swept) / TAU * 100);
+        tm.innerHTML = `<span class="measuring" style="--p:${prog.toFixed(0)}%">${prog.toFixed(0)} %<i></i></span>`;
+        dl.textContent = '—'; dl.className = 'delta dash'; tr.classList.remove('agree');
+      }
+      tr.classList.toggle('followed', P === followed);
+      E += energyOf(P);
+    }
+    document.getElementById('energy').innerHTML = E.toPrecision(5) + '<small>M⊕·AU²/yr²</small>';
+    const drift = (E - E0) / Math.abs(E0);
+    document.getElementById('drift').innerHTML = (drift >= 0 ? '+' : '−') + Math.abs(drift * 100).toExponential(2) + '<small>%</small>';
+  }
+
+  function setFollow(P) {
+    followed = P;
+    document.getElementById('follow').textContent = P ? `following ${P.name} · click empty space to release` : 'free view';
+  }
+
+  // ---------- Interaction ----------
+  let downAt = null;
+  canvas.addEventListener('pointerdown', e => { downAt = [e.clientX, e.clientY]; });
+  canvas.addEventListener('pointerup', e => {
+    if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 6) { downAt = null; return; }
+    downAt = null;
+    setFollow(planetAt(e));
+  });
+  canvas.addEventListener('pointermove', e => { canvas.style.cursor = planetAt(e) ? 'pointer' : 'crosshair'; });
+  function planetAt(e) {
+    const rect = canvas.getBoundingClientRect(); const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    let best = null, bd = 22;
+    for (const P of planets) { const [px, py] = toScreen(P.x, P.y); const d = Math.hypot(px - mx, py - my); if (d < bd) { bd = d; best = P; } }
+    return best;
+  }
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    cam.zoom = Math.min(60, Math.max(0.25, cam.zoom * Math.exp(-e.deltaY * 0.0016)));
+  }, { passive: false });
+
+  const speedEl = document.getElementById('speed'), speedVal = document.getElementById('speedVal');
+  function applySpeed() { speedMul = Math.pow(10, parseFloat(speedEl.value)); speedVal.textContent = '×' + (speedMul < 10 ? speedMul.toFixed(2) : speedMul.toFixed(1)); }
+  speedEl.addEventListener('input', applySpeed); applySpeed();
+
+  const pauseBtn = document.getElementById('pause');
+  function togglePause() { paused = !paused; pauseBtn.textContent = paused ? 'Resume' : 'Pause'; }
+  pauseBtn.addEventListener('click', togglePause);
+  document.getElementById('reset').addEventListener('click', () => { cam.zoom = 1; setFollow(null); });
+  window.addEventListener('keydown', e => { if (e.code === 'Space' && e.target.tagName !== 'INPUT') { e.preventDefault(); togglePause(); } });
+
+  let nameIdx = 0;
+  document.getElementById('add').addEventListener('click', () => {
+    const name = extraNames[nameIdx++ % extraNames.length] + (nameIdx > extraNames.length ? ' ' + toRoman(Math.ceil(nameIdx / extraNames.length)) : '');
+    const hue = Math.floor(Math.random() * 360);
+    const d = {
+      name, color: hslToHex(hue, 70, 68),
+      a: 0.7 + Math.random() * 7.5, e: Math.pow(Math.random(), 2) * 0.65,
+      omega: Math.random() * 360, nu: Math.random() * 360,
+      mass: +(0.1 + Math.random() * 25).toFixed(1), rad: 4 + Math.random() * 5,
+    };
+    const P = makePlanet(d); planets.push(P);
+    E0 += energyOf(P);                   // re-baseline so drift still measures integrator error only
+    DT_MAX = dtMax();
+    cam.fitTarget = (Math.min(W, H) / 2) * 0.90 / maxApoapsis();
+    ensureRow(P);
+    document.getElementById('follow').textContent = `${P.name} has joined the system · a = ${d.a.toFixed(2)} AU, e = ${d.e.toFixed(2)}`;
+  });
+  function toRoman(n) { return ['', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][n - 1] || n; }
+  function hslToHex(h, s, l) {
+    s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+    const f = n => Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1))));
+    return '#' + [f(0), f(8), f(4)].map(v => v.toString(16).padStart(2, '0')).join('');
+  }
+
+  // ---------- Main loop ----------
+  let last = performance.now(), panelClock = 0;
+  function frame(now) {
+    const realDt = Math.min(0.1, (now - last) / 1000); last = now;
+    const view = canvas.parentElement;
+    if (view.clientWidth !== W || view.clientHeight !== H) resize();
+    if (!paused) {
+      const simDt = BASE_RATE * speedMul * realDt;
+      const n = Math.min(20000, Math.ceil(simDt / DT_MAX));
+      const h = simDt / n;
+      for (let i = 0; i < n; i++) step(h);
+    }
+    draw(realDt);
+    panelClock += realDt;
+    if (panelClock > 0.1) { panelClock = 0; updatePanel(); }
+    requestAnimationFrame(frame);
+  }
+  updatePanel();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

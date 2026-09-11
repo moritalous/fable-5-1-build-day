@@ -1,0 +1,68 @@
+---
+title: 1. 星系シミュレーター
+description: ケプラーの第三法則で自分の計算結果を検算する惑星系シミュレーター。プロンプトと成果物、実測の時間と料金。
+sidebar:
+  order: 1
+  label: 1. 星系シミュレーター
+---
+
+import { Aside, Badge, Tabs, TabItem } from '@astrojs/starlight/components';
+import DemoLink from '../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="公式デモ 1" variant="note" /><Badge text="$9.21" variant="success" /><Badge text="9分21秒" variant="tip" /></p>
+
+架空の星系を真上から見たシミュレーターです。惑星は本物のニュートン重力で動き、シミュレーション自身が測った公転周期を、ケプラーの第三法則が予測する値と突き合わせて、1%以内で一致したら行が緑になります。
+
+<DemoLink file="star-system.html" />
+
+## 何ができるか
+
+- 恒星1つと惑星6つ。名前・色・軌道の大きさはモデルが考えたもので、1つははっきりした楕円軌道
+- 惑星ごとに「軌道長半径 / 実測した公転周期 / ケプラーの第三法則による予測値 / 誤差%」を表示。1%以内なら緑
+- 系全体のエネルギーと、開始時からのドリフト（ずれ）を表示
+- 惑星をクリックで追尾、スクロールでズーム、スライダーで時間の速さを変更
+- ボタンでランダムな惑星を追加。追加した惑星もその場から計測対象になる
+
+## 使ったプロンプト
+
+<Tabs syncKey="prompt-lang">
+
+<TabItem label="原文（English）">
+
+```text wrap
+Show a top-down animated model of a fictional star system: one star and six planets with invented names, distinct colours and orbits of clearly different sizes, at least one noticeably elliptical, and make it look like an elegant museum exhibit readable from across a room.
+Beside the view show a live table per planet: semi-major axis, orbital period measured from the simulation itself once an orbit completes, the period predicted by Kepler's third law from the star's mass, and the percentage difference, highlighting a row green when they agree within one percent; also show total system energy with its drift since start.
+Let me click a planet to follow it, scroll to zoom, drag a time-speed slider, and press a button to add a new random planet that starts being measured too.
+Draw thin fading orbit trails on a dark starfield with a soft glow on the star, choose the default time scale so the outermost planet completes an orbit in about thirty seconds, and start running immediately, framed to fit. Move the planets with real Newtonian gravity from the star using a symplectic integrator (velocity Verlet), not pre-computed ellipses. Create it as one self-contained HTML file, no external libraries or assets.
+```
+
+</TabItem>
+
+<TabItem label="日本語訳">
+
+```text wrap
+架空の星系を真上から見たアニメーションモデルを見せてください。恒星1つと惑星6つで、名前は考えたもの、色ははっきり違うもの、軌道の大きさも明確に異なるものにし、少なくとも1つははっきりと楕円にしてください。部屋の反対側からでも読める、洗練された美術館の展示のような見た目にしてください。
+ビューの横には、惑星ごとのライブな表を表示してください。軌道長半径、1周が完了した時点でシミュレーション自身が測定した公転周期、恒星の質量からケプラーの第三法則で予測した周期、そしてその差のパーセンテージ。両者が1パーセント以内で一致したら、その行を緑でハイライトしてください。系全体のエネルギーと、開始時からのドリフトも表示してください。
+惑星をクリックして追尾でき、スクロールでズームでき、時間の速さのスライダーをドラッグでき、ボタンを押すとランダムな惑星が新しく追加され、それも測定の対象になるようにしてください。
+暗い星空の上に、細く消えていく軌道の軌跡を描き、恒星にはやわらかい光をまとわせてください。デフォルトの時間スケールは、最も外側の惑星が約30秒で1周するように選んでください。開いた時点ですぐに動き始め、画面に収まるように構図を取ってください。惑星は、事前に計算した楕円ではなく、恒星からの本物のニュートン重力を使い、シンプレクティック積分法（velocity Verlet）で動かしてください。外部ライブラリもアセットも使わない、自己完結した1つのHTMLファイルとして作成してください。
+```
+
+</TabItem>
+
+</Tabs>
+
+## 実測値
+
+| 項目 | トークン | 料金 |
+| :--- | ---: | ---: |
+| 入力 | 1,766 | $0.02 |
+| 出力 | 90,741 | $4.54 |
+| キャッシュ書き込み | 271,780 | $3.40 |
+| キャッシュ読み込み | 5,013,145 | $1.25 |
+| **合計** | **5,377,432** | **$9.21** |
+
+所要時間 **9分21秒** / モデル `claude-fable-5-1`
+
+<Aside type="note">
+	各項目の料金は四捨五入しているため、合計と一致しない場合があります。料金はセッションログから算出した目安です。
+</Aside>

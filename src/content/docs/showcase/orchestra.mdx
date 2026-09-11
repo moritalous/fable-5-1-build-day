@@ -1,0 +1,65 @@
+---
+title: 2. オーケストラ指揮者ゲーム
+description: Webカメラで手の動きを読み、振る速さでテンポが変わる指揮者シミュレーター。プロンプトと成果物、実測の時間と料金。
+sidebar:
+  order: 2
+  label: 2. オーケストラ指揮者ゲーム
+---
+
+import { Aside, Badge, Tabs, TabItem } from '@astrojs/starlight/components';
+import DemoLink from '../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="公式デモ 2" variant="note" /><Badge text="$15.85" variant="success" /><Badge text="15分43秒" variant="tip" /><Badge text="カメラ使用" variant="caution" /></p>
+
+Webカメラに向かって指揮棒を振ると、オーケストラが「きらきら星」を演奏します。速く振れば速く、ゆっくり振ればゆっくり、手を下ろせば演奏が止まります。
+
+<DemoLink
+	file="orchestra.html"
+	note="※ Webカメラを使います。許可を求められたら「許可」してください。カメラを使いたくない場合は「NO CAMERA? USE THE MOUSE AS A BATON」からマウスを指揮棒として操作できます。映像はすべてブラウザ内で処理され、外部への通信は一切ありません。"
+/>
+
+## 何ができるか
+
+- Webカメラの映像から手の動きを検出し、振る速さからテンポ（BPM）を割り出す
+- 速く振れば加速、ゆっくり振れば減速。手を下ろす／動きが検出されないと演奏が止まる
+- コンサートホールのステージを表示し、音を出しているパートが光る
+- 自分のカメラ映像を左右反転で表示し、検出した動きを重ねて描画
+- 大きなBPM表示と、いま歌っている歌詞の行を表示
+
+## 使ったプロンプト
+
+<Tabs syncKey="prompt-lang">
+
+<TabItem label="原文（English）">
+
+```text wrap
+Create an "orchestra conductor simulator game" in HTML/JS. I'd like for it to use the webcam to detect my hand movements to understand how I'm waving a conductor wand. I'd like to conduct the orchestra through the song Twinkle Twinkle little star. As I speed up my hand movements, the orchestra should speed up and vice versa if I slow down. When I put my hands down or motion is not detected, the orchestra should stop playing. Keep it to a single self-contained HTML file with no external libraries: detect the motion by comparing successive webcam frames, and synthesize the instruments with the Web Audio API. Make it beautiful and stage-worthy: show a concert-hall stage where each section of the orchestra visibly lights up as it plays its notes, my mirrored webcam view with the detected motion drawn over it, a big live tempo (BPM) display, and the current lyric line.
+```
+
+</TabItem>
+
+<TabItem label="日本語訳">
+
+```text wrap
+「オーケストラ指揮者シミュレーターゲーム」をHTML/JSで作ってください。Webカメラを使って私の手の動きを検出し、私が指揮棒をどう振っているかを読み取るようにしてほしいです。「きらきら星」の曲をオーケストラに指揮したいです。手の動きを速くすればオーケストラも速くなり、遅くすれば逆に遅くなるようにしてください。手を下ろしたり、動きが検出されなかったりしたときは、オーケストラの演奏が止まるようにしてください。外部ライブラリを使わない、自己完結した1つのHTMLファイルに収めてください。動きの検出は連続するWebカメラのフレームを比較して行い、楽器の音はWeb Audio APIで合成してください。美しく、ステージに立てる出来にしてください。オーケストラの各セクションが自分の音を鳴らすときに目に見えて光るコンサートホールのステージ、検出した動きを重ねて描いた左右反転の自分のWebカメラ映像、大きなライブのテンポ（BPM）表示、そして現在の歌詞の行を表示してください。
+```
+
+</TabItem>
+
+</Tabs>
+
+## 実測値
+
+| 項目 | トークン | 料金 |
+| :--- | ---: | ---: |
+| 入力 | 870 | $0.01 |
+| 出力 | 214,528 | $10.73 |
+| キャッシュ書き込み | 342,853 | $4.29 |
+| キャッシュ読み込み | 3,327,559 | $0.83 |
+| **合計** | **3,885,810** | **$15.85** |
+
+所要時間 **15分43秒** / モデル `claude-fable-5-1`
+
+<Aside type="note">
+	各項目の料金は四捨五入しているため、合計と一致しない場合があります。料金はセッションログから算出した目安です。
+</Aside>

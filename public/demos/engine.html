@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Four-Stroke Engine Lab</title>
+<style>
+  :root {
+    --bg: #070a10; --panel: #0e131c; --panel2: #121927; --line: #1f2937;
+    --text: #e6edf7; --muted: #7d8aa3; --cyan: #4cc3ff; --violet: #a78bfa;
+    --orange: #ff7a3d; --amber: #ffc857; --red: #ff3b5c; --green: #5ee6a8; --gray: #9aa3b2;
+    --mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; }
+  body { background: radial-gradient(1200px 600px at 30% -10%, #16233a 0%, var(--bg) 60%); }
+  #app { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+  header { display: flex; align-items: center; gap: 22px; padding: 12px 20px; border-bottom: 1px solid var(--line);
+           background: linear-gradient(180deg, rgba(255,255,255,.03), transparent); flex-wrap: wrap; }
+  h1 { font-size: 15px; letter-spacing: .28em; font-weight: 700; margin: 0; white-space: nowrap; }
+  h1 span { color: var(--orange); }
+  .ctl { display: flex; align-items: center; gap: 10px; }
+  .ctl label { font-size: 11px; letter-spacing: .16em; color: var(--muted); text-transform: uppercase; }
+  .throttle { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px; max-width: 520px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; outline: none;
+    background: linear-gradient(90deg, var(--cyan) 0%, var(--orange) var(--pct, 0%), #222b3a var(--pct, 0%)); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+    background: #fff; border: 3px solid var(--orange); box-shadow: 0 0 14px rgba(255,122,61,.6); cursor: pointer; }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 3px solid var(--orange); cursor: pointer; }
+  .val { font-family: var(--mono); font-size: 14px; min-width: 44px; text-align: right; color: var(--amber); }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .seg button { background: transparent; color: var(--muted); border: 0; padding: 7px 14px; font: 600 13px var(--sans); cursor: pointer; letter-spacing: .04em; }
+  .seg button.on { background: linear-gradient(180deg, #223047, #1a2536); color: var(--text); box-shadow: inset 0 0 0 1px rgba(76,195,255,.35); }
+  .btn { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 7px 14px; font: 600 13px var(--sans); cursor: pointer; }
+  .btn.on { border-color: var(--green); color: var(--green); box-shadow: 0 0 12px rgba(94,230,168,.25); }
+  main { display: grid; grid-template-columns: 1fr 400px; gap: 14px; padding: 14px; min-height: 0; }
+  #engine-wrap { position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    background: linear-gradient(180deg, #0b1220, #070a10); min-height: 0; }
+  #engine-wrap canvas, .card canvas { display: block; width: 100%; height: 100%; }
+  aside { display: grid; grid-template-rows: 150px 1fr auto; gap: 14px; min-height: 0; }
+  .card { border: 1px solid var(--line); border-radius: 14px; background: var(--panel); overflow: hidden; min-height: 0; position: relative; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); }
+  .stat { background: var(--panel2); padding: 8px 10px; }
+  .stat .k { font-size: 10px; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; }
+  .stat .v { font: 600 17px var(--mono); margin-top: 3px; color: var(--text); white-space: nowrap; }
+  .stat .v small { font-size: 10px; color: var(--muted); margin-left: 3px; }
+  .stat.hi .v { color: var(--amber); }
+  #fps { position: absolute; right: 12px; top: 10px; font: 11px var(--mono); color: var(--muted); }
+  .hint { position: absolute; left: 14px; top: 10px; font: 11px var(--sans); color: var(--muted); letter-spacing: .08em; }
+  @media (max-width: 980px) {
+    html, body { overflow: auto; }
+    #app { height: auto; }
+    main { grid-template-columns: 1fr; }
+    #engine-wrap { height: 52vh; }
+    aside { grid-template-rows: 150px 340px auto; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>FOUR-STROKE <span>ENGINE LAB</span></h1>
+    <div class="ctl throttle">
+      <label for="throttle">Throttle</label>
+      <input id="throttle" type="range" min="0" max="100" value="0" step="1" aria-label="Throttle">
+      <span class="val" id="thrVal">0%</span>
+    </div>
+    <div class="ctl">
+      <label>Cylinders</label>
+      <div class="seg" id="cylSeg">
+        <button data-n="1">1</button><button data-n="4" class="on">4</button><button data-n="8">8</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <button class="btn" id="soundBtn" aria-pressed="false">🔇 Sound off</button>
+    </div>
+  </header>
+  <main>
+    <section id="engine-wrap">
+      <canvas id="engine"></canvas>
+      <div id="fps"></div>
+      <div class="hint">↑ / ↓ throttle · click canvas to enable sound</div>
+    </section>
+    <aside>
+      <div class="card"><canvas id="gauge"></canvas></div>
+      <div class="card"><canvas id="pv"></canvas></div>
+      <div class="card stats" id="stats"></div>
+    </aside>
+  </main>
+</div>
+<script>
+'use strict';
+/* ============================================================
+   PHYSICS — four-stroke engine from first principles
+   Units: SI (m, kg, s, K, Pa, J, N·m). Angles in degrees unless noted.
+   Cycle angle φ per cylinder: 0=TDC intake, 180=BDC, 360=TDC fire,
+   540=BDC, 720=TDC. Strokes: intake, compression, power, exhaust.
+   ============================================================ */
+const DEG = Math.PI / 180;
+
+const GEO = {
+  bore: 0.086,          // m
+  stroke: 0.086,        // m
+  rod: 0.143,           // m  (connecting rod length)
+  cr: 10.5,             // compression ratio
+};
+GEO.r = GEO.stroke / 2;
+GEO.A = Math.PI * GEO.bore * GEO.bore / 4;   // piston area
+GEO.Vd = GEO.A * GEO.stroke;                 // displacement per cylinder
+GEO.Vc = GEO.Vd / (GEO.cr - 1);              // clearance volume
+
+const GAS = {
+  R: 287,           // J/(kg K) — air
+  gamma: 1.30,      // effective ratio of specific heats (hot burned gas)
+  Patm: 101325,     // Pa
+  Pexh: 105000,     // exhaust back-pressure, Pa
+  Tin: 320,         // K intake charge temperature
+  Texh: 900,        // K exhaust-port gas temp (for back-flow)
+  Twall: 450,       // K cylinder wall temp
+  AFR: 14.7,        // stoichiometric air/fuel
+  LHV: 44.0e6,      // J/kg — gasoline lower heating value
+};
+GAS.cv = GAS.R / (GAS.gamma - 1);
+
+// valve timing (deg of cycle angle)
+const VALVE = {
+  ivo: 710, ivc: 220,      // intake opens 10° BTDC, closes 40° ABDC
+  evo: 500, evc: 730,      // exhaust opens 40° BBDC, closes 10° ATDC
+  flowRate: 2600,          // 1/s — pressure equalisation rate at full lift
+};
+
+// Wiebe combustion model
+const BURN = { a: 5, m: 2, duration: 60 };
+
+// Firing orders drawn inline; phase[i] = crank degrees cylinder i lags cylinder 1
+const LAYOUTS = {
+  1: { phases: [0] },
+  4: { phases: [0, 540, 180, 360] },                 // 1-3-4-2
+  8: { phases: [0, 180, 450, 630, 270, 90, 540, 360] }, // 1-6-2-5-8-3-7-4
+};
+
+const mod = (a, n) => ((a % n) + n) % n;
+
+// piston distance below TDC (m) as a function of crank angle (deg)
+function pistonX(deg) {
+  const th = deg * DEG, s = Math.sin(th), c = Math.cos(th);
+  const { r, rod } = GEO;
+  return r + rod - r * c - Math.sqrt(rod * rod - r * r * s * s);
+}
+// dx/dθ (m per radian)
+function pistonDx(deg) {
+  const th = deg * DEG, s = Math.sin(th), c = Math.cos(th);
+  const { r, rod } = GEO;
+  return r * s + (r * r * s * c) / Math.sqrt(rod * rod - r * r * s * s);
+}
+function volume(deg) { return GEO.Vc + GEO.A * pistonX(deg); }
+
+// smooth valve lift 0..1 between open and close angles (handles wrap)
+function lift(phi, open, close) {
+  const span = mod(close - open, 720);
+  const t = mod(phi - open, 720);
+  if (t > span) return 0;
+  return 0.5 * (1 - Math.cos(2 * Math.PI * t / span));
+}
+const intakeLift = phi => lift(phi, VALVE.ivo, VALVE.ivc);
+const exhaustLift = phi => lift(phi, VALVE.evo, VALVE.evc);
+
+function wiebe(phi, spark, dur) {
+  const t = (phi - spark) / dur;
+  if (t <= 0) return 0;
+  if (t >= 1) return 1;
+  return 1 - Math.exp(-BURN.a * Math.pow(t, BURN.m + 1));
+}
+function strokeName(phi) {
+  return phi < 180 ? 'INTAKE' : phi < 360 ? 'COMPRESSION' : phi < 540 ? 'POWER' : 'EXHAUST';
+}
+
+class Cylinder {
+  constructor(index, phase) {
+    this.index = index;
+    this.phase = phase;
+    this.reset(0);
+  }
+  reset(theta) {
+    this.phi = mod(theta - this.phase, 720);
+    this.V = volume(this.phi);
+    this.P = GAS.Patm;
+    this.T = GAS.Tin;
+    this.m = this.P * this.V / (GAS.R * this.T);
+    this.Q = 0; this.Qcycle = 0;      // heat available / released this cycle
+    this.xb = 0;                       // burned fraction
+    this.spark = 340; this.sparkOn = false;
+    this.work = 0; this.lastWork = 0; this.lastQ = 0;
+    this.peakP = 0; this.lastPeakP = 0;
+    this.exhaustFlow = 0; this.intakeFlow = 0;
+    this.li = 0; this.le = 0;
+    this.trail = []; this.lastTrail = [];
+    this.fired = false;
+  }
+
+  // advance from crank θ0 to θ1 (deg) over dt seconds; returns torque (N·m) & events
+  step(theta0, theta1, dt, eng, ev) {
+    const phi0 = mod(theta0 - this.phase, 720);
+    let phi1 = phi0 + (theta1 - theta0);
+    const wrapped = phi1 >= 720;
+    if (wrapped) {
+      // cycle complete → bank results
+      this.lastWork = this.work; this.lastQ = this.Qcycle; this.lastPeakP = this.peakP;
+      this.lastTrail = this.trail; this.trail = [];
+      this.work = 0; this.Qcycle = 0; this.peakP = 0; this.xb = 0; this.Q = 0; this.fired = false;
+    }
+    phi1 = mod(phi1, 720);
+    const V0 = volume(phi0), V1 = volume(phi1), dV = V1 - V0;
+    const { R, gamma, cv } = GAS;
+    let P = this.P, T = this.T, m = this.m;
+
+    // --- closed-system energy balance: m cv dT = dQ_comb - dQ_wall - P dV
+    let dQc = 0;
+    if (this.Q > 0 && phi1 >= this.spark) {
+      const xb1 = wiebe(phi1, this.spark, BURN.duration);
+      dQc = this.Q * (xb1 - this.xb);
+      this.xb = xb1; this.Qcycle += dQc;
+    }
+    const x = pistonX(phi0);
+    const Awall = 2 * GEO.A + Math.PI * GEO.bore * x;
+    // Woschni heat-transfer coefficient: h = 3.26 B^-0.2 p^0.8 T^-0.53 w^0.8 (p in kPa)
+    const w = 2.28 * eng.pistonSpeed + 0.6;
+    const h = 1.6 * 3.26 * Math.pow(GEO.bore, -0.2) * Math.pow(P / 1000, 0.8) * Math.pow(T, -0.53) * Math.pow(w, 0.8);
+    const dQw = h * Awall * (T - GAS.Twall) * dt;
+    const Pmid = P;                                     // explicit
+    T += (dQc - dQw - Pmid * dV) / (m * cv);
+    if (T < 250) T = 250;
+    P = m * R * T / V1;
+    this.work += 0.5 * (this.P + P) * dV;             // ∮P dV, trapezoid
+
+    // --- gas exchange through valves (pressure relaxation, mass-conserving)
+    const li = intakeLift(phi1), le = exhaustLift(phi1);
+    this.li = li; this.le = le;
+    this.intakeFlow = 0; this.exhaustFlow = 0;
+    if (li > 0) {
+      const Pt = eng.Pman;
+      const k = 1 - Math.exp(-VALVE.flowRate * li * dt);
+      const Pn = P + (Pt - P) * k;
+      this.intakeFlow = (Pt - P) * li;
+      if (Pn > P) {  // fresh charge enters at Tin, mixes
+        const dm = (Pn - P) * V1 / (R * GAS.Tin);
+        T = (m * T + dm * GAS.Tin) / (m + dm); m += dm;
+      } else {       // gas leaves; remainder expands
+        T *= Math.pow(Pn / P, (gamma - 1) / gamma);
+        m = Pn * V1 / (R * T);
+      }
+      P = Pn;
+    }
+    if (le > 0) {
+      const Pt = GAS.Pexh;
+      const k = 1 - Math.exp(-VALVE.flowRate * le * dt);
+      const Pn = P + (Pt - P) * k;
+      this.exhaustFlow = Math.max(0, (P - Pt) * le);
+      if (Pn < P) {  // blow-down
+        T *= Math.pow(Pn / P, (gamma - 1) / gamma);
+        m = Pn * V1 / (R * T);
+      } else {
+        const dm = (Pn - P) * V1 / (R * GAS.Texh);
+        T = (m * T + dm * GAS.Texh) / (m + dm); m += dm;
+      }
+      P = Pn;
+    }
+    // exhaust valve opening event → sound pulse
+    if (phi0 < VALVE.evo && phi1 >= VALVE.evo) ev.push({ cyl: this.index, dP: this.P - GAS.Pexh });
+    // intake valve closes → trap charge, decide fuel & spark for this cycle
+    if (phi0 < VALVE.ivc && phi1 >= VALVE.ivc) {
+      const fuel = eng.ignition ? m / GAS.AFR : 0;
+      this.Q = fuel * GAS.LHV * 0.96;      // ~4% incomplete combustion
+      this.spark = 360 - eng.advance;
+      this.sparkOn = eng.ignition;
+    }
+
+    this.P = P; this.T = T; this.m = m; this.V = V1; this.phi = phi1;
+    if (P > this.peakP) this.peakP = P;
+    if (this.index === 0) this.trail.push(V1, P, phi1);
+    // torque on crank from gas force (N·m per radian of crank)
+    return (P - GAS.Patm) * GEO.A * pistonDx(phi1);
+  }
+}
+
+class Engine {
+  constructor(n) {
+    this.theta = 0;       // crank angle, deg, kept in [0,720)
+    this.omega = 0;       // rad/s
+    this.throttle = 0.0;
+    this.ignition = true;
+    this.revLimit = 7600;
+    this.time = 0;
+    this.torqueAvg = 0; this.gasTorque = 0;
+    this.setCylinders(n);
+  }
+  setCylinders(n) {
+    this.n = n;
+    this.cyls = LAYOUTS[n].phases.map((p, i) => new Cylinder(i, p));
+    this.J = 0.08 + 0.02 * n;          // crank + flywheel inertia, kg·m²
+    this.omega = Math.max(this.omega, 0);
+  }
+  get rpm() { return this.omega * 60 / (2 * Math.PI); }
+  get pistonSpeed() { return 2 * GEO.stroke * this.omega / (2 * Math.PI); }   // mean, m/s
+  get Pman() { const t = this.throttle; return GAS.Patm * (0.19 + 0.81 * Math.pow(t, 1.6)); }
+  get advance() { return 8 + 22 * Math.min(1, this.rpm / 7000); }
+
+  frictionTorque() {                  // FMEP-based, all cylinders
+    const fmep = 1e5 * (1.0 + 1.6 * (this.rpm / 8000));
+    return fmep * GEO.Vd * this.n / (4 * Math.PI);
+  }
+  loadTorque() {                      // vehicle/dyno load ~ ω²
+    const k = this.n / 4;
+    return k * (0.06 * this.omega + 2.9e-4 * this.omega * this.omega);
+  }
+
+  // integrate dt seconds; returns list of exhaust events with fractional times
+  step(dt) {
+    const ev = [];
+    const dThetaMax = 1.0;                                   // deg per substep
+    const nSub = Math.min(4000, Math.max(1, Math.ceil(this.omega / DEG * dt / dThetaMax)));
+    const h = dt / nSub;
+    const cutIgn = this.rpm > this.revLimit;
+    if (cutIgn) this.ignition = false; else if (this.rpm < this.revLimit - 300) this.ignition = true;
+    for (let s = 0; s < nSub; s++) {
+      const th0 = this.theta;
+      const dth = this.omega * h / DEG;
+      const th1 = th0 + dth;
+      const evBefore = ev.length;
+      let Tg = 0;
+      for (const c of this.cyls) Tg += c.step(th0, th1, h, this, ev);
+      for (let i = evBefore; i < ev.length; i++) ev[i].t = s * h;
+      let Tf = this.frictionTorque() * (this.omega > 0.5 ? 1 : this.omega / 0.5);
+      const Tl = this.loadTorque();
+      const Tstart = this.rpm < 400 ? 60 + 10 * this.n : 0;  // starter motor
+      const Tnet = Tg - Tf - Tl + Tstart;
+      this.omega += Tnet / this.J * h;
+      if (this.omega < 0) this.omega = 0;
+      this.theta = mod(th1, 720);
+      this.time += h;
+      const a = Math.min(1, h / 0.25);
+      this.torqueAvg += ((Tg - Tf) - this.torqueAvg) * a;
+      this.gasTorque = Tg;
+    }
+    return ev;
+  }
+}
+/* ============================================================
+   AUDIO — exhaust pulses synthesised from the blow-down pressure
+   Each exhaust-valve opening emits a pressure pulse whose amplitude
+   comes from the cylinder pressure at EVO; pulses excite a delay-line
+   "exhaust pipe" resonator, then a low-pass and compressor.
+   ============================================================ */
+class EngineAudio {
+  constructor() { this.ctx = null; this.enabled = false; this.t = 0; }
+  toggle() { return this.enabled ? this.stop() : this.start(); }
+  async start() {
+    if (!this.ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+      this.ctx = new AC();
+      this.build();
+    }
+    await this.ctx.resume();
+    this.enabled = true;
+    this.t = this.ctx.currentTime + 0.08;
+    return true;
+  }
+  async stop() {
+    this.enabled = false;
+    if (this.ctx) await this.ctx.suspend();
+    return false;
+  }
+  build() {
+    const c = this.ctx;
+    this.master = c.createGain(); this.master.gain.value = 0.8;
+    const comp = c.createDynamicsCompressor();
+    comp.threshold.value = -20; comp.ratio.value = 8; comp.attack.value = 0.002; comp.release.value = 0.12;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3400; lp.Q.value = 0.8;
+    // exhaust pipe: quarter-wave resonator ≈ 85 Hz modelled as a feedback delay
+    this.pipeIn = c.createGain(); this.pipeIn.gain.value = 1;
+    const delay = c.createDelay(0.1); delay.delayTime.value = 1 / 85;
+    const fbLp = c.createBiquadFilter(); fbLp.type = 'lowpass'; fbLp.frequency.value = 700;
+    const fb = c.createGain(); fb.gain.value = 0.42;
+    this.pipeIn.connect(delay); delay.connect(fbLp); fbLp.connect(fb); fb.connect(delay);
+    this.pipeIn.connect(lp); delay.connect(lp);
+    // low "drone" at the firing frequency gives the engine its body
+    this.drone = c.createOscillator(); this.drone.type = 'triangle'; this.drone.frequency.value = 30;
+    this.droneGain = c.createGain(); this.droneGain.gain.value = 0;
+    this.drone.connect(this.droneGain); this.droneGain.connect(lp); this.drone.start();
+    lp.connect(comp); comp.connect(this.master); this.master.connect(c.destination);
+  }
+  // one exhaust pulse: sharp crack + short low thump + noise burst
+  pulse(time, amp) {
+    const c = this.ctx, sr = c.sampleRate, N = Math.floor(sr * 0.055);
+    const buf = c.createBuffer(1, N, sr), d = buf.getChannelData(0);
+    const f0 = 70 + 50 * amp;
+    for (let i = 0; i < N; i++) {
+      const t = i / sr;
+      d[i] = amp * (Math.sin(2 * Math.PI * f0 * t) * Math.exp(-t / 0.011) * 0.9
+                  + (Math.random() * 2 - 1) * Math.exp(-t / 0.004) * 0.8
+                  + Math.exp(-t / 0.0012) * 1.2);
+    }
+    const src = c.createBufferSource(); src.buffer = buf;
+    src.connect(this.pipeIn); src.start(time);
+  }
+  // called once per frame with the exhaust events produced by the physics step
+  schedule(events, frameDt, eng) {
+    if (!this.enabled || !this.ctx) return;
+    const now = this.ctx.currentTime;
+    if (this.t < now + 0.02) this.t = now + 0.06;      // fell behind: resync
+    if (this.t > now + 0.30) this.t = now + 0.10;      // ran ahead: resync
+    for (const ev of events) {
+      const amp = Math.min(1, 0.06 + 0.26 * Math.sqrt(Math.max(0, ev.dP) / GAS.Patm));
+      this.pulse(this.t + ev.t, amp);
+    }
+    this.t += frameDt;
+    const fire = Math.max(10, eng.rpm / 60 * eng.n / 2);   // firing frequency, Hz
+    this.drone.frequency.setTargetAtTime(fire, now, 0.05);
+    this.droneGain.gain.setTargetAtTime(0.02 + 0.05 * eng.throttle, now, 0.1);
+  }
+}
+/* ============================================================
+   RENDER — animated cutaway of the engine
+   ============================================================ */
+const STROKE_COLOR = { INTAKE: '#4cc3ff', COMPRESSION: '#a78bfa', POWER: '#ff7a3d', EXHAUST: '#9aa3b2' };
+const MAX_LIFT = 0.011;               // m
+const VALVE_TILT = 21 * DEG;          // from vertical
+
+// per-cylinder exhaust smoke particles (purely visual)
+const smoke = [];
+function spawnSmoke(x, y, dirx, diry, strength, n) {
+  for (let i = 0; i < n; i++) smoke.push({ x, y, vx: dirx * (60 + 160 * strength) + (Math.random() - .5) * 40,
+    vy: diry * (60 + 160 * strength) + (Math.random() - .5) * 40, life: 1, r: 3 + 5 * Math.random(), s: strength });
+}
+function updateSmoke(dt) {
+  for (let i = smoke.length - 1; i >= 0; i--) {
+    const p = smoke[i]; p.x += p.vx * dt; p.y += p.vy * dt; p.vy -= 60 * dt; p.life -= dt * 1.8; p.r += 12 * dt;
+    if (p.life <= 0) smoke.splice(i, 1);
+  }
+  if (smoke.length > 600) smoke.splice(0, smoke.length - 600);
+}
+
+function gasColor(P, T) {
+  // temperature → hue (dark blue → orange → white), pressure → opacity
+  const t = Math.max(0, Math.min(1, (T - 350) / 2200));
+  const a = Math.min(0.92, 0.08 + 0.45 * Math.pow(Math.max(0, P) / 60e5, 0.5) + 0.65 * t);
+  const r = Math.round(50 + 205 * Math.min(1, t * 1.8));
+  const g = Math.round(100 + 110 * Math.max(0, t - 0.12) * 1.3);
+  const b = Math.round(170 - 150 * t);
+  return `rgba(${r},${g},${b},${a.toFixed(3)})`;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+
+function drawEngine(ctx, W, H, eng, time) {
+  const n = eng.n;
+  ctx.clearRect(0, 0, W, H);
+  // subtle grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.035)'; ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  const cellW = Math.min((W - 40) / n, 340);
+  const s = Math.min(cellW / (GEO.bore * 1.75), (H - 60) / 0.41);   // px per metre
+  const x0 = (W - cellW * n) / 2;
+  const bore = GEO.bore * s, r = GEO.r * s, rod = GEO.rod * s;
+  const crownH = 0.03 * s, pistonH = 0.05 * s, chamberH = 0.014 * s, headH = 0.075 * s;
+  const yc = (H - 50) / 2 + 0.125 * s;               // crank centre (engine vertically centred)
+  const yPinTdc = yc - (r + rod);                    // wrist pin at TDC
+  const yDeck = yPinTdc - crownH;                    // top of piston crown at TDC ≈ deck
+  const yLinerBot = yPinTdc + 2 * r + pistonH + 6;
+
+  // crankshaft main journal behind everything
+  ctx.fillStyle = '#2a3140';
+  roundRect(ctx, x0 - 20, yc - 0.012 * s, cellW * n + 40, 0.024 * s, 4); ctx.fill();
+
+  for (let i = 0; i < n; i++) {
+    const c = eng.cyls[i];
+    const cx = x0 + cellW * (i + 0.5);
+    const phi = c.phi, th = phi * DEG;
+    const pinX = cx + r * Math.sin(th), pinY = yc - r * Math.cos(th);
+    const wristY = yPinTdc + pistonX(phi) * s;
+    const crownY = wristY - crownH;
+    const left = cx - bore / 2, right = cx + bore / 2;
+
+    // --- engine block & liner
+    ctx.fillStyle = '#151b27';
+    roundRect(ctx, left - 0.03 * s, yDeck - headH - chamberH, bore + 0.06 * s, (yLinerBot - yDeck) + headH + chamberH, 10); ctx.fill();
+    ctx.fillStyle = '#0a0e15';
+    ctx.fillRect(left - 0.006 * s, yDeck, bore + 0.012 * s, yLinerBot - yDeck);
+    ctx.fillStyle = '#39424f';
+    ctx.fillRect(left - 0.006 * s, yDeck, 0.006 * s, yLinerBot - yDeck);
+    ctx.fillRect(right, yDeck, 0.006 * s, yLinerBot - yDeck);
+
+    // --- combustion chamber polygon (pent roof) + cylinder gas volume
+    const roofY = yDeck - chamberH;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(left, yDeck); ctx.lineTo(left + bore * 0.08, roofY + chamberH * 0.35); ctx.lineTo(cx, roofY);
+    ctx.lineTo(right - bore * 0.08, roofY + chamberH * 0.35); ctx.lineTo(right, yDeck);
+    ctx.lineTo(right, crownY); ctx.lineTo(left, crownY); ctx.closePath();
+    ctx.clip();
+    ctx.fillStyle = '#0d1420'; ctx.fillRect(left - 5, roofY - 5, bore + 10, crownY - roofY + 10);
+    ctx.fillStyle = gasColor(c.P, c.T); ctx.fillRect(left - 5, roofY - 5, bore + 10, crownY - roofY + 10);
+    // flame front (Wiebe burned fraction → radius from the plug)
+    if (c.xb > 0 && c.xb < 0.999 && c.T > 600) {
+      const R = Math.max(4, Math.sqrt(c.xb) * (bore * 0.62 + (crownY - roofY) * 0.4));
+      const flick = 0.9 + 0.1 * Math.sin(time * 90 + i);
+      const g = ctx.createRadialGradient(cx, roofY + 4, 0, cx, roofY + 4, R * flick);
+      g.addColorStop(0, 'rgba(255,255,230,0.95)'); g.addColorStop(0.35, 'rgba(255,190,60,0.85)');
+      g.addColorStop(0.75, 'rgba(255,90,20,0.55)'); g.addColorStop(1, 'rgba(255,60,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(left - 5, roofY - 5, bore + 10, crownY - roofY + 10);
+    }
+    // spark
+    if (c.sparkOn && c.Q > 0 && phi >= c.spark && phi < c.spark + 7) {
+      ctx.strokeStyle = 'rgba(200,240,255,0.95)'; ctx.lineWidth = 1.5; ctx.shadowColor = '#9be7ff'; ctx.shadowBlur = 14;
+      for (let k = 0; k < 4; k++) {
+        ctx.beginPath(); ctx.moveTo(cx, roofY + 3);
+        let px = cx, py = roofY + 3;
+        for (let j = 0; j < 4; j++) { px += (Math.random() - .5) * 10; py += 3 + Math.random() * 4; ctx.lineTo(px, py); }
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+    }
+    ctx.restore();
+
+    // --- head, ports, valves
+    ctx.fillStyle = '#1b2230';
+    ctx.beginPath();
+    ctx.moveTo(left - 0.03 * s, yDeck); ctx.lineTo(left, yDeck); ctx.lineTo(left + bore * 0.08, roofY + chamberH * 0.35); ctx.lineTo(cx, roofY);
+    ctx.lineTo(right - bore * 0.08, roofY + chamberH * 0.35); ctx.lineTo(right, yDeck); ctx.lineTo(right + 0.03 * s, yDeck);
+    ctx.lineTo(right + 0.03 * s, yDeck - headH - chamberH); ctx.lineTo(left - 0.03 * s, yDeck - headH - chamberH); ctx.closePath(); ctx.fill();
+
+    const drawValve = (side, liftFrac, flow, isExhaust) => {
+      // side: -1 intake (left), +1 exhaust (right). Valve axis tilted toward centre.
+      const seatX = cx + side * bore * 0.27, seatY = roofY + chamberH * 0.55;
+      const ax = -side * Math.sin(VALVE_TILT), ay = -Math.cos(VALVE_TILT);   // axis unit vector (upwards)
+      const liftPx = liftFrac * MAX_LIFT * s;
+      const headR = bore * 0.2, stemL = headH * 0.8;
+      // port channel
+      const portW = headR * 1.5;
+      ctx.save();
+      ctx.strokeStyle = isExhaust ? '#2a2020' : '#1d2a3a'; ctx.lineWidth = portW; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(seatX + ax * 6, seatY + ay * 6);
+      ctx.lineTo(seatX + ax * headH * 0.4, seatY + ay * headH * 0.4);
+      ctx.lineTo(cx + side * (bore * 0.5 + 0.022 * s), seatY - headH * 0.62); ctx.stroke();
+      if (flow > 0.02) {
+        ctx.strokeStyle = isExhaust ? `rgba(255,120,40,${Math.min(0.8, flow)})` : `rgba(90,200,255,${Math.min(0.7, flow)})`;
+        ctx.lineWidth = portW * 0.55; ctx.shadowColor = isExhaust ? '#ff7a3d' : '#4cc3ff'; ctx.shadowBlur = 16;
+        ctx.stroke(); ctx.shadowBlur = 0;
+      }
+      ctx.restore();
+      // stem + head (moves down along axis when open)
+      const hx = seatX - ax * liftPx, hy = seatY - ay * liftPx;
+      ctx.strokeStyle = '#c9d1dc'; ctx.lineWidth = Math.max(2, bore * 0.035); ctx.lineCap = 'butt';
+      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx + ax * stemL, hy + ay * stemL); ctx.stroke();
+      ctx.save(); ctx.translate(hx, hy); ctx.rotate(side * VALVE_TILT);
+      ctx.fillStyle = isExhaust ? '#d9a06b' : '#cfd8e3';
+      ctx.beginPath(); ctx.moveTo(-headR, 0); ctx.lineTo(headR, 0); ctx.lineTo(headR * 0.7, -headR * 0.35); ctx.lineTo(-headR * 0.7, -headR * 0.35); ctx.closePath(); ctx.fill();
+      ctx.restore();
+      // camshaft + lobe (turns at half crank speed)
+      const camX = seatX + ax * (stemL + headR * 0.9), camY = seatY + ay * (stemL + headR * 0.9);
+      const centre = isExhaust ? (VALVE.evo + VALVE.evc) / 2 : ((VALVE.ivo + VALVE.ivc + 720) / 2) % 720;
+      const camAng = ((phi - centre) / 2) * DEG;
+      ctx.save(); ctx.translate(camX, camY); ctx.rotate(-side * VALVE_TILT + camAng);
+      ctx.fillStyle = '#6b7686';
+      ctx.beginPath(); ctx.arc(0, 0, headR * 0.55, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-headR * 0.5, 0); ctx.quadraticCurveTo(0, headR * 1.7, headR * 0.5, 0); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#2b3240'; ctx.beginPath(); ctx.arc(0, 0, headR * 0.16, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    };
+    drawValve(-1, c.li, Math.max(0, c.intakeFlow) / 4e4, false);
+    drawValve(1, c.le, c.exhaustFlow / 8e4, true);
+    if (c.exhaustFlow > 3000) spawnSmoke(cx + bore * 0.5 + 0.022 * s, roofY - headH * 0.55, 0.6, -1, Math.min(1, c.exhaustFlow / 4e5), 1);
+
+    // spark plug
+    ctx.fillStyle = '#e8eef5'; ctx.fillRect(cx - bore * 0.03, roofY - headH * 0.5, bore * 0.06, headH * 0.5);
+    ctx.fillStyle = '#b5c0cf'; ctx.fillRect(cx - bore * 0.06, roofY - headH * 0.9, bore * 0.12, headH * 0.45);
+
+    // --- connecting rod
+    ctx.strokeStyle = '#8d97a6'; ctx.lineWidth = bore * 0.11; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(pinX, pinY); ctx.lineTo(cx, wristY); ctx.stroke();
+    ctx.strokeStyle = '#5f6a7a'; ctx.lineWidth = bore * 0.05;
+    ctx.beginPath(); ctx.moveTo(pinX, pinY); ctx.lineTo(cx, wristY); ctx.stroke();
+
+    // --- piston
+    const pg = ctx.createLinearGradient(left, 0, right, 0);
+    pg.addColorStop(0, '#5b6675'); pg.addColorStop(0.5, '#aeb8c6'); pg.addColorStop(1, '#4d5766');
+    ctx.fillStyle = pg;
+    roundRect(ctx, left + 1, crownY, bore - 2, pistonH + crownH, 3); ctx.fill();
+    ctx.fillStyle = '#1b2029';
+    for (let k = 0; k < 3; k++) ctx.fillRect(left + 1, crownY + 4 + k * 5, bore - 2, 2);
+    ctx.fillStyle = '#2f3745'; ctx.beginPath(); ctx.arc(cx, wristY, bore * 0.08, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#cbd3de'; ctx.beginPath(); ctx.arc(cx, wristY, bore * 0.04, 0, Math.PI * 2); ctx.fill();
+
+    // --- crank web with counterweight, crank pin
+    ctx.save(); ctx.translate(cx, yc); ctx.rotate(th);
+    ctx.fillStyle = '#3d4653';
+    ctx.beginPath(); ctx.arc(0, 0, r * 1.35, Math.PI * 0.15, Math.PI * 0.85); ctx.lineTo(-r * 0.45, -r * 0.85); ctx.lineTo(r * 0.45, -r * 0.85); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#556072'; roundRect(ctx, -r * 0.42, -r, r * 0.84, r * 1.1, r * 0.3); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = '#6f7a8c'; ctx.beginPath(); ctx.arc(cx, yc, r * 0.32, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#e1e7ef'; ctx.beginPath(); ctx.arc(pinX, pinY, bore * 0.09, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#2a313d'; ctx.beginPath(); ctx.arc(pinX, pinY, bore * 0.045, 0, Math.PI * 2); ctx.fill();
+
+    // --- labels
+    const name = strokeName(phi);
+    ctx.textAlign = 'center'; ctx.font = `600 ${Math.max(10, Math.min(13, cellW / 14))}px ${'-apple-system, Segoe UI, Inter, sans-serif'}`;
+    ctx.fillStyle = STROKE_COLOR[name]; ctx.fillText(name, cx, H - 14);
+    ctx.font = `${Math.max(9, Math.min(12, cellW / 16))}px Menlo, monospace`; ctx.fillStyle = '#7d8aa3';
+    ctx.fillText(`#${i + 1}  ${(c.P / 1e5).toFixed(1)} bar  ${Math.round(c.T)} K`, cx, H - 30);
+  }
+
+  // smoke
+  for (const p of smoke) {
+    ctx.fillStyle = `rgba(${200 + 55 * p.s},${120 + 60 * p.life},${80},${0.28 * p.life})`;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+  }
+}
+/* ============================================================
+   P–V DIAGRAM, GAUGE, STATS, UI, MAIN LOOP
+   ============================================================ */
+const pvState = { pmax: 20 };
+
+function niceStep(range, target) {
+  const raw = range / target, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+
+function drawPV(ctx, W, H, eng) {
+  const c = eng.cyls[0];
+  ctx.clearRect(0, 0, W, H);
+  const L = 54, R = 16, T = 30, B = 40, pw = W - L - R, ph = H - T - B;
+  const Vmax = (GEO.Vc + GEO.Vd) * 1e6 * 1.05;
+  const target = Math.max(12, (c.lastPeakP / 1e5) * 1.15, (c.peakP / 1e5) * 1.15);
+  pvState.pmax += (target - pvState.pmax) * 0.06;
+  const Pmax = pvState.pmax;
+  const X = v => L + (v * 1e6 / Vmax) * pw;
+  const Y = p => T + ph - (p / 1e5 / Pmax) * ph;
+
+  // grid
+  ctx.font = '10px Menlo, monospace'; ctx.fillStyle = '#7d8aa3'; ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+  const vs = niceStep(Vmax, 5);
+  for (let v = 0; v <= Vmax; v += vs) {
+    const x = X(v / 1e6); ctx.beginPath(); ctx.moveTo(x, T); ctx.lineTo(x, T + ph); ctx.stroke();
+    ctx.textAlign = 'center'; ctx.fillText(v.toFixed(0), x, T + ph + 14);
+  }
+  const ps = niceStep(Pmax, 5);
+  for (let p = 0; p <= Pmax; p += ps) {
+    const y = Y(p * 1e5); ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(L + pw, y); ctx.stroke();
+    ctx.textAlign = 'right'; ctx.fillText(p.toFixed(0), L - 6, y + 3);
+  }
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, T + ph); ctx.lineTo(L + pw, T + ph); ctx.stroke();
+  ctx.fillStyle = '#7d8aa3'; ctx.textAlign = 'center'; ctx.fillText('V  (cm³)', L + pw / 2, H - 6);
+  ctx.save(); ctx.translate(12, T + ph / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('P  (bar)', 0, 0); ctx.restore();
+  ctx.fillStyle = '#e6edf7'; ctx.font = '600 11px -apple-system, Segoe UI, sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('P–V DIAGRAM · CYLINDER 1', L, 16);
+  ctx.textAlign = 'right'; ctx.fillStyle = '#7d8aa3'; ctx.font = '10px Menlo, monospace';
+  ctx.fillText(`Vc ${(GEO.Vc * 1e6).toFixed(0)}  Vd ${(GEO.Vd * 1e6).toFixed(0)}  CR ${GEO.cr}`, W - R, 16);
+
+  // TDC / BDC markers
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.setLineDash([3, 4]);
+  for (const v of [GEO.Vc, GEO.Vc + GEO.Vd]) { ctx.beginPath(); ctx.moveTo(X(v), T); ctx.lineTo(X(v), T + ph); ctx.stroke(); }
+  ctx.setLineDash([]);
+
+  ctx.save(); ctx.beginPath(); ctx.rect(L, T, pw, ph); ctx.clip();
+  const poly = (tr, fill) => {
+    if (tr.length < 6) return;
+    ctx.beginPath(); ctx.moveTo(X(tr[0]), Y(tr[1]));
+    for (let i = 3; i < tr.length; i += 3) ctx.lineTo(X(tr[i]), Y(tr[i + 1]));
+    ctx.closePath(); ctx.fillStyle = fill; ctx.fill();
+  };
+  // previous complete cycle (faint) and current cycle (filled = the work integral)
+  poly(c.lastTrail, 'rgba(255,122,61,0.07)');
+  if (c.lastTrail.length >= 6) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let i = 0; i < c.lastTrail.length; i += 3) { const x = X(c.lastTrail[i]), y = Y(c.lastTrail[i + 1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+  }
+  poly(c.trail, 'rgba(255,122,61,0.22)');
+  const tr = c.trail;
+  if (tr.length >= 6) {
+    ctx.lineWidth = 2.2; ctx.lineJoin = 'round';
+    let cur = null;
+    for (let i = 3; i < tr.length; i += 3) {
+      const name = strokeName(tr[i + 2]);
+      if (name !== cur) { if (cur) ctx.stroke(); cur = name; ctx.strokeStyle = STROKE_COLOR[name]; ctx.beginPath(); ctx.moveTo(X(tr[i - 3]), Y(tr[i - 2])); }
+      ctx.lineTo(X(tr[i]), Y(tr[i + 1]));
+    }
+    ctx.stroke();
+    const x = X(tr[tr.length - 3]), y = Y(tr[tr.length - 2]);
+    ctx.fillStyle = '#fff'; ctx.shadowColor = STROKE_COLOR[strokeName(tr[tr.length - 1])]; ctx.shadowBlur = 12;
+    ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+  }
+  ctx.restore();
+
+  // live work integral readout
+  ctx.textAlign = 'right'; ctx.font = '600 12px Menlo, monospace'; ctx.fillStyle = '#ffc857';
+  ctx.fillText(`∮P dV = ${c.work.toFixed(1)} J`, L + pw - 8, T + 44);
+  ctx.font = '10px Menlo, monospace'; ctx.fillStyle = '#7d8aa3';
+  ctx.fillText(`last cycle ${c.lastWork.toFixed(1)} J`, L + pw - 8, T + 58);
+  // legend
+  let lx = L + 6; ctx.textAlign = 'left'; ctx.font = '9px -apple-system, Segoe UI, sans-serif';
+  for (const k of ['INTAKE', 'COMPRESSION', 'POWER', 'EXHAUST']) {
+    ctx.fillStyle = STROKE_COLOR[k]; ctx.fillRect(lx, T + 8, 8, 8); ctx.fillText(k, lx + 11, T + 15); lx += ctx.measureText(k).width + 22;
+  }
+}
+
+function drawGauge(ctx, W, H, eng, rpmDisp) {
+  ctx.clearRect(0, 0, W, H);
+  const cx = W * 0.3, cy = H * 0.72, R = Math.min(H * 0.62, W * 0.26);
+  const a0 = Math.PI * 1.0, a1 = Math.PI * 2.0, maxRpm = 9000;
+  const ang = v => a0 + (a1 - a0) * Math.min(1, v / maxRpm);
+  ctx.lineWidth = 10; ctx.lineCap = 'butt';
+  ctx.strokeStyle = '#1f2937'; ctx.beginPath(); ctx.arc(cx, cy, R, a0, a1); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,59,92,0.55)'; ctx.beginPath(); ctx.arc(cx, cy, R, ang(eng.revLimit), a1); ctx.stroke();
+  const g = ctx.createLinearGradient(cx - R, 0, cx + R, 0); g.addColorStop(0, '#4cc3ff'); g.addColorStop(1, '#ff7a3d');
+  ctx.strokeStyle = g; ctx.shadowColor = '#ff7a3d'; ctx.shadowBlur = 10;
+  ctx.beginPath(); ctx.arc(cx, cy, R, a0, ang(rpmDisp)); ctx.stroke(); ctx.shadowBlur = 0;
+  ctx.fillStyle = '#7d8aa3'; ctx.font = '9px Menlo, monospace'; ctx.textAlign = 'center';
+  for (let v = 0; v <= maxRpm; v += 1000) {
+    const a = ang(v), x = cx + Math.cos(a) * (R - 18), y = cy + Math.sin(a) * (R - 18) + 3;
+    ctx.fillText((v / 1000).toString(), x, y);
+  }
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#e6edf7'; ctx.font = `700 ${Math.round(H * 0.34)}px Menlo, monospace`;
+  ctx.fillText(Math.round(rpmDisp).toString().padStart(4, ' '), W * 0.5, cy);
+  ctx.fillStyle = '#7d8aa3'; ctx.font = '600 11px -apple-system, Segoe UI, sans-serif';
+  ctx.fillText('RPM', W * 0.5 + 4, cy + 18);
+  ctx.fillStyle = eng.ignition ? '#5ee6a8' : '#ff3b5c'; ctx.font = '10px Menlo, monospace';
+  ctx.fillText(eng.ignition ? (eng.rpm < 400 ? '● STARTER' : '● IGNITION') : '● REV LIMIT', W * 0.5 + 4, cy - H * 0.42);
+}
+
+// ---------- DOM wiring ----------
+const $ = id => document.getElementById(id);
+const engine = new Engine(4);
+const audio = new EngineAudio();
+const canvases = { engine: $('engine'), pv: $('pv'), gauge: $('gauge') };
+const ctxs = {};
+function fitCanvases() {
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  for (const k in canvases) {
+    const cv = canvases[k], rect = cv.parentElement.getBoundingClientRect();
+    const w = Math.max(50, Math.round(rect.width)), h = Math.max(50, Math.round(rect.height));
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) {
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      ctxs[k] = cv.getContext('2d'); ctxs[k].setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    cv._w = w; cv._h = h;
+  }
+}
+window.addEventListener('resize', fitCanvases);
+
+const thr = $('throttle'), thrVal = $('thrVal');
+function setThrottle(v) {
+  v = Math.max(0, Math.min(100, Math.round(v)));
+  thr.value = v; thr.style.setProperty('--pct', v + '%'); thrVal.textContent = v + '%';
+  engine.throttle = v / 100;
+}
+thr.addEventListener('input', () => setThrottle(+thr.value));
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowUp') { setThrottle(+thr.value + 2); e.preventDefault(); }
+  if (e.key === 'ArrowDown') { setThrottle(+thr.value - 2); e.preventDefault(); }
+});
+$('cylSeg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  engine.setCylinders(+b.dataset.n); smoke.length = 0;
+  for (const x of $('cylSeg').children) x.classList.toggle('on', x === b);
+});
+const soundBtn = $('soundBtn');
+async function toggleSound(force) {
+  const on = force === undefined ? await audio.toggle() : (force ? await audio.start() : await audio.stop());
+  soundBtn.textContent = on ? '🔊 Sound on' : '🔇 Sound off';
+  soundBtn.classList.toggle('on', on); soundBtn.setAttribute('aria-pressed', String(on));
+}
+soundBtn.addEventListener('click', () => toggleSound());
+canvases.engine.addEventListener('click', () => { if (!audio.enabled) toggleSound(true); });
+
+const STATS = [
+  ['torque', 'Torque', 'N·m'], ['power', 'Power', 'kW'], ['hp', 'Power', 'hp'],
+  ['imep', 'IMEP', 'bar'], ['pmax', 'Peak pressure', 'bar'], ['eff', 'Indicated η', '%'],
+  ['pman', 'Manifold', 'bar'], ['adv', 'Spark advance', '° BTDC'], ['qin', 'Heat in / cycle', 'J'],
+];
+$('stats').innerHTML = STATS.map(([id, k, u]) => `<div class="stat ${id === 'torque' || id === 'power' ? 'hi' : ''}"><div class="k">${k}</div><div class="v"><span id="s_${id}">–</span><small>${u}</small></div></div>`).join('');
+const statEls = Object.fromEntries(STATS.map(([id]) => [id, $('s_' + id)]));
+function updateStats() {
+  const c = engine.cyls[0], e = engine;
+  statEls.torque.textContent = e.torqueAvg.toFixed(1);
+  statEls.power.textContent = (e.torqueAvg * e.omega / 1000).toFixed(1);
+  statEls.hp.textContent = (e.torqueAvg * e.omega / 745.7).toFixed(1);
+  statEls.imep.textContent = (c.lastWork / GEO.Vd / 1e5).toFixed(2);
+  statEls.pmax.textContent = (c.lastPeakP / 1e5).toFixed(1);
+  statEls.eff.textContent = c.lastQ > 0 ? (100 * c.lastWork / c.lastQ).toFixed(1) : '–';
+  statEls.pman.textContent = (e.Pman / 1e5).toFixed(2);
+  statEls.adv.textContent = e.advance.toFixed(1);
+  statEls.qin.textContent = c.lastQ.toFixed(0);
+}
+
+// ---------- main loop ----------
+let last = performance.now(), rpmDisp = 0, fpsAcc = 0, fpsN = 0, statTimer = 0;
+const fpsEl = $('fps');
+function frame(now) {
+  let dt = (now - last) / 1000; last = now;
+  if (!(dt > 0)) dt = 1 / 60; if (dt > 1 / 30) dt = 1 / 30;
+  const events = engine.step(dt);
+  audio.schedule(events, dt, engine);
+  rpmDisp += (engine.rpm - rpmDisp) * Math.min(1, dt * 6);
+  updateSmoke(dt);
+  fitCanvases();
+  drawEngine(ctxs.engine, canvases.engine._w, canvases.engine._h, engine, now / 1000);
+  drawPV(ctxs.pv, canvases.pv._w, canvases.pv._h, engine);
+  drawGauge(ctxs.gauge, canvases.gauge._w, canvases.gauge._h, engine, rpmDisp);
+  statTimer += dt; fpsAcc += dt; fpsN++;
+  if (statTimer > 0.12) { updateStats(); statTimer = 0; }
+  if (fpsAcc > 0.5) { fpsEl.textContent = `${Math.round(fpsN / fpsAcc)} fps`; fpsAcc = 0; fpsN = 0; }
+  requestAnimationFrame(frame);
+}
+setThrottle(0);
+fitCanvases();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

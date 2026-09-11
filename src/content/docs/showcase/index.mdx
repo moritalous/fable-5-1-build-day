@@ -1,0 +1,78 @@
+---
+title: 作例集：プロンプトと成果物
+description: Fable 5.1に実際に投げたプロンプトと、そこから出てきたHTML、かかった時間と料金。6作品すべて追加指示なしの一発生成です。
+sidebar:
+  order: 0
+  label: 作例集について
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**Fable 5.1に実際に投げたプロンプトと、そこから出てきたものをそのまま公開します。** 6作品すべて、プロンプトを1回投げただけで、追加の指示は一切していません。生成されたHTMLは別タブで実際に動かせます。
+
+<Aside type="tip" title="プロンプトはコピーして使えます">
+	各ページのプロンプトは原文のままコピーできます。まずはそのまま投げて、出てきたものを自分の好きな方向に変えていくのが、当日いちばん手早いスタート方法です。
+</Aside>
+
+6作品とも**外部ライブラリ・画像・外部通信が一切ない、HTMLファイル1枚**です。ダウンロードすればオフラインでも動きます。カメラやマイクを使う作例（2・6）も、映像と音声はブラウザの中だけで処理され、どこにも送信されません。
+
+## 公式デモ（Anthropic提供）
+
+Anthropicより提供されたデモプロンプトです。
+
+<CardGrid>
+	<LinkCard
+		title="1. 星系シミュレーター"
+		description="ケプラーの第三法則で自己検算する惑星系。"
+		href="star-system/"
+	/>
+	<LinkCard
+		title="2. オーケストラ指揮者ゲーム"
+		description="Webカメラで手の動きを読み、テンポが変わる。"
+		href="orchestra/"
+	/>
+	<LinkCard
+		title="3. 4ストロークエンジン"
+		description="熱力学を実計算し、P-V線図から仕事量を積分。"
+		href="engine/"
+	/>
+</CardGrid>
+
+## オリジナル作例
+
+主催者（[moritalous](https://github.com/moritalous)）が独自に考えて投げたプロンプトです。
+
+<CardGrid>
+	<LinkCard
+		title="4. アルゴン分子動力学"
+		description="気体・液体・固体の相転移が物理から創発する。"
+		href="molecular/"
+	/>
+	<LinkCard
+		title="5. 戦国勢力図の絵巻"
+		description="外部地図データなしで日本地図を描き、石高を検算。"
+		href="sengoku/"
+	/>
+	<LinkCard
+		title="6. VTuberスタジオ"
+		description="FFTで日本語5母音を判定し、アバターの口が あいうえお を作る。"
+		href="vtuber/"
+	/>
+</CardGrid>
+
+<Aside type="caution" title="同じプロンプトでも同じものは出てきません">
+	生成AIの出力は毎回変わります。各ページに載せている時間・料金・出来上がりは「だいたいこのくらい」の目安として見てください。同じプロンプトを投げても、違うデザイン・違う構成のものが出てきます。それも含めて当日楽しんでください。
+</Aside>
+
+## 関連ページ
+
+<LinkCard
+	title="利用上限とコストの確認"
+	description="支出上限の設定と、Claude Codeで使った金額の確認方法。"
+	href="../reference/costs/"
+/>
+<LinkCard
+	title="APIクレジットの受け取り方"
+	description="会場で配布するAPIクレジットの申請手順。"
+	href="../credits/"
+/>
