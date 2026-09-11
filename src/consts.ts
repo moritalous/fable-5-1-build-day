@@ -15,9 +15,6 @@ export const SURVEY_URL: string | null = 'https://forms.gle/QiWHUQUzHUYRbocG9';
  */
 export const BUILD_SUBMISSION_URL: string | null = 'https://form.typeform.com/to/VIUAjxNi';
 
-/** APIクレジットの申請フォーム。当日配布するURLが決まったらここに設定する */
-export const CREDIT_FORM_URL: string | null = null;
-
 /** 会場で口頭・スライドから案内するための短縮URL（ヘッダーにテキスト表示する） */
 export const SHORT_URL = 'https://bit.ly/osaka-fable-5-1';
 

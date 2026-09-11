@@ -3,8 +3,7 @@ title: APIクレジットの受け取り方
 description: Build Dayで配布するAPIクレジットの申請手順と、受け取ったあとの確認方法。
 ---
 
-import { Aside, Steps, LinkButton } from '@astrojs/starlight/components';
-import { CREDIT_FORM_URL } from '../../consts.ts';
+import { Aside, Steps } from '@astrojs/starlight/components';
 
 Build Dayの参加者には、**Claude Codeで使えるAPIクレジット**を配布予定です。当日会場で申請用のURLをご案内しますので、この手順で申請してください。
 
@@ -20,15 +19,9 @@ Build Dayの参加者には、**Claude Codeで使えるAPIクレジット**を�
 
 1. イベント当日に提示されるURLにアクセスします。
 
-    {CREDIT_FORM_URL ? (
-    	<LinkButton href={CREDIT_FORM_URL} target="_blank" rel="noopener noreferrer" icon="external">
-    		クレジットを申請する
-    	</LinkButton>
-    ) : (
-    	<Aside type="tip" title="申請URLは当日ご案内します">
-    		会場のスライドで表示します。
-    	</Aside>
-    )}
+    <Aside type="tip" title="申請URLは当日ご案内します">
+    	会場のスライドで表示します。
+    </Aside>
 
 1. メールアドレス、組織名があっていることを確認し、氏名（First name / Last name）を入力します。「Which Anthropic products do you currently use?」で「Claude API」にチェックを入れ、「申請を送信」をクリックします。
 
