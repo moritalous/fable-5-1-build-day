@@ -1,16 +1,16 @@
 ---
-title: 2. Claude Codeをインストールする
+title: Claude Codeをインストールする
 description: macOS / Windows それぞれのClaude Codeインストール手順。ターミナルを使ったことがない方向けの説明つき。
 sidebar:
-  order: 2
+  label: Claude Codeのインストール
 ---
 
-import { Aside, Steps, Tabs, TabItem, LinkButton, Card, CardGrid } from '@astrojs/starlight/components';
+import { Aside, Steps, Tabs, TabItem, LinkButton } from '@astrojs/starlight/components';
 
 **Claude Code**は、ターミナル（黒い画面）で動くClaudeです。「こういうものを作って」と日本語で書くだけで、Claudeがファイルを作り、コードを書き、実行して、動くところまで進めてくれます。Build Dayではこれをメインの道具として使います。
 
 <Aside type="tip" title="ターミナルが苦手な方へ">
-	この手順で打ち込むのは**コピペで済むコマンド1行だけ**です。それでも不安な方は、公式の[ターミナルガイド](https://code.claude.com/docs/ja/terminal-guide)に画面つきの説明があります。どうしてもターミナルを使いたくない方は、このページの最後の[デスクトップアプリ](#ターミナルを使いたくない方へデスクトップアプリ)を使ってください。
+	この手順で打ち込むのは**コピペで済むコマンド1行だけ**です。それでも不安な方は、公式の[ターミナルガイド](https://code.claude.com/docs/ja/terminal-guide)に画面つきの説明があります。当日会場でもサポートしますので、うまくいかなくても心配いりません。
 </Aside>
 
 ## 動作環境
@@ -77,15 +77,15 @@ curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del in
 	`winget install Anthropic.ClaudeCode` でもインストールできます（こちらは自動更新されないため、`winget upgrade Anthropic.ClaudeCode` を定期的に実行してください）。
 </Aside>
 
-</TabItem>
-
-</Tabs>
-
-<Aside type="caution" title="Windowsの方へ：Git for Windowsの導入をおすすめします">
+<Aside type="caution" title="Git for Windowsの導入をおすすめします">
 	[Git for Windows](https://git-scm.com/downloads/win)を入れておくと、Claude Codeがコマンド実行にGit Bashを使えるようになり、動かせることが増えます。入っていない場合はPowerShellで代替されるので、必須ではありません。
 
 	WSLを普段使っている方は、WSLのターミナルの中でmacOS/Linux版のコマンドを実行してください（この場合Git for Windowsは不要です）。
 </Aside>
+
+</TabItem>
+
+</Tabs>
 
 ## インストールできたか確認する
 
@@ -113,21 +113,8 @@ curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del in
 	ほとんどの場合、ターミナルの開き直しで解決します。それでもだめな場合は[困ったときは](/reference/troubleshooting/)を確認してください。
 </Aside>
 
-## ターミナルを使いたくない方へ：デスクトップアプリ
-
-Claude Codeには、同じことがGUIでできる**デスクトップアプリ**もあります。ターミナルに抵抗がある方はこちらでも参加できます。
-
-<CardGrid>
-	<Card title="ダウンロード" icon="laptop">
-		[claude.com/download](https://claude.com/download)からmacOS版・Windows版をダウンロードできます。
-	</Card>
-	<Card title="使い方" icon="open-book">
-		公式の[デスクトップ版クイックスタート](https://code.claude.com/docs/ja/desktop-quickstart)を参照してください。ログイン方法はターミナル版と同じです。
-	</Card>
-</CardGrid>
-
 ## 次のステップ
 
 <LinkButton href="../first-run/" icon="right-arrow">
-	次へ：初回起動とログイン
+	次へ：初回起動
 </LinkButton>

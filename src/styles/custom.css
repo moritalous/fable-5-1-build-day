@@ -10,3 +10,12 @@
 	--sl-color-accent: #a94e2c;
 	--sl-color-accent-high: #582410;
 }
+
+/* 作例集のページ冒頭に並べるバッジ */
+.badges {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: 0.75rem;
+}

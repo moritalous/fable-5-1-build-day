@@ -1,13 +1,13 @@
 ---
-title: 3. 初回起動とログイン
-description: Claude Codeを初めて起動してログインし、最初の1つを作ってみるまで。
+title: 初回起動
+description: APIキーを設定したClaude Codeを初めて起動し、最初の1つを作ってみるまで。
 sidebar:
-  order: 3
+  label: 初回起動
 ---
 
 import { Aside, Steps, Tabs, TabItem, LinkButton } from '@astrojs/starlight/components';
 
-インストールができたら、実際に起動してログインします。ここまでできていれば当日は作るだけです。
+作業用のフォルダを作り、APIキーを設定して、実際に起動するところまで進めます。ここまでできていれば当日は作るだけです。
 
 ## 作業用のフォルダを作る
 
@@ -35,7 +35,55 @@ cd $HOME\build-day
 
 </Tabs>
 
-## 起動してログインする
+## APIキーを設定する
+
+作業フォルダの中に設定ファイルを置くと、**ターミナルを開き直してもキーが残ります**。毎回入力する必要はありません。
+
+<Steps>
+
+1. 設定ファイルを作って開きます。作業フォルダ（`build-day`）にいる状態で実行してください。
+
+    <Tabs syncKey="os">
+
+    <TabItem label="macOS">
+
+    ```sh
+    mkdir -p .claude && touch .claude/settings.json && open -e .claude/settings.json
+    ```
+
+    テキストエディットで空のファイルが開きます。
+
+    </TabItem>
+
+    <TabItem label="Windows">
+
+    ```powershell
+    New-Item -ItemType Directory -Force .claude | Out-Null; if (!(Test-Path .claude\settings.json)) { "" | Set-Content .claude\settings.json }; notepad .claude\settings.json
+    ```
+
+    メモ帳で空のファイルが開きます。
+
+    </TabItem>
+
+    </Tabs>
+
+1. 次の内容を貼り付け、`ここにAPIキー` を[発行したキー](../apikey/)（`sk-ant-`で始まる文字列）に置き換えて保存します。
+
+    ```json
+    {
+      "env": {
+        "ANTHROPIC_API_KEY": "ここにAPIキー"
+      }
+    }
+    ```
+
+</Steps>
+
+<Aside type="caution" title="このファイルは人に渡さないでください">
+	`settings.json`にはAPIキーがそのまま書かれています。**作業フォルダをGitHubなどに公開すると、キーごと公開されます。** 作ったものを共有するときは、HTMLファイルだけを渡してください。
+</Aside>
+
+## 起動する
 
 <Steps>
 
@@ -45,18 +93,18 @@ cd $HOME\build-day
     claude
     ```
 
-1. 初回はログインを求められます。**Claude Console**（＝[1. Claude Platformアカウントを作る](../account/)で作ったアカウント）を選び、ブラウザで認証を完了します。
-
-    <Aside type="note" title="Pro/Maxプランを契約している方">
-    	claude.aiのPro/Max/Team/Enterpriseプランでもログインできます。その場合はサブスクリプションの枠で動くので、配布するAPIクレジットは使いません（どちらでも参加できます）。あとから切り替えたいときは、起動中に `/login` と入力します。
-    </Aside>
-
-1. ログインが終わるとClaude Codeのプロンプトが表示されます。バージョン・使用中のモデル・作業ディレクトリが上部に出ていれば準備完了です。
+1. Claude Codeのプロンプトが表示されれば準備完了です。バージョン・使用中のモデル・作業ディレクトリが上部に出ています。**APIキーが設定されていればログインは求められません。**
 
 </Steps>
 
-<Aside type="tip" title="Consoleでログインすると専用ワークスペースができます">
-	Claude ConsoleのアカウントでClaude Codeに初めてログインすると、コンソール側に「**Claude Code**」という名前のワークスペースが自動で作られます。Claude Codeの利用料はここに集計されるので、使った金額の確認や上限の設定はこのワークスペースに対して行います。詳しくは[利用上限とコストの確認](/reference/costs/)へ。
+## どの認証で動いているか確認する
+
+APIキーはログイン情報より**優先**されます。起動中に `/usage` や `/login` を開くと、いまどのアカウント・どの認証で動いているかを確認できます。
+
+<Aside type="caution" title="Pro/Maxプランを契約している方はご注意ください">
+	すでにPro/Maxプランでログインした状態のPCでAPIキーを設定すると、**キーのほうが優先されてAPIクレジットが消費されます**。逆に、APIクレジットを使いたいのにキーを設定し忘れると、サブスクリプションの枠で動いてしまいます。どちらで動かすか決めてから起動してください。
+
+	サブスクリプションの枠で動かしたい場合は、`.claude/settings.json`を作らずに `claude` を起動してログインしてください。すでに作ってしまった場合は、そのファイルを削除すればログイン側に戻ります。
 </Aside>
 
 ## 最初の1つを作ってみる
@@ -100,8 +148,8 @@ Claude Codeを起動したあと、`/` から始まるコマンドが使えま�
 
 ## 次のステップ
 
-当日の流れはこちらです。
+セットアップは以上です。当日つくるもののヒントに、実際のプロンプトと成果物を用意しています。
 
-<LinkButton href="../../credits/" icon="right-arrow">
-	APIクレジットの受け取り方
+<LinkButton href="../../showcase/" icon="right-arrow">
+	作例集：プロンプトと成果物
 </LinkButton>

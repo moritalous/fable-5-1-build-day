@@ -1,8 +1,6 @@
 ---
 title: APIクレジットの受け取り方
 description: Build Dayで配布するAPIクレジットの申請手順と、受け取ったあとの確認方法。
-sidebar:
-  order: 1
 ---
 
 import { Aside, Steps, LinkButton } from '@astrojs/starlight/components';
@@ -11,12 +9,8 @@ import { CREDIT_FORM_URL } from '../../consts.ts';
 Build Dayの参加者には、**Claude Codeで使えるAPIクレジット**を配布予定です。当日会場で申請用のURLをご案内しますので、この手順で申請してください。
 
 <Aside type="caution" title="クレジットが配布できない場合">
-	何らかの事情で配布できない場合は、各自でクレジットの購入をお願いします。手順はこのページの[自分でクレジットを購入する](#自分でクレジットを購入する)にあります。
+	何らかの事情で配布できない場合は、各自でクレジットの購入をお願いします。手順はこのページの[自分でクレジットを購入する場合](#自分でクレジットを購入する場合)にあります。
 </Aside>
-
-## 事前にやっておくこと
-
-[Claude Platformのアカウント](/preparation/account/)を作成しておいてください。クレジットはこのアカウントに付与されます。
 
 ## クレジットを申請する
 
@@ -56,13 +50,7 @@ Claude Platformの左下（または「請求」メニュー）に残高が表�
 
 クレジットを使い切ると、Claude Codeで `Credit balance is too low` のようなエラーが出ます。その場合は下の手順で購入するか、スタッフに声をかけてください。
 
-## Claude Codeで使う
-
-クレジットを受け取ったあと、Claude Codeを**Claude Consoleアカウントでログイン**して使えば、そのクレジットが消費されます。特別な設定は不要です。手順は[3. 初回起動とログイン](/preparation/first-run/)にあります。
-
-すでにPro/Maxプランでログインしている場合は、起動中に `/login` でConsoleアカウントに切り替えられます。APIキーを使う方法もあります（[APIキーの発行と設定](/reference/apikey/)）。
-
-## 自分でクレジットを購入する
+## 自分でクレジットを購入する場合
 
 配布分を使い切った場合や、事前に試しておきたい場合はこちら。
 

@@ -9,7 +9,7 @@ hero:
     file: ../../assets/build-day-cover.jpg
     alt: Claude Community Osaka
   actions:
-    - text: 事前準備を始める
+    - text: セットアップを始める
       link: preparation/account/
       icon: right-arrow
     - text: イベントページ(Luma)
@@ -28,7 +28,7 @@ import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 Build Dayは、**新しいモデルを実際に手を動かして体験する回**です。世界中の人がFable 5.1を試しているこのタイミングで、集まって、作って、見せ合いましょう。
 
-作るものは自由です。「これまで作れなかったもの」「日々の困りごとを解決するもの」「びっくりするもの」など、どんな方向でも歓迎です。エンジニア・開発者の方はもちろん、Claudeでのものづくりに関心がある方であれば経験は問いません。**Claude Codeを使ったことがない方でも大丈夫です。**[事前準備](/preparation/account/)のページに、インストールからログインまで手順を用意しました。
+作るものは自由です。「これまで作れなかったもの」「日々の困りごとを解決するもの」「びっくりするもの」など、どんな方向でも歓迎です。エンジニア・開発者の方はもちろん、Claudeでのものづくりに関心がある方であれば経験は問いません。**Claude Codeを使ったことがない方でも大丈夫です。**[セットアップ](/preparation/account/)のページに、アカウント作成からClaude Codeを動かすところまでの手順を用意しました。
 
 <CardGrid>
 	<Card title="タイムテーブル" icon="clock">
@@ -40,10 +40,11 @@ Build Dayは、**新しいモデルを実際に手を動かして体験する回
 
 		※プログラム・時間は変更になる場合があります。
 	</Card>
-	<Card title="持ち物・事前準備" icon="laptop">
+	<Card title="持ち物・セットアップ" icon="laptop">
 		- ノートパソコン（電源の用意はありますが数に限りがあります。事前の充電にご協力ください）
 		- [Claude Platform](https://platform.claude.com)のアカウント（**事前作成をお願いします**）
 		- [Claude Code](/preparation/install/)のインストール
+		- [APIキー](/preparation/apikey/)の発行（当日はこのキーでClaude Codeを動かします。Pro/Max契約の方は不要です）
 
 		APIクレジットはイベントで配布予定です。事前の購入は不要です。
 	</Card>
@@ -59,33 +60,50 @@ Build Dayは、**新しいモデルを実際に手を動かして体験する回
 	</Card>
 </CardGrid>
 
-## 当日までにやっておくこと
+## セットアップ
 
-イベント当日は作る時間をたっぷり取りたいので、**セットアップは事前に済ませておいてください**。3ステップ、合わせて15分ほどです。
+イベント当日は作る時間をたっぷり取りたいので、**セットアップは事前に済ませておいてください**。APIクレジットの申請だけは当日の案内が必要なので、会場で行います。
 
 <LinkCard
-	title="1. Claude Platformアカウントを作る"
+	title="アカウント作成"
 	description="APIクレジットを受け取るための、開発者向けコンソールのアカウントを作成します。"
 	href="preparation/account/"
 />
-<LinkCard
-	title="2. Claude Codeをインストールする"
-	description="macOS / Windows それぞれの手順。ターミナルを使ったことがない方向けの説明つき。"
-	href="preparation/install/"
-/>
-<LinkCard
-	title="3. 初回起動とログイン"
-	description="実際に起動してログインし、最初の1つを作ってみるところまで。"
-	href="preparation/first-run/"
-/>
-
-## 当日・参考
-
 <LinkCard
 	title="APIクレジットの受け取り方"
 	description="会場で配布するAPIクレジットの申請手順と、受け取ったあとの確認方法。"
 	href="credits/"
 />
+<LinkCard
+	title="APIキーの発行"
+	description="当日Claude Codeを動かすためのAPIキーを、自分のアカウントで発行します。"
+	href="preparation/apikey/"
+/>
+<LinkCard
+	title="Claude Codeのインストール"
+	description="macOS / Windows それぞれの手順。ターミナルを使ったことがない方向けの説明つき。"
+	href="preparation/install/"
+/>
+<LinkCard
+	title="初回起動"
+	description="APIキーを設定して起動し、最初の1つを作ってみるところまで。"
+	href="preparation/first-run/"
+/>
+
+## 何を作るか迷ったら
+
+**Fable 5.1に実際に投げたプロンプトと、そこから出てきたHTMLを6作品ぶん公開しています。** すべて追加指示なしの一発生成で、生成物は別タブで実際に動かせます。かかった時間と料金（1本あたり$9〜$24）も載せているので、当日の見通しを立てる材料にしてください。
+
+プロンプトはコピーしてそのまま使えます。まず投げてみて、出てきたものを自分の好きな方向に変えていくのが、いちばん手早いスタートです。
+
+<LinkCard
+	title="作例集：プロンプトと成果物"
+	description="星系シミュレーター、オーケストラ指揮者ゲーム、4ストロークエンジン、分子動力学、戦国勢力図、VTuberスタジオ。プロンプト全文・実機デモ・料金つき。"
+	href="showcase/"
+/>
+
+## 参考
+
 <LinkCard
 	title="利用上限とコストの確認"
 	description="支出上限の設定と、Claude Codeで使った金額の確認方法。"

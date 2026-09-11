@@ -1,0 +1,73 @@
+---
+title: 3. 4ストロークエンジン
+description: 熱力学をライブ計算し、P-V線図の面積から仕事量を積分する4ストロークエンジンのカットモデル。プロンプトと成果物、実測の時間と料金。
+sidebar:
+  order: 3
+  label: 3. 4ストロークエンジン
+---
+
+import { Aside, Badge, Tabs, TabItem } from '@astrojs/starlight/components';
+import DemoLink from '../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="公式デモ 3" variant="note" /><Badge text="$14.57" variant="success" /><Badge text="29分01秒" variant="tip" /><Badge text="音が出ます" variant="caution" /></p>
+
+4ストロークエンジンのカットモデルが動き、熱力学がその場で計算されます。燃料が燃え、ピストンに圧力がかかり、トルクが生まれ、排気の脈動がそのままエンジン音になります。横に描かれるP-V線図（圧力-体積線図）は、囲まれた面積をその場で積分して、1サイクルあたりの仕事量を出しています。
+
+<DemoLink
+	file="engine.html"
+	note="※ エンジン音が鳴ります。音量にご注意ください。"
+/>
+
+## 何ができるか
+
+- ピストン・コンロッド・クランクシャフト・バルブの開閉・点火プラグの火花と燃焼まで描いた大きなカットモデルのアニメーション
+- 燃焼・ピストンにかかる圧力・トルクをライブで計算
+- 排気の脈動をエンジン音に変換して再生
+- P-V線図をリアルタイムで描画し、囲まれた面積を積分して1サイクルの仕事量を算出
+- スロットルのスライダー、回転数（RPM）表示、1気筒／4気筒／8気筒の切り替え
+
+## 使ったプロンプト
+
+<Tabs syncKey="prompt-lang">
+
+<TabItem label="原文（English）">
+
+```text wrap
+Build me an interactive, visually stunning simulation of a four-stroke car engine, from first principles.
+Compute the thermodynamics live: fuel burning, pressure on the pistons, torque, and the exhaust pulses turned into engine sound.
+Draw the engine as a big animated cutaway — pistons, connecting rods, crankshaft, valves opening and closing, the spark and the flame — and show the pressure–volume loop being drawn in real time next to it, with the work per cycle integrated live from the area inside the loop.
+Give me a throttle slider, an RPM readout, and a way to switch between 1, 4 and 8 cylinders, and make it beautiful.
+Build it as a single HTML file with no external libraries, make it run at 60 fps, and keep the code clean and correct so it works perfectly the first time it is opened.
+```
+
+</TabItem>
+
+<TabItem label="日本語訳">
+
+```text wrap
+4ストローク自動車エンジンの、インタラクティブで視覚的に目を見張るシミュレーションを、第一原理から作ってください。
+熱力学をライブで計算してください。燃料の燃焼、ピストンにかかる圧力、トルク、そして排気の脈動をエンジン音に変換したもの。
+エンジンは大きなアニメーションのカットモデルとして描いてください。ピストン、コンロッド、クランクシャフト、開閉するバルブ、火花と炎。その横には圧力-体積線図がリアルタイムで描かれていく様子を表示し、1サイクルあたりの仕事量を、線図が囲む面積からライブで積分して求めてください。
+スロットルのスライダー、回転数（RPM）の表示、そして1気筒・4気筒・8気筒を切り替える手段をつけてください。そして美しくしてください。
+外部ライブラリを使わない1つのHTMLファイルとして作り、60fpsで動くようにし、最初に開いたときに完璧に動くよう、コードは整理され、正しいものにしてください。
+```
+
+</TabItem>
+
+</Tabs>
+
+## 実測値
+
+| 項目 | トークン | 料金 |
+| :--- | ---: | ---: |
+| 入力 | 1,834 | $0.02 |
+| 出力 | 208,615 | $10.43 |
+| キャッシュ書き込み | 211,667 | $2.65 |
+| キャッシュ読み込み | 5,884,710 | $1.47 |
+| **合計** | **6,306,826** | **$14.57** |
+
+所要時間 **29分01秒** / モデル `claude-fable-5-1`
+
+<Aside type="note">
+	各項目の料金は四捨五入しているため、合計と一致しない場合があります。料金はセッションログから算出した目安です。
+</Aside>

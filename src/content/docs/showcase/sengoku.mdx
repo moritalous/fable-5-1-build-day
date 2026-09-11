@@ -1,0 +1,80 @@
+---
+title: 5. 戦国勢力図の絵巻
+description: 外部地図データなしで日本地図を描き、1540年から1615年までの勢力の推移を石高で検算しながら見せる水墨画風の絵巻。プロンプトと成果物、実測の時間と料金。
+sidebar:
+  order: 5
+  label: 5. 戦国勢力図の絵巻
+---
+
+import { Aside, Badge, Tabs, TabItem } from '@astrojs/starlight/components';
+import DemoLink from '../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="オリジナル" variant="tip" /><Badge text="$18.12" variant="success" /><Badge text="34分24秒" variant="tip" /></p>
+
+1540年から1615年まで、戦国時代の勢力図がどう塗り替わっていったかを、墨と和紙の絵巻として見せるものです。年のスライダーを動かすと、国が大名家の色で塗り分けられ、境界が引き直されていきます。日本地図の海岸線は外部データを読み込まず、モデルがファイルに埋め込んだ座標から描いています。
+
+<DemoLink file="sengoku.html" />
+
+## 何ができるか
+
+- 年スライダーをドラッグすると、国ごとの支配大名の色が塗り替わり、境界が引き直される
+- 横に大名家のランキング表：現在の領国、合算した石高、全国比（%）、前年からの変化。順位が変わると表の並びも変わる
+- 合算した石高を慶長検地の記録値と突き合わせ、5%以内で一致したら行が緑になる
+- 国をクリックすると、いつ・誰の手に渡ったかが分かる
+- 大名家をクリックすると、その家の領地だけを全期間にわたって追える
+- ボタンで桶狭間・長篠・本能寺・関ヶ原・大坂の陣に一足飛び。軍勢も地図上に表示
+- 日付は西暦と和暦（元号＋旧暦の月日）を併記
+
+## 使ったプロンプト
+
+<Tabs syncKey="prompt-lang">
+
+<TabItem label="原文（English）">
+
+```text wrap
+Build me an animated map of Japan showing how territorial control shifted through the Sengoku period from 1540 to 1615, drawn as a beautiful ink-and-paper scroll readable from across a room, with each province filled in the colour of the clan that held it and the boundaries redrawing themselves as I scrub through the years.
+
+Beside the map show a live ranking table of the great houses: the provinces each one currently holds, their combined kokudaka summed from the per-province figures, their share of the national total as a percentage, and the change since the previous year, reordering itself as the ranking shifts; check the summed totals against the recorded Keicho-era survey figures and highlight a row green when they agree within five percent.
+
+Let me drag a year slider and watch the map animate, click a province to see who held it and when it changed hands, click a clan in the table to trace only its territory across the whole period, and press a button to jump straight to Okehazama, Nagashino, Honnoji, Sekigahara and the sieges of Osaka with the armies marked on the map.
+
+Draw the coastline of Japan from coordinates you embed in the file yourself — no external map data, no images — and keep it recognisable enough that anyone in the room can find their own prefecture. Show every date in both the Gregorian calendar and the era name with its lunisolar month and day. Style it like a sumi-e screen: washed paper, ink outlines, restrained colour, clan crests drawn as simple vector marks, and build it as one self-contained HTML file with no external libraries or assets.
+```
+
+</TabItem>
+
+<TabItem label="日本語訳">
+
+```text wrap
+1540年から1615年までの戦国時代を通じて、領国の支配がどのように移り変わったかを示す、日本のアニメーション地図を作ってください。部屋の反対側からでも読める、美しい墨と紙の絵巻として描き、それぞれの国はそれを領有していた家の色で塗り、私が年をスクラブするのに合わせて境界が自ら引き直されるようにしてください。
+
+地図の横には、大名家のライブなランキング表を表示してください。各家が現在領有している国、国ごとの数値を合算した石高、全国総計に占める割合のパーセンテージ、そして前年からの変化。順位が入れ替わるのに合わせて表自身も並び替わるようにしてください。合算した総計を慶長検地の記録値と照合し、5パーセント以内で一致したときは行を緑でハイライトしてください。
+
+年のスライダーをドラッグして地図が動くのを見られ、国をクリックすると誰が領有していたか、いつ手が変わったかが分かり、表の中の家をクリックするとその家の領地だけを全期間にわたってたどれ、ボタンを押すと桶狭間・長篠・本能寺・関ヶ原・大坂の陣へ直接飛べて、軍勢が地図上に示されるようにしてください。
+
+日本の海岸線は、あなた自身がファイルに埋め込んだ座標から描いてください。外部の地図データも画像も使わないでください。そして、会場にいる誰もが自分の県を見つけられる程度には、見分けがつくようにしてください。すべての日付を、西暦と、元号に旧暦の月日を添えたものの両方で表示してください。水墨画の屏風のような趣にしてください。晒した紙、墨の輪郭、抑えた色、簡素なベクター図形として描いた家紋。そして、外部ライブラリもアセットも使わない、自己完結した1つのHTMLファイルとして作ってください。
+```
+
+</TabItem>
+
+</Tabs>
+
+<Aside type="caution" title="史実データの扱いについて">
+	モデルが書き出した座標・石高・年月日は、厳密な史料ではありません。それらしく作れることのデモとして見てください。
+</Aside>
+
+## 実測値
+
+| 項目 | トークン | 料金 |
+| :--- | ---: | ---: |
+| 入力 | 1,418 | $0.01 |
+| 出力 | 262,444 | $13.12 |
+| キャッシュ書き込み | 280,857 | $3.51 |
+| キャッシュ読み込み | 5,903,015 | $1.48 |
+| **合計** | **6,447,734** | **$18.12** |
+
+所要時間 **34分24秒** / モデル `claude-fable-5-1`
+
+<Aside type="note">
+	各項目の料金は四捨五入しているため、合計と一致しない場合があります。料金はセッションログから算出した目安です。
+</Aside>

@@ -1,0 +1,75 @@
+---
+title: 4. アルゴン分子動力学
+description: 約600個のアルゴン原子を本物のLennard-Jonesポテンシャルで動かし、気体・液体・固体の相転移を創発させるシミュレーター。プロンプトと成果物、実測の時間と料金。
+sidebar:
+  order: 4
+  label: 4. アルゴン分子動力学
+---
+
+import { Aside, Badge, Tabs, TabItem } from '@astrojs/starlight/components';
+import DemoLink from '../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="オリジナル" variant="tip" /><Badge text="$16.13" variant="success" /><Badge text="24分34秒" variant="tip" /></p>
+
+2次元の箱の中で約600個のアルゴン原子が動きます。温度スライダーを動かすと、気体・液体・固体のあいだを行き来する様子が見られます。原子はLennard-Jonesポテンシャルと速度Verlet法で動いているだけで、相転移はプログラムされていません。
+
+<DemoLink file="molecular.html" />
+
+## 何ができるか
+
+- 約600個の原子。運動エネルギーで色分けされるので、熱が箱の中を伝わっていく様子が見える
+- 測定パネル：等分配則から出した瞬間温度、ビリアル定理から出した圧力、希薄になるほど1に近づくはずの PV/NkT、全エネルギーと開始時からのドリフト
+- 速度分布のヒストグラムを毎フレーム更新し、その温度でのマクスウェル・ボルツマン分布の解析曲線を重ねて描画。2%以内で一致するとパネルが緑になる
+- 温度スライダーで加熱・冷却、右の壁をピストンのようにドラッグして圧縮
+- 原子をクリックでタグ付けして軌跡を追跡
+- ボタンで急冷（クエンチ）し、結晶格子が核生成して成長する様子を観察
+
+## 使ったプロンプト
+
+<Tabs syncKey="prompt-lang">
+
+<TabItem label="原文（English）">
+
+```text wrap
+Show me a live molecular dynamics simulation of about six hundred argon atoms in a two-dimensional box, rendered like an elegant museum exhibit readable from across a room, where I can watch the substance move between gas, liquid and solid as I change the temperature.
+
+Beside the box show a live measurement panel: instantaneous temperature computed from the average kinetic energy by equipartition, pressure computed from the virial theorem, the ratio PV/NkT which should approach one as the gas gets dilute, and total energy with its drift since start; also draw a histogram of the atoms' speeds updating every frame with the analytic Maxwell–Boltzmann curve for the current temperature drawn over it, and highlight the panel green when the measured distribution matches the curve within two percent.
+
+Let me drag a temperature slider to heat and cool the box, drag the right wall like a piston to compress it, click an atom to tag it and trace its path, and press a button to quench the system instantly so I can watch a crystal lattice nucleate and grow.
+
+Move every atom with a real Lennard-Jones potential and velocity Verlet integration, never with scripted animations or preset states — the phase changes must emerge from the physics alone. Draw the atoms with soft glowing edges and faint motion trails on a dark background, colour them by kinetic energy so heat visibly flows through the box, run at 60 fps, and build it as one self-contained HTML file with no external libraries or assets.
+```
+
+</TabItem>
+
+<TabItem label="日本語訳">
+
+```text wrap
+2次元の箱に入った約600個のアルゴン原子の、ライブな分子動力学シミュレーションを見せてください。部屋の反対側からでも読める、洗練された美術館の展示のように描画し、温度を変えるとその物質が気体・液体・固体のあいだを移り変わる様子を見られるようにしてください。
+
+箱の横にはライブな測定パネルを表示してください。等分配則により平均運動エネルギーから計算した瞬間温度、ビリアル定理から計算した圧力、気体が希薄になるにつれて1に近づくはずの比 PV/NkT、そして全エネルギーと開始時からのドリフト。さらに、原子の速さのヒストグラムを毎フレーム更新しながら描き、その時点の温度に対する解析的なマクスウェル–ボルツマン曲線をその上に重ねて描いてください。測定した分布が曲線と2パーセント以内で一致したときは、パネルを緑でハイライトしてください。
+
+温度スライダーをドラッグして箱を加熱・冷却でき、右の壁をピストンのようにドラッグして圧縮でき、原子をクリックしてタグを付けその軌跡をたどれ、ボタンを押すと系を瞬時に急冷して、結晶格子が核生成して成長する様子を見られるようにしてください。
+
+すべての原子は、本物のLennard-Jonesポテンシャルとvelocity Verlet積分で動かしてください。スクリプトによるアニメーションやプリセットされた状態は決して使わないでください。相転移は物理だけから創発しなければなりません。原子は、暗い背景の上に、やわらかく光る輪郭とかすかな運動の軌跡とともに描き、運動エネルギーによって色分けして、熱が箱の中を流れていくのが目に見えるようにしてください。60fpsで動かし、外部ライブラリもアセットも使わない、自己完結した1つのHTMLファイルとして作ってください。
+```
+
+</TabItem>
+
+</Tabs>
+
+## 実測値
+
+| 項目 | トークン | 料金 |
+| :--- | ---: | ---: |
+| 入力 | 1,832 | $0.02 |
+| 出力 | 205,310 | $10.27 |
+| キャッシュ書き込み | 301,662 | $3.77 |
+| キャッシュ読み込み | 8,311,888 | $2.08 |
+| **合計** | **8,820,692** | **$16.13** |
+
+所要時間 **24分34秒** / モデル `claude-fable-5-1`
+
+<Aside type="note">
+	各項目の料金は四捨五入しているため、合計と一致しない場合があります。料金はセッションログから算出した目安です。
+</Aside>

@@ -1,0 +1,80 @@
+---
+title: 6. VTuberスタジオ
+description: Webカメラで頭の動きを追い、FFTのフォルマント解析で日本語5母音を判定してアバターの口を動かすVTuberスタジオ。プロンプトと成果物、実測の時間と料金。
+sidebar:
+  order: 6
+  label: 6. VTuberスタジオ
+---
+
+import { Aside, Badge, Tabs, TabItem } from '@astrojs/starlight/components';
+import DemoLink from '../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="オリジナル" variant="tip" /><Badge text="$23.77" variant="success" /><Badge text="26分51秒" variant="tip" /><Badge text="カメラ・マイク使用" variant="caution" /></p>
+
+ノートPCの前に座った人を、バーチャルステージ上のキャラクターに変えるVTuberスタジオです。頭の動き、目、口がリアルタイムで追従します。口は音量に合わせて開閉するのではなく、FFTで第1・第2フォルマントを求めて日本語5母音を判定し、あ・い・う・え・お の形を作ります。
+
+<DemoLink
+	file="vtuber.html"
+	note="※ Webカメラとマイクを使います。許可を求められたら「許可」してください。使いたくない場合は「Demo without camera」から動きのデモだけ見られます。映像・音声はすべてブラウザ内で処理され、外部への通信は一切ありません。"
+/>
+
+## 何ができるか
+
+- **頭部トラッキング**：Webカメラのフレーム差分から、頭の位置・向き（ヨー）・傾き（ロール・ピッチ）を推定
+- **母音判定**：マイク入力にFFTをかけ、第1・第2フォルマントから あ・い・う・え・お のどれを発音しているか判定。アバターの口がその形になる
+- トラッキングパネル：ヨー・ピッチ・ロール（度）、まばたき回数、判定した母音と確信度、入力レベル、トラッキング遅延（ミリ秒）、フレームレート
+- **母音チャート**：第1・第2フォルマントを点としてプロット。5母音の領域が示されているので、しゃべると点が正しい領域に入るのが見える
+- 左右反転したカメラ映像に、トラッキング結果を重ねて表示
+- キャラクターはすべてコードで描画（画像なし）。髪と服が物理で揺れ、静止していると自分で呼吸・まばたきをする
+- ステージの照明、流れるコメント、口を大きく開けたり頭を強く傾けたときに出るリアクション演出
+- キャラクターデザインと背景の切り替え
+
+## 使ったプロンプト
+
+<Tabs syncKey="prompt-lang">
+
+<TabItem label="原文（English）">
+
+```text wrap
+Create a VTuber studio that turns whoever sits in front of the laptop into an animated character on a virtual stage, stage-worthy and readable from across a room, with the avatar's head, eyes and mouth following the real person in real time.
+
+Use the webcam to track the head — its position, how far it is turned and how far it is tilted — by comparing successive frames and analysing the image yourself, and use the microphone to drive the mouth: run your own FFT, find the first two formants, and decide which of the five Japanese vowels is being spoken, so the character's mouth actually forms あ, い, う, え or お rather than simply opening and closing with the volume.
+
+Beside the stage show a live tracking panel: head yaw, pitch and roll in degrees, a blink counter, the detected vowel with your confidence in it, the input level, the tracking latency in milliseconds and the frame rate; also plot the first and second formants as a moving point on a vowel chart with the five Japanese vowel regions marked, so I can watch the point land in the right region as I speak, and show my mirrored webcam view with the tracking drawn over it.
+
+Draw the character entirely in code — no images, no external assets — as a soft two-dimensional avatar whose hair and clothing swing with a little physics as the head moves, breathing and blinking on its own when I hold still, and give me a stage with lighting, a comment stream scrolling across the screen, and a reaction effect that fires when I open my mouth wide or tilt my head hard. Let me switch between two or three character designs and change the background. Build it as one self-contained HTML file with no external libraries or assets, and keep it at 60 fps so the avatar never feels laggy.
+```
+
+</TabItem>
+
+<TabItem label="日本語訳">
+
+```text wrap
+ノートパソコンの前に座った人を、バーチャルステージ上のアニメーションキャラクターに変えるVTuberスタジオを作ってください。ステージに立てる出来で、部屋の反対側からでも読め、アバターの頭・目・口が実在の人物にリアルタイムで追従するようにしてください。
+
+Webカメラを使って頭を追跡してください。その位置、どれだけ向きを変えたか、どれだけ傾いているかを、連続するフレームを比較し、あなた自身が画像を解析することで求めてください。そしてマイクで口を駆動してください。あなた自身のFFTを実行し、第1・第2フォルマントを見つけ、日本語の5つの母音のどれが発音されているかを判定してください。そうすることで、キャラクターの口が、単に音量に合わせて開いたり閉じたりするのではなく、実際に あ・い・う・え・お の形を作るようにしてください。
+
+ステージの横にはライブなトラッキングパネルを表示してください。頭のヨー・ピッチ・ロールを度数で、まばたきのカウンター、検出した母音とそれに対するあなたの確信度、入力レベル、トラッキングの遅延をミリ秒で、そしてフレームレート。さらに、第1・第2フォルマントを、日本語の5母音の領域が記された母音チャート上の動く点としてプロットし、私が話すのに合わせてその点が正しい領域に着地するのを見られるようにしてください。また、トラッキングを重ねて描いた左右反転の自分のWebカメラ映像も表示してください。
+
+キャラクターは、画像も外部アセットも使わず、すべてコードで描いてください。やわらかな2次元のアバターとして、頭が動くのに合わせて髪と衣服がちょっとした物理で揺れ、私がじっとしているときは自分で呼吸しまばたきするようにしてください。照明のあるステージ、画面を横切って流れるコメント、そして私が口を大きく開けたり頭を強く傾けたりしたときに発動するリアクション演出をつけてください。2〜3種類のキャラクターデザインを切り替えられ、背景も変えられるようにしてください。外部ライブラリもアセットも使わない、自己完結した1つのHTMLファイルとして作り、アバターが遅れて感じられることが決してないよう60fpsを保ってください。
+```
+
+</TabItem>
+
+</Tabs>
+
+## 実測値
+
+| 項目 | トークン | 料金 |
+| :--- | ---: | ---: |
+| 入力 | 1,830 | $0.02 |
+| 出力 | 329,159 | $16.46 |
+| キャッシュ書き込み | 394,886 | $4.94 |
+| キャッシュ読み込み | 9,423,921 | $2.36 |
+| **合計** | **10,149,796** | **$23.77** |
+
+所要時間 **26分51秒** / モデル `claude-fable-5-1`
+
+<Aside type="note">
+	各項目の料金は四捨五入しているため、合計と一致しない場合があります。料金はセッションログから算出した目安です。
+</Aside>
