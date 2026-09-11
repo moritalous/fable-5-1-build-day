@@ -6,8 +6,8 @@ export const EVENT_URL = 'https://luma.com/claude-oec1';
 /** Claude Community(JP)のconnpassグループ */
 export const CONNPASS_URL: string | null = 'https://claude.connpass.com/';
 
-/** アンケートフォーム。未作成のうちは null（ページ上は「当日案内します」の表示になる） */
-export const SURVEY_URL: string | null = null;
+/** イベント後アンケート（Googleフォーム） */
+export const SURVEY_URL: string | null = 'https://forms.gle/QiWHUQUzHUYRbocG9';
 
 /**
  * 作ったものの提出フォーム（Anthropic公式「Share what you built with Claude!」）。
