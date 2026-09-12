@@ -101,6 +101,26 @@ cd $HOME\build-day
 
 </Steps>
 
+## モデルをFable 5.1に切り替える
+
+起動直後は既定のモデル（`Opus 5`など）が選ばれています。Build Dayでは新しく公開された**Fable 5.1**を使うので、`/model`で切り替えておきましょう。
+
+<Steps>
+
+1. `/model` と入力してEnterを押します。
+
+1. 一覧から`Fable`（Fable 5.1）を選び、Enterを押します。
+
+    ![](images/2026-09-13-01-52-12.png)
+
+1. 「Set model to Fable 5.1 and saved as your default for new sessions」と表示されれば切り替え完了です。以降起動するときも自動でFable 5.1が使われます。
+
+</Steps>
+
+<Aside type="tip" title="モデルはあとからでも切り替えられます">
+	起動中いつでも`/model`で変更できます。手が重いと感じたら`Sonnet`や`Haiku`など軽いモデルに切り替えてみてください。
+</Aside>
+
 ## どの認証で動いているか確認する
 
 APIキーはログイン情報より**優先**されます。起動中に `/usage` や `/login` を開くと、いまどのアカウント・どの認証で動いているかを確認できます。
