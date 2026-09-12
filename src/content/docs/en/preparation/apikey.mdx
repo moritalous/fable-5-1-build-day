@@ -1,6 +1,6 @@
 ---
 title: Creating an API key
-description: How to create your own API key on Claude Platform, and what to watch out for when you do.
+description: How to create a workspace and your own API key on Claude Platform, and what to watch out for when you do.
 sidebar:
   label: Creating an API key
 ---
@@ -13,11 +13,31 @@ At Build Day you will run Claude Code with **an API key created in your own Clau
 	If you subscribe to a claude.ai Pro/Max/Team/Enterprise plan, you can take part on that plan without using an API key. In that case it runs within your subscription, so no API credits are consumed. See [First run](../first-run/) for how to start it.
 </Aside>
 
+## Create a workspace
+
+API keys are issued per "workspace". Right after creating your account, only the `Default` workspace exists, but `Default` won't let you create an API key unless you change an organization setting — so we'll create a new workspace for Build Day instead.
+
+<Steps>
+
+1. Click the workspace selector in the top left of the screen, then click 「ワークスペースを作成」 (Create workspace).
+
+    ![](../../images/2026-07-04-06-06-12.png)
+
+1. Enter a name (for example `build-day` — any name works) and click 「作成」 (Create). You can leave the color and workspace region at their defaults.
+
+    ![](../../images/2026-07-04-06-07-52.png)
+
+</Steps>
+
+<Aside type="tip" title="If it doesn't switch automatically">
+	After creating it, check that the top-left display now shows your new workspace's name. If it still shows `Default`, click the workspace selector again and switch to it.
+</Aside>
+
 ## Create an API key
 
 <Steps>
 
-1. Select the 「APIキー」 (API keys) menu in the console and click 「キーを作成」 (Create Key).
+1. Select the 「APIキー」 (API keys) menu in the console and click 「キーを作成」 (Create Key). Make sure the workspace shown in the top left is the one you created in the previous step.
 
     ![](../../images/2026-07-04-23-33-46.png)
 
@@ -27,8 +47,8 @@ At Build Day you will run Claude Code with **an API key created in your own Clau
 
 </Steps>
 
-<Aside type="caution" title='Choose the "Default" workspace'>
-	API keys are created per workspace, and that workspace's balance and limits apply. To use the credits you received, create the key in `Default`.
+<Aside type="caution" title="Make sure your new workspace is selected">
+	API keys are created per workspace, and that workspace's balance and limits apply. Create the key while the workspace from the previous step is selected.
 </Aside>
 
 <Aside type="caution" title="Handling your key">
