@@ -2,7 +2,10 @@
 /**
  * 生成したHTMLそのものを別タブで開くボタン。
  * ファイルは public/demos/ に置き、baseは自動で付与する。
+ * 見た目を他ページと揃えるため、StarlightのLinkButtonをそのまま使う。
  */
+import { LinkButton } from '@astrojs/starlight/components';
+
 interface Props {
 	/** public/demos/ 配下のファイル名。例: 'engine.html' */
 	file: string;
@@ -20,55 +23,15 @@ const href = `${base}/demos/${file}`;
 ---
 
 <div class="demo-link">
-	<a class="demo-link__button" href={href} target="_blank" rel="noopener noreferrer">
-		<span>{label ?? defaultLabel}</span>
-		<svg
-			class="demo-link__icon"
-			width="16"
-			height="16"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-		>
-			<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-			<polyline points="15 3 21 3 21 9"></polyline>
-			<line x1="10" y1="14" x2="21" y2="3"></line>
-		</svg>
-	</a>
+	<LinkButton href={href} target="_blank" rel="noopener noreferrer" icon="external">
+		{label ?? defaultLabel}
+	</LinkButton>
 	{note && <p class="demo-link__note">{note}</p>}
 </div>
 
 <style>
 	.demo-link {
 		margin: 1.5rem 0;
-	}
-
-	.demo-link__button {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.6rem;
-		padding: 0.7rem 1.25rem;
-		border-radius: 0.5rem;
-		background: var(--sl-color-accent);
-		color: var(--sl-color-white);
-		font-weight: 700;
-		text-decoration: none;
-		line-height: 1.2;
-		border: 1px solid var(--sl-color-accent);
-	}
-
-	.demo-link__button:hover {
-		background: var(--sl-color-accent-high);
-		border-color: var(--sl-color-accent-high);
-		color: var(--sl-color-black);
-	}
-
-	.demo-link__icon {
-		flex-shrink: 0;
 	}
 
 	.demo-link__note {
