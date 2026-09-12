@@ -1,0 +1,58 @@
+---
+title: 5. Sengoku territory scroll
+description: An ink-painting scroll that draws a map of Japan with no external map data and shows how territorial control shifted from 1540 to 1615, checking its kokudaka totals as it goes. The prompt, the result, and the measured time and cost.
+sidebar:
+  order: 5
+  label: 5. Sengoku territory scroll
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+import DemoLink from '../../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="Original" variant="tip" /><Badge text="$18.12" variant="success" /><Badge text="34 min 24 s" variant="tip" /></p>
+
+This shows how the map of power in the Sengoku period was repainted between 1540 and 1615, as a scroll in ink on washi paper. Move the year slider and the provinces are filled in the colours of the clans that held them while the boundaries redraw themselves. The coastline of Japan loads no external data; it is drawn from coordinates the model embedded in the file itself.
+
+<DemoLink file="sengoku.html" />
+
+## What it does
+
+- Drag the year slider and each province is repainted in the colour of the clan holding it, with the boundaries redrawn
+- A ranking table of the clans alongside: the provinces they currently hold, their combined kokudaka, their share of the national total (%), and the change since the previous year. The table reorders itself as the ranking shifts
+- The combined kokudaka is checked against the recorded Keicho-era survey figures, and a row turns green when they agree within 5%
+- Click a province to see when it changed hands and to whom
+- Click a clan to trace only its territory across the whole period
+- Buttons jump straight to Okehazama, Nagashino, Honnoji, Sekigahara and the sieges of Osaka, with the armies marked on the map
+- Dates are shown in both the Gregorian calendar and the era name with its lunisolar month and day
+
+## The prompt
+
+```text wrap
+Build me an animated map of Japan showing how territorial control shifted through the Sengoku period from 1540 to 1615, drawn as a beautiful ink-and-paper scroll readable from across a room, with each province filled in the colour of the clan that held it and the boundaries redrawing themselves as I scrub through the years.
+
+Beside the map show a live ranking table of the great houses: the provinces each one currently holds, their combined kokudaka summed from the per-province figures, their share of the national total as a percentage, and the change since the previous year, reordering itself as the ranking shifts; check the summed totals against the recorded Keicho-era survey figures and highlight a row green when they agree within five percent.
+
+Let me drag a year slider and watch the map animate, click a province to see who held it and when it changed hands, click a clan in the table to trace only its territory across the whole period, and press a button to jump straight to Okehazama, Nagashino, Honnoji, Sekigahara and the sieges of Osaka with the armies marked on the map.
+
+Draw the coastline of Japan from coordinates you embed in the file yourself — no external map data, no images — and keep it recognisable enough that anyone in the room can find their own prefecture. Show every date in both the Gregorian calendar and the era name with its lunisolar month and day. Style it like a sumi-e screen: washed paper, ink outlines, restrained colour, clan crests drawn as simple vector marks, and build it as one self-contained HTML file with no external libraries or assets.
+```
+
+<Aside type="caution" title="About the historical data">
+	The coordinates, kokudaka figures and dates the model produced are not rigorous historical sources. Take them as a demonstration that it can make something plausible.
+</Aside>
+
+## Measured results
+
+| Item | Tokens | Cost |
+| :--- | ---: | ---: |
+| Input | 1,418 | $0.01 |
+| Output | 262,444 | $13.12 |
+| Cache write | 280,857 | $3.51 |
+| Cache read | 5,903,015 | $1.48 |
+| **Total** | **6,447,734** | **$18.12** |
+
+Time taken **34 min 24 s** / model `claude-fable-5-1`
+
+<Aside type="note">
+	Each line is rounded, so the individual figures may not add up exactly to the total. Costs are estimates calculated from the session log.
+</Aside>

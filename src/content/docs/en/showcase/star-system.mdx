@@ -1,0 +1,49 @@
+---
+title: 1. Star system simulator
+description: A planetary system that checks its own measurements against Kepler's third law. The prompt, the result, and the measured time and cost.
+sidebar:
+  order: 1
+  label: 1. Star system simulator
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+import DemoLink from '../../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="Official demo 1" variant="note" /><Badge text="$9.21" variant="success" /><Badge text="9 min 21 s" variant="tip" /></p>
+
+A top-down simulator of a fictional star system. The planets move under real Newtonian gravity, and the orbital period the simulation measures for itself is compared with the value Kepler's third law predicts; a row turns green when the two agree within 1%.
+
+<DemoLink file="star-system.html" />
+
+## What it does
+
+- One star and six planets. The names, colours and orbit sizes are the model's own, and one orbit is clearly elliptical
+- Per planet it shows the semi-major axis, the measured orbital period, the period predicted by Kepler's third law, and the error as a percentage. Within 1% turns green
+- Shows the total energy of the system and its drift since the start
+- Click a planet to follow it, scroll to zoom, and use the slider to change the speed of time
+- A button adds a random planet, which starts being measured from that moment on
+
+## The prompt
+
+```text wrap
+Show a top-down animated model of a fictional star system: one star and six planets with invented names, distinct colours and orbits of clearly different sizes, at least one noticeably elliptical, and make it look like an elegant museum exhibit readable from across a room.
+Beside the view show a live table per planet: semi-major axis, orbital period measured from the simulation itself once an orbit completes, the period predicted by Kepler's third law from the star's mass, and the percentage difference, highlighting a row green when they agree within one percent; also show total system energy with its drift since start.
+Let me click a planet to follow it, scroll to zoom, drag a time-speed slider, and press a button to add a new random planet that starts being measured too.
+Draw thin fading orbit trails on a dark starfield with a soft glow on the star, choose the default time scale so the outermost planet completes an orbit in about thirty seconds, and start running immediately, framed to fit. Move the planets with real Newtonian gravity from the star using a symplectic integrator (velocity Verlet), not pre-computed ellipses. Create it as one self-contained HTML file, no external libraries or assets.
+```
+
+## Measured results
+
+| Item | Tokens | Cost |
+| :--- | ---: | ---: |
+| Input | 1,766 | $0.02 |
+| Output | 90,741 | $4.54 |
+| Cache write | 271,780 | $3.40 |
+| Cache read | 5,013,145 | $1.25 |
+| **Total** | **5,377,432** | **$9.21** |
+
+Time taken **9 min 21 s** / model `claude-fable-5-1`
+
+<Aside type="note">
+	Each line is rounded, so the individual figures may not add up exactly to the total. Costs are estimates calculated from the session log.
+</Aside>

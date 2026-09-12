@@ -1,0 +1,127 @@
+---
+title: Fable 5.1 Build Day
+description: A Build Day celebrating the release of Fable 5.1. A hands-on event where you try the new model and build something on the spot.
+template: splash
+hero:
+  title: Osaka | Fable 5.1 Build Day
+  tagline: Get hands-on with Fable 5.1, the model that just launched, and build something on the spot.<br />Saturday, September 19, 2026, 14:00–16:00 — a Claude Community Event in Osaka.
+  image:
+    file: ../../../assets/build-day-cover.jpg
+    alt: Claude Community Osaka
+  actions:
+    - text: Start the setup
+      link: preparation/account/
+      icon: right-arrow
+    - text: Event page (Luma)
+      link: https://luma.com/claude-oec1
+      icon: external
+      variant: minimal
+---
+
+import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="About this site (unofficial)">
+	This site is not official Anthropic content. It is a guide for event participants, run by a volunteer ([moritalous](https://github.com/moritalous)).
+</Aside>
+
+## What is a Build Day?
+
+A Build Day is **a session for experiencing a new model by actually building with it**. While people around the world are trying out Fable 5.1, let's get together, build, and show each other what we made.
+
+Build whatever you want. Something you couldn't build before, something that solves a daily annoyance, something surprising — any direction is welcome. Engineers and developers are of course welcome, and so is anyone interested in building with Claude, regardless of experience. **It's fine if you've never used Claude Code.** The [Setup](/en/preparation/account/) pages walk you through everything from creating an account to running Claude Code.
+
+<CardGrid>
+	<Card title="Schedule" icon="clock">
+		- 13:30 Doors open
+		- 14:00 Opening / what's new in Fable 5.1
+		- 14:10 Build time (solo or in a team)
+		- 15:30 Demos
+		- 15:55 Feedback, group photo, closing
+
+		*The program and times may change.
+	</Card>
+	<Card title="What to bring / setup" icon="laptop">
+		- A laptop (power outlets are available but limited — please charge in advance)
+		- A [Claude Platform](https://platform.claude.com) account (**please create it in advance**)
+		- [Claude Code](/en/preparation/install/) installed
+		- An [API key](/en/preparation/apikey/) (you'll run Claude Code with this key on the day; not needed if you have a Pro/Max plan)
+
+		API credits will be handed out at the event. No need to buy any in advance.
+	</Card>
+	<Card title="Venue" icon="setting">
+		Central Osaka (the venue is still being arranged; we'll announce it on the [event page](https://luma.com/claude-oec1) once it's confirmed)
+
+		This is an in-person-only event. There is no online stream. Seats are limited, so please sign up early if you'd like to join.
+	</Card>
+	<Card title="One request after the event" icon="pencil">
+		After the event, **please share photos from the day and what you built on social media**. This is the one thing we ask of you for holding a Build Day.
+
+		Use the hashtags `#ClaudeCommunityOsaka` and `#ClaudeCommunity`.
+	</Card>
+</CardGrid>
+
+## Setup
+
+We want to leave plenty of time for building on the day, so **please finish the setup in advance**. Only the API credit request needs to be done at the venue, since it requires instructions given on the day.
+
+<LinkCard
+	title="Create an account"
+	description="Create a developer console account so you can receive API credits."
+	href="preparation/account/"
+/>
+<LinkCard
+	title="How to get API credits"
+	description="How to request the API credits handed out at the venue, and how to check them afterwards."
+	href="credits/"
+/>
+<LinkCard
+	title="Issue an API key"
+	description="Issue an API key on your own account to run Claude Code on the day."
+	href="preparation/apikey/"
+/>
+<LinkCard
+	title="Install Claude Code"
+	description="Steps for macOS and Windows, with notes for people who have never used a terminal."
+	href="preparation/install/"
+/>
+<LinkCard
+	title="First run"
+	description="Set your API key, start Claude Code, and build your first thing."
+	href="preparation/first-run/"
+/>
+
+## Not sure what to build?
+
+**We've published six pieces we actually made with Fable 5.1 — the prompts we sent and the HTML that came back.** Each one was generated in a single shot with no follow-up instructions, and you can run the results in a separate tab. We also list the time and cost ($9–$24 per piece) so you can plan for the day.
+
+You can copy the prompts and use them as they are. Sending one first and then steering the result in your own direction is the quickest way to start.
+
+<LinkCard
+	title="Showcase: prompts and results"
+	description="A star system simulator, an orchestra conductor game, a four-stroke engine, molecular dynamics, a Sengoku power map, and a VTuber studio. Full prompts, live demos, and costs."
+	href="showcase/"
+/>
+
+## Reference
+
+<LinkCard
+	title="Spending limits and costs"
+	description="How to set a spending limit and check what you've spent with Claude Code."
+	href="reference/costs/"
+/>
+<LinkCard
+	title="Troubleshooting"
+	description="What to do when you get stuck installing, logging in, or running Claude Code."
+	href="reference/troubleshooting/"
+/>
+<LinkCard
+	title="Survey"
+	description="Please fill this in after the event. It helps us run better events."
+	href="survey/"
+/>
+
+## Notes
+
+- This is an in-person-only event. There is no online stream.
+- If you need to cancel after signing up, please do so as early as you can.
+- We'll be taking photos during the event. They may later appear in report articles or on social media. When taking your own photos or videos, please be considerate about capturing other participants' faces or anything else that identifies them.

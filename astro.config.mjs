@@ -42,6 +42,7 @@ export default defineConfig({
 			defaultLocale: 'root',
 			locales: {
 				root: { label: '日本語', lang: 'ja' },
+				en: { label: 'English' },
 			},
 			customCss: [
 				'@fontsource/line-seed-jp/400.css',
@@ -57,9 +58,10 @@ export default defineConfig({
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/moritalous' },
 			],
 			sidebar: [
-				{ label: 'トップ', link: '/' },
+				{ label: 'トップ', translations: { en: 'Home' }, link: '/' },
 				{
 					label: 'セットアップ',
+					translations: { en: 'Setup' },
 					items: [
 						{ slug: 'preparation/account' },
 						{ slug: 'credits' },
@@ -70,14 +72,16 @@ export default defineConfig({
 				},
 				{
 					label: '作例集',
+					translations: { en: 'Showcase' },
 					items: [{ autogenerate: { directory: 'showcase/' } }],
 				},
 				{ label: "Let's Build", slug: 'build' },
 				{
 					label: '参考',
+					translations: { en: 'Reference' },
 					items: [{ autogenerate: { directory: 'reference/' } }],
 				},
-				{ label: 'アンケート', slug: 'survey' },
+				{ label: 'アンケート', translations: { en: 'Survey' }, slug: 'survey' },
 			],
 		}),
 	],

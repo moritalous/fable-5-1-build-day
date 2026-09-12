@@ -1,0 +1,53 @@
+---
+title: 4. Argon molecular dynamics
+description: A simulator that moves about 600 argon atoms with a real Lennard-Jones potential and lets gas, liquid and solid phase transitions emerge on their own. The prompt, the result, and the measured time and cost.
+sidebar:
+  order: 4
+  label: 4. Argon molecular dynamics
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+import DemoLink from '../../../../components/DemoLink.astro';
+
+<p class="badges"><Badge text="Original" variant="tip" /><Badge text="$16.13" variant="success" /><Badge text="24 min 34 s" variant="tip" /></p>
+
+About 600 argon atoms move inside a two-dimensional box. Drag the temperature slider and you can watch the substance move between gas, liquid and solid. The atoms only follow a Lennard-Jones potential and velocity Verlet integration; the phase transitions are not programmed in.
+
+<DemoLink file="molecular.html" />
+
+## What it does
+
+- About 600 atoms, coloured by kinetic energy, so you can see heat travelling through the box
+- Measurement panel: instantaneous temperature from equipartition, pressure from the virial theorem, PV/NkT which should approach one as the gas gets dilute, and total energy with its drift since the start
+- A histogram of speeds updated every frame, with the analytic Maxwell-Boltzmann curve for that temperature drawn over it. The panel turns green when they agree within 2%
+- Heat and cool with the temperature slider, and compress by dragging the right wall like a piston
+- Click an atom to tag it and trace its path
+- A button quenches the system so you can watch a crystal lattice nucleate and grow
+
+## The prompt
+
+```text wrap
+Show me a live molecular dynamics simulation of about six hundred argon atoms in a two-dimensional box, rendered like an elegant museum exhibit readable from across a room, where I can watch the substance move between gas, liquid and solid as I change the temperature.
+
+Beside the box show a live measurement panel: instantaneous temperature computed from the average kinetic energy by equipartition, pressure computed from the virial theorem, the ratio PV/NkT which should approach one as the gas gets dilute, and total energy with its drift since start; also draw a histogram of the atoms' speeds updating every frame with the analytic Maxwell–Boltzmann curve for the current temperature drawn over it, and highlight the panel green when the measured distribution matches the curve within two percent.
+
+Let me drag a temperature slider to heat and cool the box, drag the right wall like a piston to compress it, click an atom to tag it and trace its path, and press a button to quench the system instantly so I can watch a crystal lattice nucleate and grow.
+
+Move every atom with a real Lennard-Jones potential and velocity Verlet integration, never with scripted animations or preset states — the phase changes must emerge from the physics alone. Draw the atoms with soft glowing edges and faint motion trails on a dark background, colour them by kinetic energy so heat visibly flows through the box, run at 60 fps, and build it as one self-contained HTML file with no external libraries or assets.
+```
+
+## Measured results
+
+| Item | Tokens | Cost |
+| :--- | ---: | ---: |
+| Input | 1,832 | $0.02 |
+| Output | 205,310 | $10.27 |
+| Cache write | 301,662 | $3.77 |
+| Cache read | 8,311,888 | $2.08 |
+| **Total** | **8,820,692** | **$16.13** |
+
+Time taken **24 min 34 s** / model `claude-fable-5-1`
+
+<Aside type="note">
+	Each line is rounded, so the individual figures may not add up exactly to the total. Costs are estimates calculated from the session log.
+</Aside>

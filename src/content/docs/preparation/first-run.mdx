@@ -48,7 +48,9 @@ cd $HOME\build-day
     <TabItem label="macOS">
 
     ```sh
-    mkdir -p .claude && touch .claude/settings.json && open -e .claude/settings.json
+    mkdir -p .claude
+    touch .claude/settings.json
+    open -e .claude/settings.json
     ```
 
     テキストエディットで空のファイルが開きます。
@@ -58,7 +60,9 @@ cd $HOME\build-day
     <TabItem label="Windows">
 
     ```powershell
-    New-Item -ItemType Directory -Force .claude | Out-Null; if (!(Test-Path .claude\settings.json)) { "" | Set-Content .claude\settings.json }; notepad .claude\settings.json
+    New-Item -ItemType Directory -Force .claude | Out-Null
+    if (!(Test-Path .claude\settings.json)) { "" | Set-Content .claude\settings.json }
+    notepad .claude\settings.json
     ```
 
     メモ帳で空のファイルが開きます。

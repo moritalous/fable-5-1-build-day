@@ -1,0 +1,27 @@
+---
+title: Survey
+description: A request to fill in the post-event survey.
+---
+
+import { Aside, LinkButton } from '@astrojs/starlight/components';
+import { SURVEY_URL } from '../../../consts.ts';
+
+We would like to hear your thoughts so we can make future events better. Please take a few minutes to fill in the survey.
+
+{SURVEY_URL ? (
+	<LinkButton href={SURVEY_URL} target="_blank" rel="noopener noreferrer" icon="external">
+		Open the survey
+	</LinkButton>
+) : (
+	<Aside type="tip" title="The survey link is being prepared">
+		We will post it on this page before the event.
+	</Aside>
+)}
+
+## Share it on social media
+
+This is the one thing we ask of you at a Build Day. Please share what you built and how the day went.
+
+<LinkButton href="https://x.com/intent/post?text=%23ClaudeCommunityOsaka%20%23ClaudeCommunity" target="_blank" rel="noopener noreferrer" icon="external">
+	Post on X
+</LinkButton>
