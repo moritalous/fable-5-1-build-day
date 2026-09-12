@@ -1,0 +1,69 @@
+---
+/**
+ * Xの投稿を埋め込む。
+ *
+ * ビルド時にoEmbed APIからHTMLを取得して埋め込むため、Xのスクリプトが
+ * 読み込めない環境でも投稿本文と投稿者名は必ず表示される（画像・動画は
+ * スクリプトが読み込めたときだけ表示される）。
+ * 取得に失敗した場合はビルドを止めず、投稿へのリンクだけを出す。
+ *
+ * 注意: 1ページに複数置くとwidgets.jsが重複して読み込まれる。
+ */
+import { LinkButton } from '@astrojs/starlight/components';
+
+interface Props {
+	/** 投稿のURL。例: 'https://x.com/moritalous/status/123' */
+	url: string;
+}
+
+const { url } = Astro.props;
+const lang = Astro.currentLocale === 'en' ? 'en' : 'ja';
+
+let html: string | null = null;
+try {
+	const endpoint = new URL('https://publish.twitter.com/oembed');
+	endpoint.searchParams.set('url', url);
+	endpoint.searchParams.set('omit_script', '1');
+	endpoint.searchParams.set('dnt', 'true');
+	endpoint.searchParams.set('lang', lang);
+	const res = await fetch(endpoint, { signal: AbortSignal.timeout(10_000) });
+	if (res.ok) html = (await res.json()).html ?? null;
+} catch {
+	// Xが不調でもビルドは通す。下のフォールバックが出る。
+}
+---
+
+{
+	html ? (
+		<div class="x-post">
+			<Fragment set:html={html} />
+			<script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8" />
+		</div>
+	) : (
+		<LinkButton href={url} target="_blank" rel="noopener noreferrer" icon="external">
+			{lang === 'en' ? 'View the post on X' : 'Xで投稿を見る'}
+		</LinkButton>
+	)
+}
+
+<style>
+	.x-post {
+		margin: 1.5rem 0;
+	}
+
+	/* 埋め込みが読み込まれるまでの素の blockquote も読める見た目にする */
+	.x-post :global(.twitter-tweet) {
+		margin: 0;
+		padding: 1rem 1.25rem;
+		border-inline-start: 4px solid var(--sl-color-accent);
+		background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+		border-radius: 0.25rem;
+	}
+
+	/* 読み込み後はXのiframeが入るので、上の装飾を消す */
+	.x-post :global(.twitter-tweet-rendered) {
+		border-inline-start: none;
+		padding: 0;
+		background: none;
+	}
+</style>
