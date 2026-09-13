@@ -6,7 +6,7 @@ sidebar:
   label: "7. Bonus: macOS apps"
 ---
 
-import { Aside, Badge } from '@astrojs/starlight/components';
+import { Aside, Badge, Tabs, TabItem } from '@astrojs/starlight/components';
 import XPost from '../../../../components/XPost.astro';
 
 All six examples above are single HTML files, but that is not the limit of what Fable 5.1 can build. Here are two macOS apps the organiser ([moritalous](https://github.com/moritalous)) actually had it build. Both are native apps written in Swift.
@@ -44,6 +44,40 @@ How long it took was not recorded. The model was `claude-fable-5-1`.
 Here is the organiser's post about having it build a Windows-style file explorer for macOS.
 
 <XPost url="https://x.com/moritalous/status/2098930080680739180?s=20" />
+
+## The prompt
+
+<Tabs syncKey="prompt-lang">
+
+<TabItem label="Original (Japanese)">
+
+```text wrap
+最近macを使い始めました。それまではWindowsでした。　FinderよりWindowsのエクスプローラーのほうが圧倒的に使いやすいです。なので、macで動くエクスプローラーのようなアプリを作ってください。見た目、機能など、あなたの実力を最大限発揮して、可能な限りWindowsのものに寄せてください。細かなことはわからないので、あなたの考える最高のエクスプローラーを作って。
+
+これから寝るので、朝起きたら出来上がってるのが理想。途中で質問されても答えられないので、自分で考えて進めてください。
+```
+
+</TabItem>
+
+<TabItem label="English translation">
+
+```text wrap
+I recently started using a Mac. Before that I used Windows, and Windows Explorer is far easier to use than Finder. So please build an app that works like Explorer, but for macOS. Put your full ability into the look and the features, and get it as close to the Windows one as you can. I don't know the fine details, so just build the best explorer you can imagine.
+
+I'm about to go to sleep, so ideally it will be done by the time I wake up. I won't be able to answer if you ask me anything along the way, so please just use your own judgment and keep going.
+```
+
+</TabItem>
+
+</Tabs>
+
+Start of the session:
+
+![Start of the session](../../showcase/images/explorer-start.png)
+
+End of the session:
+
+![End of the session](../../showcase/images/explorer-end.png)
 
 ### Measured usage
 
