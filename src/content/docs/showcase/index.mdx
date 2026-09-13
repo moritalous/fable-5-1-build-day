@@ -7,7 +7,6 @@ sidebar:
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
-import XPost from '../../../components/XPost.astro';
 
 **Fable 5.1に実際に投げたプロンプトと、そこから出てきたものをそのまま公開します。** 6作品すべて、プロンプトを1回投げただけで、追加の指示は一切していません。生成されたHTMLは別タブで実際に動かせます。
 
@@ -61,13 +60,15 @@ Anthropicより提供されたデモプロンプトです。
 	/>
 </CardGrid>
 
-## おまけ：HTMLだけではありません
+## おまけ：macOSアプリ
 
-ここまでの6作品はすべて単一のHTMLファイルですが、Fable 5.1が作れるものはそれだけではありません。主催者がWindowsの `Alt+Tab` をmacOSで再現するアプリを作らせたときの投稿です。
+ここまでの6作品はすべて単一のHTMLファイルですが、Fable 5.1が作れるものはそれだけではありません。主催者が実際に作らせたmacOSアプリを2つ紹介しています。
 
-<XPost url="https://x.com/moritalous/status/2097302855422234705" />
-
-Swiftで書かれたmacOSアプリで、ソースコードは[moritalous/alt-tab-mac](https://github.com/moritalous/alt-tab-mac)にあります。このときのプロンプトは残っていません。
+<LinkCard
+	title="7. おまけ：macOSアプリ"
+	description="Alt+Tabウィンドウ切り替えの再現と、Windowsスタイルのファイルエクスプローラー。"
+	href="mac-apps/"
+/>
 
 <Aside type="caution" title="同じプロンプトでも同じものは出てきません">
 	生成AIの出力は毎回変わります。各ページに載せている時間・料金・出来上がりは「だいたいこのくらい」の目安として見てください。同じプロンプトを投げても、違うデザイン・違う構成のものが出てきます。それも含めて当日楽しんでください。

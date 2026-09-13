@@ -1,0 +1,62 @@
+---
+title: 7. おまけ：macOSアプリ
+description: Fable 5.1に作らせたmacOSアプリ2つ。Alt+Tabウィンドウ切り替えの再現と、Windowsスタイルのファイルエクスプローラー。実測の時間と料金。
+sidebar:
+  order: 7
+  label: 7. おまけ：macOSアプリ
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+import XPost from '../../../components/XPost.astro';
+
+ここまでの6作品はすべて単一のHTMLファイルですが、Fable 5.1が作れるものはそれだけではありません。主催者（[moritalous](https://github.com/moritalous)）が実際に作らせたmacOSアプリを2つ紹介します。どちらもSwiftで書かれたネイティブアプリです。
+
+## AltTabの再現（WindowsのAlt+TabをmacOSで）
+
+<p class="badges"><Badge text="オリジナル" variant="tip" /><Badge text="$27.61" variant="success" /></p>
+
+Windowsの`Alt+Tab`によるウィンドウ切り替えをmacOSで再現するアプリを作らせたときの投稿です。
+
+<XPost url="https://x.com/moritalous/status/2097302855422234705" />
+
+ソースコードは[moritalous/alt-tab-mac](https://github.com/moritalous/alt-tab-mac)にあります。このときのプロンプトは残っていません。
+
+### 実測値（トークン使用量）
+
+所要時間は記録が残っておらず不明です。モデルは`claude-fable-5-1`です。
+
+| 項目 | トークン数 | 単価 | 金額 |
+| :--- | ---: | ---: | ---: |
+| Base input | 2,876 | $10/MTok | $0.03 |
+| 1h cache write | 771,636 | $20/MTok | $15.43 |
+| Cache read | 13,114,988 | $0.25/MTok | $3.28 |
+| Output | 177,441 | $50/MTok | $8.87 |
+| **小計** | **14,066,941** | — | **$27.61** |
+
+<Aside type="note">
+	各項目の料金は四捨五入しているため、小計と一致しない場合があります。料金はセッションログから算出した目安です。
+</Aside>
+
+## Windowsスタイルのファイルエクスプローラー
+
+<p class="badges"><Badge text="オリジナル" variant="tip" /><Badge text="$54.02" variant="success" /><Badge text="52分" variant="tip" /></p>
+
+macOSにWindowsスタイルのファイルエクスプローラーを作らせたときの投稿です。
+
+<XPost url="https://x.com/moritalous/status/2098930080680739180?s=20" />
+
+### 実測値
+
+期間 **2026-09-12 17:15〜18:07**（52分）/ モデル `claude-fable-5-1` / アシスタントターン数 **166**
+
+| 種別 | 消費量 | 単価 | 金額 |
+| :--- | ---: | ---: | ---: |
+| 入力 | 4,502 | $10.00/M | $0.05 |
+| 出力 | 605,692 | $50.00/M | $30.28 |
+| キャッシュ書き込み | 1,037,581 | $12.50/M | $12.97 |
+| キャッシュ読み込み | 42,891,484 | $0.25/M | $10.72 |
+| **合計** | **44,539,259** | — | **$54.02** |
+
+<Aside type="note">
+	各項目の料金は四捨五入しているため、合計と一致しない場合があります。料金はセッションログから算出した目安です。
+</Aside>
