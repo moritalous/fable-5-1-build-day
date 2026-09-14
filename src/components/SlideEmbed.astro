@@ -1,0 +1,70 @@
+---
+/**
+ * Googleスライド（ウェブに公開したもの）を埋め込む。
+ *
+ * URLは「ファイル > 共有 > ウェブに公開 > 埋め込む」で出てくる
+ * .../pubembed?... のもの。横幅に合わせて16:9強（960x569）で伸縮する。
+ * 埋め込みが表示されない環境向けに、別タブで開くリンクを下に置く。
+ */
+interface Props {
+	/** 公開スライドの埋め込みURL（.../pubembed?...） */
+	src: string;
+	/** スクリーンリーダー・iframeのタイトル */
+	title?: string;
+	/** 別タブで開くリンクの文言 */
+	label?: string;
+}
+
+const isEn = Astro.currentLocale === 'en';
+const {
+	src,
+	title = isEn ? 'Event slides' : '当日のスライド',
+	label = isEn ? 'Open the slides in a new tab' : 'スライドを別タブで開く',
+} = Astro.props;
+
+// pubembed を pub に変えると、別タブで全画面表示になる
+const standaloneHref = src.replace('/pubembed?', '/pub?');
+---
+
+<div class="slide-embed">
+	<div class="slide-embed__frame">
+		<iframe
+			src={src}
+			title={title}
+			loading="lazy"
+			frameborder="0"
+			allowfullscreen
+			mozallowfullscreen="true"
+			webkitallowfullscreen="true"></iframe>
+	</div>
+	<p class="slide-embed__note">
+		<a href={standaloneHref} target="_blank" rel="noopener noreferrer">{label}</a>
+	</p>
+</div>
+
+<style>
+	.slide-embed {
+		margin: 1.5rem 0;
+	}
+
+	.slide-embed__frame {
+		aspect-ratio: 960 / 569;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		overflow: hidden;
+		background: var(--sl-color-gray-6);
+	}
+
+	.slide-embed__frame iframe {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+
+	.slide-embed__note {
+		margin: 0.6rem 0 0;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+</style>

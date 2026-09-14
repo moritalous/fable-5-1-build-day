@@ -18,7 +18,9 @@ hero:
       variant: minimal
 ---
 
-import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+import SlideEmbed from '../../../components/SlideEmbed.astro';
+import { SLIDES_EMBED_URL } from '../../../consts';
 
 <Aside type="caution" title="About this site (unofficial)">
 	This site is not official Anthropic content. It is a guide for event participants, run by a volunteer ([moritalous](https://github.com/moritalous)).
@@ -60,65 +62,11 @@ Build whatever you want. Something you couldn't build before, something that sol
 	</Card>
 </CardGrid>
 
-## Setup
+## Event slides
 
-We want to leave plenty of time for building on the day, so **please finish the setup in advance**. Only the API credit request needs to be done at the venue, since it requires instructions given on the day.
+The slides we'll use at the venue. Use the arrows to move between pages.
 
-<LinkCard
-	title="Create an account"
-	description="Create a developer console account so you can receive API credits."
-	href="preparation/account/"
-/>
-<LinkCard
-	title="How to get API credits"
-	description="How to request the API credits handed out at the venue, and how to check them afterwards."
-	href="credits/"
-/>
-<LinkCard
-	title="Issue an API key"
-	description="Issue an API key on your own account to run Claude Code on the day."
-	href="preparation/apikey/"
-/>
-<LinkCard
-	title="Install Claude Code"
-	description="Steps for macOS and Windows, with notes for people who have never used a terminal."
-	href="preparation/install/"
-/>
-<LinkCard
-	title="First run"
-	description="Set your API key, start Claude Code, and build your first thing."
-	href="preparation/first-run/"
-/>
-
-## Not sure what to build?
-
-**We've published six pieces we actually made with Fable 5.1 — the prompts we sent and the HTML that came back.** Each one was generated in a single shot with no follow-up instructions, and you can run the results in a separate tab. We also list the time and cost ($9–$24 per piece) so you can plan for the day.
-
-You can copy the prompts and use them as they are. Sending one first and then steering the result in your own direction is the quickest way to start.
-
-<LinkCard
-	title="Showcase: prompts and results"
-	description="A star system simulator, an orchestra conductor game, a four-stroke engine, molecular dynamics, a Sengoku power map, and a VTuber studio. Full prompts, live demos, and costs."
-	href="showcase/"
-/>
-
-## Reference
-
-<LinkCard
-	title="Spending limits and costs"
-	description="How to set a spending limit and check what you've spent with Claude Code."
-	href="reference/costs/"
-/>
-<LinkCard
-	title="Troubleshooting"
-	description="What to do when you get stuck installing, logging in, or running Claude Code."
-	href="reference/troubleshooting/"
-/>
-<LinkCard
-	title="Survey"
-	description="Please fill this in after the event. It helps us run better events."
-	href="survey/"
-/>
+{SLIDES_EMBED_URL && <SlideEmbed src={SLIDES_EMBED_URL} />}
 
 ## Notes
 
