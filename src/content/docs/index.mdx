@@ -18,7 +18,9 @@ hero:
       variant: minimal
 ---
 
-import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+import SlideEmbed from '../../components/SlideEmbed.astro';
+import { SLIDES_EMBED_URL } from '../../consts';
 
 <Aside type="caution" title="非公式コンテンツについて">
 	本サイトはAnthropic公式のコンテンツではありません。有志([moritalous](https://github.com/moritalous))が運営する、イベント参加者向けの案内ページです。
@@ -60,65 +62,11 @@ Build Dayは、**新しいモデルを実際に手を動かして体験する回
 	</Card>
 </CardGrid>
 
-## セットアップ
+## 当日のスライド
 
-イベント当日は作る時間をたっぷり取りたいので、**セットアップは事前に済ませておいてください**。APIクレジットの申請だけは当日の案内が必要なので、会場で行います。
+会場で使うスライドです。矢印でページを送れます。
 
-<LinkCard
-	title="アカウント作成"
-	description="APIクレジットを受け取るための、開発者向けコンソールのアカウントを作成します。"
-	href="preparation/account/"
-/>
-<LinkCard
-	title="APIクレジットの受け取り方"
-	description="会場で配布するAPIクレジットの申請手順と、受け取ったあとの確認方法。"
-	href="credits/"
-/>
-<LinkCard
-	title="APIキーの発行"
-	description="当日Claude Codeを動かすためのAPIキーを、自分のアカウントで発行します。"
-	href="preparation/apikey/"
-/>
-<LinkCard
-	title="Claude Codeのインストール"
-	description="macOS / Windows それぞれの手順。ターミナルを使ったことがない方向けの説明つき。"
-	href="preparation/install/"
-/>
-<LinkCard
-	title="初回起動"
-	description="APIキーを設定して起動し、最初の1つを作ってみるところまで。"
-	href="preparation/first-run/"
-/>
-
-## 何を作るか迷ったら
-
-**Fable 5.1に実際に投げたプロンプトと、そこから出てきたHTMLを6作品ぶん公開しています。** すべて追加指示なしの一発生成で、生成物は別タブで実際に動かせます。かかった時間と料金（1本あたり$9〜$24）も載せているので、当日の見通しを立てる材料にしてください。
-
-プロンプトはコピーしてそのまま使えます。まず投げてみて、出てきたものを自分の好きな方向に変えていくのが、いちばん手早いスタートです。
-
-<LinkCard
-	title="作例集：プロンプトと成果物"
-	description="星系シミュレーター、オーケストラ指揮者ゲーム、4ストロークエンジン、分子動力学、戦国勢力図、VTuberスタジオ。プロンプト全文・実機デモ・料金つき。"
-	href="showcase/"
-/>
-
-## 参考
-
-<LinkCard
-	title="利用上限とコストの確認"
-	description="支出上限の設定と、Claude Codeで使った金額の確認方法。"
-	href="reference/costs/"
-/>
-<LinkCard
-	title="困ったときは"
-	description="インストール・ログイン・実行でつまずいたときの対処法。"
-	href="reference/troubleshooting/"
-/>
-<LinkCard
-	title="アンケート"
-	description="イベント終了後にご協力をお願いします。今後の運営の参考にします。"
-	href="survey/"
-/>
+{SLIDES_EMBED_URL && <SlideEmbed src={SLIDES_EMBED_URL} />}
 
 ## 注意事項
 

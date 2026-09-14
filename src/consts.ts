@@ -20,3 +20,7 @@ export const SHORT_URL = 'https://bit.ly/osaka-fable-5-1';
 
 /** Slido（質問・投票）のイベントページ */
 export const SLIDO_URL = 'https://app.sli.do/event/1sPG3zbu6JsdYZhfrkqKXa';
+
+/** 当日のスライド（Googleスライドを「ウェブに公開」した埋め込みURL） */
+export const SLIDES_EMBED_URL: string | null =
+	'https://docs.google.com/presentation/d/e/2PACX-1vR_cmZeqcnqlF9TKNOuPHktCEnu5OBElmk6dlrknuASMtWfY5rJrzmDLcXiwo-d3fCNGluhDiRMaXdy/pubembed?start=false&loop=false&delayms=3000';
