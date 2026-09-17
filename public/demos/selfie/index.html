@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fable 5.1 Selfie</title>
+<style>
+  :root{
+    --clay:#D97757;
+    --ink:#141413;
+    --paper:#F5F1EC;
+    --line:rgba(20,20,19,.16);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    /* dvh はモバイルのアドレスバー伸縮に追従する。未対応なら vh にフォールバック。
+       高さを固定して overflow:hidden にすることで、端数でスクロールバーが出るのを防ぐ。
+       入り切らない場合は flex-shrink で枠(.stage)だけが縮む */
+    height:100vh;
+    height:100dvh;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Segoe UI",sans-serif;
+    display:flex;flex-direction:column;align-items:center;
+    padding:16px 16px calc(40px + env(safe-area-inset-bottom));
+    gap:0;
+    overflow:hidden;
+  }
+
+  /* バナー：横は切らず、上下だけトリミングして高さを詰める。
+     元画像 1920x1080 のうち y60〜820(高さ760)を表示。
+     ロゴは y129〜752 にあるので上下の余白が 69px / 68px でほぼ均等になる。
+     object-position の Y は 切り取り開始y / (1080 - 表示高) = 60 / 320 = 18.75% */
+  .banner{
+    flex:0 0 auto;display:block;
+    width:100%;max-width:420px;
+    aspect-ratio:1920/760;
+    object-fit:cover;object-position:center 18.75%;
+    margin-bottom:16px;
+    border-radius:8px;              /* 四辺が余白に囲まれるので枠と同じ角丸に揃える */
+  }
+
+  /* 操作系の高さを引いた残り全部を枠に使う＝余白が枠の拡大に吸われる */
+  .stage{
+    position:relative;flex:0 1 auto;margin-top:0;
+    width:auto;max-width:min(420px,100%);
+    max-height:calc(100dvh - 218px - (min(420px, 100vw - 32px) * 0.3958));
+    aspect-ratio:1080/1350;
+    border-radius:8px;overflow:hidden;
+    box-shadow:0 16px 40px rgba(20,20,19,.2);
+    background:var(--clay);
+  }
+  canvas{display:block;width:100%;height:100%}
+
+  /* カメラ起動は枠の中に置く（ツールバーにボタンを増やさない） */
+  #starter{
+    position:absolute;left:5.5%;top:4.4%;width:89%;height:74.2%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    border:0;background:rgba(20,20,19,.5);color:#fff;
+    font:inherit;font-size:14.5px;line-height:1.7;text-align:center;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #starter svg{width:44px;height:44px;opacity:.9}
+  #starter[hidden]{display:none}
+  #starter small{font-size:12px;opacity:.75;max-width:78%;line-height:1.6}
+
+  /* 操作系は下寄せ。撮影前後で行数が変わっても枠が動かないよう高さを固定する */
+  .bar{
+    width:100%;max-width:420px;flex:0 0 auto;min-height:130px;
+    margin-top:auto;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  }
+  .bar[hidden]{display:none}
+
+  /* フィルタ */
+  .filters{display:flex;gap:4px;padding:3px;border-radius:999px;background:rgba(20,20,19,.06)}
+  .filters button{
+    font:inherit;font-size:12.5px;padding:7px 14px;border:0;border-radius:999px;
+    background:transparent;color:rgba(20,20,19,.62);cursor:pointer;
+  }
+  .filters button.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(20,20,19,.14)}
+
+  /* アイコントグル */
+  .deck{display:flex;align-items:center;justify-content:center;gap:22px}
+  .icon{
+    width:42px;height:42px;padding:0;display:grid;place-items:center;
+    border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);
+    cursor:pointer;-webkit-tap-highlight-color:transparent;
+    font:inherit;font-size:13px;font-weight:700;
+  }
+  .icon svg{width:20px;height:20px}
+  .icon.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .icon:disabled{opacity:.35;cursor:default}
+
+  /* シャッター */
+  .shutter{
+    width:76px;height:76px;padding:0;border-radius:50%;
+    background:var(--clay);border:4px solid #fff;
+    box-shadow:0 0 0 2px var(--clay),0 8px 22px rgba(217,119,87,.45);
+    cursor:pointer;-webkit-tap-highlight-color:transparent;
+    transition:transform .08s;
+  }
+  .shutter:active{transform:scale(.94)}
+  .shutter:disabled{opacity:.35;cursor:default;box-shadow:0 0 0 2px var(--clay)}
+
+  /* 撮影後 */
+  .done{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .done button{
+    font:inherit;font-size:14px;padding:12px 20px;border-radius:999px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+  }
+  .done button.primary{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600}
+
+  #toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,12px);
+    background:var(--ink);color:#fff;font-size:13.5px;line-height:1.6;
+    padding:12px 18px;border-radius:12px;max-width:min(92vw,420px);text-align:center;
+    opacity:0;pointer-events:none;transition:opacity .22s,transform .22s;z-index:9;
+    box-shadow:0 10px 30px rgba(20,20,19,.3);
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<img class="banner" src="banner.png"
+     alt="Claude Community Osaka — Build Day Fable 5.1">
+
+<div class="stage">
+  <canvas id="cv" width="1080" height="1350"></canvas>
+  <button id="starter">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.7a1 1 0 0 0 .84-.46l.92-1.42A1 1 0 0 1 9.8 3.7h4.4a1 1 0 0 1 .84.42l.92 1.42a1 1 0 0 0 .84.46h1.7A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5z"/>
+      <circle cx="12" cy="12.3" r="3.6"/>
+    </svg>
+    カメラを起動
+    <small>カメラの使用を許可してください</small>
+  </button>
+</div>
+
+<div class="bar" id="liveBar">
+  <div class="filters" id="filters">
+    <button data-f="none" class="on">そのまま</button>
+    <button data-f="warm">ウォーム</button>
+    <button data-f="mono">モノクロ</button>
+    <button data-f="film">フィルム</button>
+  </div>
+  <div class="deck">
+    <button class="icon" id="flip" title="前/背面を切り替え" aria-label="前/背面を切り替え" disabled></button>
+    <button class="icon" id="timer" title="3秒タイマー" aria-label="3秒タイマー"></button>
+    <button class="shutter" id="shot" title="撮影（スペースキー）" aria-label="撮影" disabled></button>
+    <button class="icon on" id="mirror" title="左右反転" aria-label="左右反転"></button>
+    <button class="icon on" id="sound" title="シャッター音" aria-label="シャッター音"></button>
+  </div>
+</div>
+
+<div class="bar" id="afterShot" hidden>
+  <div class="done">
+    <button class="primary" id="share" hidden>共有</button>
+    <button id="save">保存</button>
+    <button id="retake">撮り直す</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(() => {
+  /* ===== 設定 ===== */
+  const FRAME_SRC = 'frame.png';
+  const POST_TEXT = 'Claude Community Build Day で Fable 5.1 と記念撮影 📸\n#ClaudeBuildDay #Fable51';
+  const W = 1080, H = 1350;
+  const HOLE = { x: 60, y: 60, w: 961, h: 1001 };   // フレームの透明な窓（実測値）
+  const BG = '#D97757';
+  const DEVELOP_MS = 1500;                          // ポラロイド現像アニメの長さ
+  const VOLUME = .65;                               // 全体音量
+
+  /* ===== アイコン ===== */
+  const SVG = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+    stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const ICONS = {
+    flip:   SVG('<path d="M20.5 12a8.5 8.5 0 0 1-8.5 8.5 8.5 8.5 0 0 1-7-3.7"/><polyline points="4.2 20 4.2 16.5 7.7 16.5"/><path d="M3.5 12A8.5 8.5 0 0 1 12 3.5a8.5 8.5 0 0 1 7 3.7"/><polyline points="19.8 4 19.8 7.5 16.3 7.5"/>'),
+    timer:  SVG('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.8v3.9l2.6 1.8"/><path d="M9.3 2.5h5.4"/>'),
+    mirror: SVG('<path d="M12 2.8v18.4" stroke-dasharray="2.6 2.6"/><path d="M9.2 7.2 4 12l5.2 4.8z"/><path d="M14.8 7.2 20 12l-5.2 4.8z"/>'),
+    soundOn:SVG('<path d="M11 5.2 6.4 9H3.4v6h3l4.6 3.8z"/><path d="M15.4 9.3a4 4 0 0 1 0 5.4"/><path d="M18 6.6a7.6 7.6 0 0 1 0 10.8"/>'),
+    soundOff:SVG('<path d="M11 5.2 6.4 9H3.4v6h3l4.6 3.8z"/><path d="m15.6 10 4.8 4.8"/><path d="m20.4 10-4.8 4.8"/>')
+  };
+
+  const cv = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+  const starter = document.getElementById('starter');
+  const toastEl = document.getElementById('toast');
+  const video = document.createElement('video');
+  video.playsInline = true; video.muted = true; video.autoplay = true;
+
+  const frame = new Image();
+  let frameReady = false;
+  frame.onload = () => { frameReady = true; render(); };
+  frame.onerror = () => {
+    starter.innerHTML = 'フレーム画像が読み込めません<br><small>' + FRAME_SRC + ' を HTML と同じ場所に置いてください</small>';
+    starter.disabled = true;
+  };
+  frame.src = encodeURI(FRAME_SRC);
+
+  let stream = null;
+  let facing = 'user', mirror = true, filter = 'none';
+  let timerOn = false, soundOn = true;
+  let photoLayer = null, developStart = 0;
+  let countdown = 0, lastBeepAt = 0, flash = 0, guidePhase = 0;
+  let lastFile = null;
+
+  const FILTERS = {
+    none: 'none',
+    warm: 'saturate(1.12) contrast(1.04) sepia(.18)',
+    mono: 'grayscale(1) contrast(1.12) brightness(1.02)',
+    film: 'saturate(.88) contrast(1.15) sepia(.32) brightness(1.03)'
+  };
+
+  /* ===== 音（WebAudio で生成。音源ファイル不要） ===== */
+  let ac = null, master = null;
+  function audio() {
+    if (!ac) {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      // 安全用のソフトクリップ。コンプレッサーと違い打撃の立ち上がりを潰さない
+      const shaper = ac.createWaveShaper();
+      const n = 1024, curve = new Float32Array(n);
+      for (let i = 0; i < n; i++) curve[i] = Math.tanh((i / (n - 1)) * 2 - 1);
+      shaper.curve = curve;
+      master = ac.createGain(); master.gain.value = VOLUME;
+      master.connect(shaper).connect(ac.destination);
+    }
+    if (ac.state === 'suspended') ac.resume();
+    return ac;
+  }
+
+  function tone(freq, dur, { type = 'sine', gain = .12, at = 0 } = {}) {
+    if (!soundOn) return;
+    const a = audio(), t0 = a.currentTime + at;
+    const o = a.createOscillator(), g = a.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(gain, t0 + .006);
+    g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+    o.connect(g).connect(master);
+    o.start(t0); o.stop(t0 + dur + .02);
+  }
+
+  // フィルタしたノイズバースト = メカの打撃音の素
+  function hit(at, dur, { type = 'bandpass', freq = 2000, Q = 1, gain = .5, decay = 2.5 } = {}) {
+    const a = audio(), t0 = a.currentTime + at;
+    const len = Math.max(1, Math.floor(a.sampleRate * dur));
+    const buf = a.createBuffer(1, len, a.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay);
+    const src = a.createBufferSource(); src.buffer = buf;
+    const f = a.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = Q;
+    const g = a.createGain(); g.gain.value = gain;
+    src.connect(f).connect(g).connect(master);
+    src.start(t0);
+  }
+
+  // 一眼レフのシャッター：ミラーアップ(ガシャッ) → 幕走行 → 100ms後にミラーダウン(コトッ)
+  // 1発目が主役、2発目はその 1/3 の大きさ、という実機の関係に合わせてある
+  function shutterSound() {
+    if (!soundOn) return;
+    audio();
+    hit(0,    .010, { type: 'highpass', freq: 5000, gain: 1.1, decay: 5 });            // 鋭い立ち上がり
+    hit(0,    .080, { type: 'bandpass', freq: 300,  Q: .7, gain: 1.0, decay: 2.0 });   // ミラーの打撃
+    hit(.003, .055, { type: 'bandpass', freq: 1500, Q: .5, gain: .70, decay: 2.6 });   // 機械の胴鳴り
+    hit(.016, .050, { type: 'highpass', freq: 3600, gain: .55, decay: 1.5 });          // 幕が走る「シャッ」
+    hit(.100, .009, { type: 'highpass', freq: 4600, gain: .42, decay: 5 });            // ミラーダウン
+    hit(.100, .050, { type: 'bandpass', freq: 430,  Q: .8, gain: .34, decay: 2.4 });
+    tone(175, .06, { type: 'triangle', gain: .10, at: .100 });                         // ボディの余韻
+  }
+
+  /* ===== 描画 ===== */
+
+  function drawCover(c, src, sw, sh) {
+    const scale = Math.max(HOLE.w / sw, HOLE.h / sh);
+    const dw = sw * scale, dh = sh * scale;
+    const dx = HOLE.x + (HOLE.w - dw) / 2;
+    const dy = HOLE.y + (HOLE.h - dh) / 2;
+    c.save();
+    c.beginPath(); c.rect(HOLE.x, HOLE.y, HOLE.w, HOLE.h); c.clip();
+    if (mirror) { c.translate(HOLE.x * 2 + HOLE.w, 0); c.scale(-1, 1); }
+    c.filter = FILTERS[filter];
+    c.drawImage(src, dx, dy, dw, dh);
+    c.restore();
+  }
+
+  function paintPhoto(c) {
+    c.fillStyle = BG; c.fillRect(0, 0, W, H);
+    c.fillStyle = '#fff'; c.fillRect(HOLE.x, HOLE.y, HOLE.w, HOLE.h);
+    if (stream && video.videoWidth) drawCover(c, video, video.videoWidth, video.videoHeight);
+  }
+
+  function drawGuide(alpha) {
+    const m = 54, L = 108, r = 8;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 7; ctx.lineCap = 'round';
+    ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 10;
+    const x0 = HOLE.x + m, y0 = HOLE.y + m;
+    const x1 = HOLE.x + HOLE.w - m, y1 = HOLE.y + HOLE.h - m;
+    const corner = (cx, cy, sx, sy) => {
+      ctx.beginPath();
+      ctx.moveTo(cx + sx * L, cy);
+      ctx.lineTo(cx + sx * r, cy);
+      ctx.quadraticCurveTo(cx, cy, cx, cy + sy * r);
+      ctx.lineTo(cx, cy + sy * L);
+      ctx.stroke();
+    };
+    corner(x0, y0, 1, 1); corner(x1, y0, -1, 1);
+    corner(x0, y1, 1, -1); corner(x1, y1, -1, -1);
+    ctx.restore();
+  }
+
+  function drawCountdown() {
+    const n = Math.ceil(countdown);
+    const p = 1 - (countdown % 1 || 1);
+    const cx = HOLE.x + HOLE.w / 2, cy = HOLE.y + HOLE.h / 2;
+    ctx.save();
+    ctx.globalAlpha = .45; ctx.fillStyle = '#141413';
+    ctx.fillRect(HOLE.x, HOLE.y, HOLE.w, HOLE.h);
+    ctx.globalAlpha = 1;
+
+    const R = 210;
+    ctx.strokeStyle = 'rgba(255,255,255,.28)'; ctx.lineWidth = 10;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 12; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + (1 - p) * Math.PI * 2);
+    ctx.stroke();
+
+    const pop = p < .18 ? 1 + (1 - p / .18) * .35 : 1;
+    ctx.globalAlpha = Math.max(0, 1 - Math.pow(p, 3));
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `400 ${Math.round(250 * pop)}px Georgia, "Times New Roman", serif`;
+    ctx.fillText(String(n), cx, cy + 8);
+    ctx.restore();
+  }
+
+  function render() {
+    if (photoLayer) {
+      // 現像アニメ：白飛び → 色がのってくる
+      const t = Math.min(1, (performance.now() - developStart) / DEVELOP_MS);
+      const e = 1 - Math.pow(1 - t, 3);
+      ctx.save();
+      if (t < 1) ctx.filter = `brightness(${(1 + (1 - e) * .8).toFixed(3)}) saturate(${e.toFixed(3)}) contrast(${(.55 + e * .45).toFixed(3)})`;
+      ctx.drawImage(photoLayer, 0, 0);
+      ctx.restore();
+      if (t < 1) {
+        ctx.save();
+        ctx.globalAlpha = (1 - e) * .5; ctx.fillStyle = '#fff';
+        ctx.fillRect(HOLE.x, HOLE.y, HOLE.w, HOLE.h);
+        ctx.restore();
+      }
+      if (frameReady) ctx.drawImage(frame, 0, 0, W, H);
+      return;
+    }
+
+    paintPhoto(ctx);
+    if (stream && countdown <= 0 && flash <= 0) drawGuide(.34 + Math.sin(guidePhase) * .12);
+    if (countdown > 0) drawCountdown();
+    if (flash > 0) {
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, flash); ctx.fillStyle = '#fff';
+      ctx.fillRect(HOLE.x, HOLE.y, HOLE.w, HOLE.h);
+      ctx.restore();
+    }
+    if (frameReady) ctx.drawImage(frame, 0, 0, W, H);
+  }
+
+  let last = performance.now();
+  function loop(t) {
+    const dt = Math.min(.1, (t - last) / 1000); last = t;
+    guidePhase += dt * 2.2;
+    if (countdown > 0) {
+      const before = Math.ceil(countdown);
+      countdown -= dt;
+      const now = Math.ceil(countdown);
+      if (now !== before && now > 0 && now !== lastBeepAt) { lastBeepAt = now; tone(880, .12, { gain: .35 }); }
+      if (countdown <= 0) { countdown = 0; capture(); }
+    }
+    if (flash > 0) flash = Math.max(0, flash - dt * 2.6);
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  /* ===== カメラ ===== */
+
+  async function startCamera() {
+    try {
+      if (stream) stream.getTracks().forEach(t => t.stop());
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: facing, width: { ideal: 1920 }, height: { ideal: 1920 } },
+        audio: false
+      });
+      video.srcObject = stream;
+      await video.play();
+      starter.hidden = true;
+      shot.disabled = false;
+      flip.disabled = false;
+    } catch (e) {
+      stream = null;
+      starter.hidden = false;
+      starter.innerHTML = 'カメラを使えませんでした<br><small>' +
+        (location.protocol === 'file:'
+          ? 'file:// では起動できません。ローカルサーバー経由で開いてください'
+          : String(e.name || e) + ' — タップで再試行') + '</small>';
+    }
+  }
+
+  /* ===== 撮影 ===== */
+
+  function capture() {
+    const layer = document.createElement('canvas');
+    layer.width = W; layer.height = H;
+    paintPhoto(layer.getContext('2d'));
+    photoLayer = layer;
+    developStart = performance.now();
+    flash = 1.15;
+    shutterSound();
+    tone(1320, .18, { at: .55, gain: .22 });
+    liveBar.hidden = true;
+    afterShot.hidden = false;
+    prepareFile();
+  }
+
+  function compose() {
+    const out = document.createElement('canvas');
+    out.width = W; out.height = H;
+    const c = out.getContext('2d');
+    c.drawImage(photoLayer || cv, 0, 0);
+    if (frameReady) c.drawImage(frame, 0, 0, W, H);
+    return out;
+  }
+
+  function filename() {
+    const d = new Date(), p = n => String(n).padStart(2, '0');
+    return `fable51-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}.png`;
+  }
+
+  // 共有・保存がワンタップで動くよう、撮影直後にファイルを用意しておく
+  function prepareFile() {
+    lastFile = null;
+    compose().toBlob(blob => {
+      if (blob) lastFile = new File([blob], filename(), { type: 'image/png' });
+    }, 'image/png');
+  }
+
+  function retake() {
+    photoLayer = null; lastFile = null;
+    afterShot.hidden = true;
+    liveBar.hidden = false;
+  }
+
+  function toast(msg, ms = 3000) {
+    toastEl.innerHTML = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toastEl.classList.remove('show'), ms);
+  }
+
+  /* ===== UI ===== */
+
+  const shot = document.getElementById('shot');
+  const flip = document.getElementById('flip');
+  const mirrorBtn = document.getElementById('mirror');
+  const timerBtn = document.getElementById('timer');
+  const soundBtn = document.getElementById('sound');
+  const shareBtn = document.getElementById('share');
+  const saveBtn = document.getElementById('save');
+  const liveBar = document.getElementById('liveBar');
+  const afterShot = document.getElementById('afterShot');
+
+  flip.innerHTML = ICONS.flip;
+  mirrorBtn.innerHTML = ICONS.mirror;
+  const syncTimer = () => {
+    timerBtn.classList.toggle('on', timerOn);
+    timerBtn.innerHTML = timerOn ? '3s' : ICONS.timer;
+  };
+  const syncSound = () => {
+    soundBtn.classList.toggle('on', soundOn);
+    soundBtn.innerHTML = soundOn ? ICONS.soundOn : ICONS.soundOff;
+  };
+  const syncMirror = () => mirrorBtn.classList.toggle('on', mirror);
+  syncTimer(); syncSound();
+
+  starter.onclick = startCamera;
+
+  shot.onclick = () => {
+    if (timerOn) { countdown = 3; lastBeepAt = 3; tone(880, .12, { gain: .35 }); }
+    else capture();
+  };
+
+  flip.onclick = () => {
+    facing = facing === 'user' ? 'environment' : 'user';
+    mirror = facing === 'user';
+    syncMirror();
+    startCamera();
+  };
+
+  mirrorBtn.onclick = () => { mirror = !mirror; syncMirror(); };
+  timerBtn.onclick = () => { timerOn = !timerOn; syncTimer(); };
+  soundBtn.onclick = () => { soundOn = !soundOn; syncSound(); if (soundOn) tone(1046, .1, { gain: .3 }); };
+
+  document.getElementById('filters').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    filter = b.dataset.f;
+    [...e.currentTarget.children].forEach(c => c.classList.toggle('on', c === b));
+  };
+
+  document.getElementById('retake').onclick = retake;
+
+  saveBtn.onclick = () => {
+    if (!lastFile) return toast('準備中です。もう一度押してください。', 2000);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(lastFile);
+    a.download = lastFile.name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    toast('保存しました 🎞️', 2000);
+  };
+
+  // OS 標準の共有シートのみ。キャンセルしても何も起きない
+  shareBtn.onclick = () => {
+    if (!lastFile) return toast('準備中です。もう一度押してください。', 2000);
+    navigator.share({ files: [lastFile], text: POST_TEXT }).catch(() => {});
+  };
+
+  const shareSupported = (() => {
+    try {
+      const probe = new File([new Blob([''], { type: 'image/png' })], 'p.png', { type: 'image/png' });
+      return !!(navigator.share && navigator.canShare && navigator.canShare({ files: [probe] }));
+    } catch (_) { return false; }
+  })();
+  if (shareSupported) shareBtn.hidden = false;
+  else { shareBtn.remove(); saveBtn.classList.add('primary'); }
+
+  window.addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); if (!shot.disabled && !photoLayer) shot.click(); }
+    if (e.key === 'Escape' && photoLayer) retake();
+  });
+
+  render();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
