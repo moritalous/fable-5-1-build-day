@@ -19,7 +19,7 @@ API keys are issued per "workspace". Right after creating your account, only the
 
 <Steps>
 
-1. Open 「組織の設定」 (Organization settings) › 「ワークスペース」 (Workspaces) in the left sidebar, then click 「＋ ワークスペースを作成」 (Create workspace) in the top right.
+1. Click the workspace selector in the top left of the screen, then click 「ワークスペースを作成」 (Create workspace).
 
     ![](../../images/2026-09-19-workspace-list.png)
 
@@ -29,15 +29,15 @@ API keys are issued per "workspace". Right after creating your account, only the
 
 </Steps>
 
-<Aside type="tip" title="What you see after creating it">
-	The new workspace is added to the list. If your screen has a workspace indicator in the top left, check that it now shows the new workspace name. Even if it does not switch, you can pick the workspace under 「スコープ」 (Scope) when you create the key in the next step, so it does not matter.
+<Aside type="tip" title="If it doesn't switch automatically">
+	After creating it, check that the top-left display now shows your new workspace's name. If it still shows `Default`, click the workspace selector again and switch to it.
 </Aside>
 
 ## Create an API key
 
 <Steps>
 
-1. Open 「組織の設定」 (Organization settings) › 「APIキー」 (API keys) in the left sidebar, then click 「キーを作成」 (Create Key) in the top right.
+1. Select the 「APIキー」 (API keys) menu in the console and click 「キーを作成」 (Create Key). Make sure the workspace shown in the top left is the one you created in the previous step.
 
     ![](../../images/2026-09-19-apikey-list.png)
 
@@ -45,12 +45,7 @@ API keys are issued per "workspace". Right after creating your account, only the
 
     ![](../../images/2026-09-19-apikey-federation.png)
 
-1. Fill in the key creation dialog as follows, then click 「キーを作成」 (Create Key).
-
-    - **「名前」 (Name)**: any name you like (for example `build-day-key`)
-    - **「有効期限」 (Expiry)**: `30日間` (30 days) by default, which is fine as is
-    - **「リンクされたアカウント」 (Linked account)**: leave at the default
-    - **「スコープ」 (Scope)** (required): choose the workspace you created in the previous step
+1. Enter a name and click 「キーを作成」 (Create Key). 「スコープ」 (Scope) is filled in with the workspace you currently have selected. 「有効期限」 (Expiry, `30日間` / 30 days by default) and 「リンクされたアカウント」 (Linked account) can be left as they are.
 
     ![](../../images/2026-09-19-apikey-dialog.png)
 
