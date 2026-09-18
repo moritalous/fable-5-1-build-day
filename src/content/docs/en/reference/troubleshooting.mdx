@@ -24,11 +24,29 @@ Almost always the wrong shell.
 
 If the prompt reads `PS C:\` it's PowerShell; if it's `C:\` with no `PS`, it's CMD.
 
+## `version 2.1.251 or newer is required`
+
+If your Claude Code is out of date, selecting Fable 5.1 fails with this error.
+
+```
+API Error: 400 Claude Code 2.1.239 does not support this model; version 2.1.251 or newer is required.
+```
+
+Update with `claude update` (or `winget upgrade Anthropic.ClaudeCode` for the winget version, `brew upgrade claude-code` for Homebrew). See [Installing Claude Code](/en/preparation/install/) for details.
+
+## The API key I set isn't being used
+
+Did you press Enter straight through the `Do you want to use this API key?` question at first startup? **`No (recommended)` is selected by default.** Once you answer `No` it is remembered, so the key is not used even after you set it.
+
+To redo it, remove that key's entry from `rejected` under `customApiKeyResponses` in `~/.claude.json` and start `claude` again. You will be asked once more — this time choose `Yes`.
+
 ## Can't log in / not sure which account is in use
 
 Run `/login` while Claude Code is running to log in again or switch accounts. `/usage` also shows the current state.
 
 If an API key is set, **it takes priority over your login**. If you want to run with your login instead, delete `.claude/settings.json` in your working folder. If you've set the `ANTHROPIC_API_KEY` environment variable in the past, check that it isn't still there either ([First run](/en/preparation/first-run/)).
+
+Note that if you set an API key on a machine already logged in to claude.ai, you get a `Both claude.ai and ANTHROPIC_API_KEY set · auth may not work as expected` warning — but **the API key wins and it works normally**. If the top of the screen shows `API Usage Billing`, you are running on API credits.
 
 ## `Credit balance is too low`
 

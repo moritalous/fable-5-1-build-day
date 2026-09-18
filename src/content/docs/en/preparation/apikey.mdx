@@ -17,35 +17,46 @@ At Build Day you will run Claude Code with **an API key created in your own Clau
 
 API keys are issued per "workspace". Right after creating your account, only the `Default` workspace exists, but `Default` won't let you create an API key unless you change an organization setting — so we'll create a new workspace for Build Day instead.
 
+{/* TODO(2026-09-19 dry run): replace the workspace / key creation screenshots with ones from the current UI */}
+
 <Steps>
 
-1. Click the workspace selector in the top left of the screen, then click 「ワークスペースを作成」 (Create workspace).
+1. Open 「組織の設定」 (Organization settings) › 「ワークスペース」 (Workspaces) in the left sidebar, then click 「＋ ワークスペースを作成」 (Create workspace) in the top right.
 
-    ![](../../images/2026-07-04-06-06-12.png)
-
-1. Enter a name (for example `build-day` — any name works) and click 「作成」 (Create). You can leave the color and workspace region at their defaults.
+1. Enter a name (for example `build-day` — any name works) and click 「ワークスペースを作成」 (Create workspace). You can leave the color and workspace region at their defaults.
 
     ![](../../images/2026-07-04-06-07-52.png)
 
 </Steps>
 
-<Aside type="tip" title="If it doesn't switch automatically">
-	After creating it, check that the top-left display now shows your new workspace's name. If it still shows `Default`, click the workspace selector again and switch to it.
+<Aside type="tip" title="What you see after creating it">
+	The new workspace is added to the list. If your screen has a workspace indicator in the top left, check that it now shows the new workspace name. Even if it does not switch, you can pick the workspace under 「スコープ」 (Scope) when you create the key in the next step, so it does not matter.
 </Aside>
 
 ## Create an API key
 
 <Steps>
 
-1. Select the 「APIキー」 (API keys) menu in the console and click 「キーを作成」 (Create Key). Make sure the workspace shown in the top left is the one you created in the previous step.
+1. Select the 「APIキー」 (API keys) menu in the console and click 「キーを作成」 (Create Key) in the top right.
 
     ![](../../images/2026-07-04-23-33-46.png)
 
-1. Enter a name and click 「追加」 (Add). Make a note of the API key that is shown (a string starting with `sk-ant-`). **It is only shown at creation time.**
+1. If a screen saying 「ID連携を使用すれば、APIキーは不要です」 (You don't need API keys if you use identity federation) appears, click **「APIキーで続ける」 (Continue with API key)** at the bottom. The prominent 「ID連携を設定する」 (Set up identity federation) button above it is not used at Build Day.
 
-    ![](../../images/2026-07-04-23-36-09.png)
+1. Fill in the key creation dialog as follows, then click 「キーを作成」 (Create Key).
+
+    - **「名前」 (Name)**: any name you like (for example `build-day-key`)
+    - **「有効期限」 (Expiry)**: `30日間` (30 days) by default, which is fine as is
+    - **「リンクされたアカウント」 (Linked account)**: leave at the default
+    - **「スコープ」 (Scope)** (required): choose the workspace you created in the previous step
+
+1. Make a note of the API key that is shown (a string starting with `sk-ant-`). **It is only shown at creation time.**
 
 </Steps>
+
+<Aside type="note" title="Keys expire after 30 days by default">
+	That is fine for using it on the day, but if you finish your preparation well in advance, check that the key has not expired by the time of the event. If it has, just create a new one the same way.
+</Aside>
 
 <Aside type="caution" title="Handling your key">
 	An API key is the same as a password. Be careful not to write it directly in script code, commit it to GitHub, or show it to anyone. When you note it down, keep it somewhere safe such as a password manager.
