@@ -17,15 +17,15 @@ At Build Day you will run Claude Code with **an API key created in your own Clau
 
 API keys are issued per "workspace". Right after creating your account, only the `Default` workspace exists, but `Default` won't let you create an API key unless you change an organization setting — so we'll create a new workspace for Build Day instead.
 
-{/* TODO(2026-09-19 dry run): replace the workspace / key creation screenshots with ones from the current UI */}
-
 <Steps>
 
 1. Open 「組織の設定」 (Organization settings) › 「ワークスペース」 (Workspaces) in the left sidebar, then click 「＋ ワークスペースを作成」 (Create workspace) in the top right.
 
+    ![](../../images/2026-09-19-workspace-list.png)
+
 1. Enter a name (for example `build-day` — any name works) and click 「ワークスペースを作成」 (Create workspace). You can leave the color and workspace region at their defaults.
 
-    ![](../../images/2026-07-04-06-07-52.png)
+    ![](../../images/2026-09-19-workspace-create.png)
 
 </Steps>
 
@@ -37,11 +37,13 @@ API keys are issued per "workspace". Right after creating your account, only the
 
 <Steps>
 
-1. Select the 「APIキー」 (API keys) menu in the console and click 「キーを作成」 (Create Key) in the top right.
+1. Open 「組織の設定」 (Organization settings) › 「APIキー」 (API keys) in the left sidebar, then click 「キーを作成」 (Create Key) in the top right.
 
-    ![](../../images/2026-07-04-23-33-46.png)
+    ![](../../images/2026-09-19-apikey-list.png)
 
 1. If a screen saying 「ID連携を使用すれば、APIキーは不要です」 (You don't need API keys if you use identity federation) appears, click **「APIキーで続ける」 (Continue with API key)** at the bottom. The prominent 「ID連携を設定する」 (Set up identity federation) button above it is not used at Build Day.
+
+    ![](../../images/2026-09-19-apikey-federation.png)
 
 1. Fill in the key creation dialog as follows, then click 「キーを作成」 (Create Key).
 
@@ -49,6 +51,8 @@ API keys are issued per "workspace". Right after creating your account, only the
     - **「有効期限」 (Expiry)**: `30日間` (30 days) by default, which is fine as is
     - **「リンクされたアカウント」 (Linked account)**: leave at the default
     - **「スコープ」 (Scope)** (required): choose the workspace you created in the previous step
+
+    ![](../../images/2026-09-19-apikey-dialog.png)
 
 1. Make a note of the API key that is shown (a string starting with `sk-ant-`). **It is only shown at creation time.**
 
