@@ -99,7 +99,11 @@ curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del in
     claude --version
     ```
 
-    `2.1.x (Claude Code)` のようにバージョンが表示されればインストール成功です。
+    `2.1.277 (Claude Code)` のようにバージョンが表示されればインストール成功です。**Fable 5.1を使うには `2.1.251` 以上が必要です。** 表示されたバージョンがこれより古いときは、次のコマンドで更新してください。
+
+    ```sh
+    claude update
+    ```
 
 1. うまくいかないときは、次のコマンドで環境をチェックできます。
 
@@ -108,6 +112,22 @@ curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del in
     ```
 
 </Steps>
+
+<Aside type="caution" title="すでにClaude Codeを入れている方は、参加前に更新をお願いします">
+	`2.1.251` より古いバージョンでFable 5.1を指定すると、次のエラーが出て動きません。
+
+	```
+	API Error: 400 Claude Code 2.1.239 does not support this model; version 2.1.251 or newer is required.
+	```
+
+	今日はじめてインストールする方はインストーラーが最新版を入れるので問題ありませんが、**すでに入っている方は更新が必要です**。とくにwinget版・Homebrew版は自動更新されません。
+
+	- インストーラー（推奨）で入れた場合: `claude update`
+	- winget版: `winget upgrade Anthropic.ClaudeCode`
+	- Homebrew版: `brew upgrade claude-code`
+
+	最新バージョンは[こちら](https://downloads.claude.ai/claude-code-releases/latest)で確認できます（2026-09-19時点で `2.1.277`）。
+</Aside>
 
 <Aside type="caution" title="command not found / 認識されません と出たら">
 	ほとんどの場合、ターミナルの開き直しで解決します。それでもだめな場合は[困ったときは](/reference/troubleshooting/)を確認してください。

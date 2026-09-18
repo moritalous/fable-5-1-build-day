@@ -24,11 +24,29 @@ import { Aside } from '@astrojs/starlight/components';
 
 プロンプトが `PS C:\` ならPowerShell、`PS` がつかない `C:\` ならCMDです。
 
+## `version 2.1.251 or newer is required` と表示される
+
+Claude Codeのバージョンが古いと、Fable 5.1を指定したときに次のエラーが出ます。
+
+```
+API Error: 400 Claude Code 2.1.239 does not support this model; version 2.1.251 or newer is required.
+```
+
+`claude update` で更新してください（winget版は `winget upgrade Anthropic.ClaudeCode`、Homebrew版は `brew upgrade claude-code`）。詳しくは[Claude Codeのインストール](/preparation/install/)へ。
+
+## 設定したはずのAPIキーが使われていない
+
+初回起動時に `Do you want to use this API key?` と聞かれたときに、そのままEnterを押していませんか。**初期選択は `No (recommended)` です**。一度 `No` と答えると記録されるため、あとから設定しても使われません。
+
+やり直すには、`~/.claude.json` の `customApiKeyResponses` の `rejected` から該当キーの記録を削除して、`claude` を起動し直してください。起動時にもう一度確認が表示されるので、今度は `Yes` を選びます。
+
 ## ログインできない / どのアカウントで動いているか分からない
 
 Claude Codeの起動中に `/login` を実行すると、ログインし直したりアカウントを切り替えたりできます。`/usage` でも現在の状態を確認できます。
 
 APIキーが設定されていると、**ログイン情報より優先されます**。ログイン側で動かしたい場合は、作業フォルダの `.claude/settings.json` を削除してください。環境変数 `ANTHROPIC_API_KEY` を以前に設定したことがある場合は、そちらも残っていないか確認します（[初回起動](/preparation/first-run/)）。
+
+なお、claude.aiにログイン済みのPCでAPIキーを設定すると `Both claude.ai and ANTHROPIC_API_KEY set · auth may not work as expected` という警告が出ますが、**APIキー側が優先されて正常に動きます**。画面上部が `API Usage Billing` になっていればAPIクレジットで動いています。
 
 ## `Credit balance is too low` と表示される
 

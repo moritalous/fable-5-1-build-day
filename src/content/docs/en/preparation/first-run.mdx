@@ -27,9 +27,13 @@ cd ~/build-day
 <TabItem label="Windows">
 
 ```powershell
-mkdir $HOME\build-day
+mkdir -Force $HOME\build-day
 cd $HOME\build-day
 ```
+
+<Aside type="note" title="Why `-Force` is there">
+	PowerShell's `mkdir` errors out if the folder already exists. With `-Force` you can run it again later without an error.
+</Aside>
 
 </TabItem>
 
@@ -81,6 +85,10 @@ If you put a settings file inside the working folder, **your key stays even afte
     }
     ```
 
+    <Aside type="caution" title="Copy and paste this — do not type it by hand">
+    	TextEdit has smart quotes on by default. If you type `"` by hand it is replaced with a curly quote, which breaks the JSON and gives you a confusing error when Claude Code starts.
+    </Aside>
+
 </Steps>
 
 <Aside type="caution" title="Do not hand this file to anyone">
@@ -97,7 +105,24 @@ If you put a settings file inside the working folder, **your key stays even afte
     claude
     ```
 
-1. You are ready once the Claude Code prompt appears. The version, the model in use and the working directory are shown at the top. **If your API key is set, you will not be asked to log in.**
+1. You are asked whether to use the API key. **Press `↑` to select `Yes`, then press Enter.**
+
+    ```
+    Detected a custom API key in your environment
+
+    ANTHROPIC_API_KEY: sk-ant-...FwAA
+
+    Do you want to use this API key?
+
+        Yes
+      ❯ No (recommended)
+
+    Enter to confirm · Esc to cancel
+    ```
+
+    **`No (recommended)` is selected by default.** Pressing Enter without thinking picks "No", and the API key you just set is not used. Your answer is remembered, so you are only asked once.
+
+1. You are ready once the Claude Code prompt appears. The version, the model in use and the working directory are shown at the top. **If your API key is set, you will not be asked to log in** (only the API key confirmation above is shown, the first time).
 
 </Steps>
 
@@ -109,7 +134,7 @@ Right after startup, the default model (e.g. `Opus 5`) is selected. Build Day is
 
 1. Type `/model` and press Enter.
 
-1. Choose `Fable` (Fable 5.1) from the list and press Enter.
+1. Choose `Fable` (Fable 5.1) from the list and press Enter. Enter sets it as your default model; `s` applies it to this session only.
 
     ![](../../preparation/images/2026-09-13-01-52-12.png)
 
@@ -125,6 +150,17 @@ An API key takes **priority** over login credentials. While it is running, open 
 	If you set an API key on a machine that is already logged in with a Pro/Max plan, **the key wins and API credits are consumed**. Conversely, if you want to use API credits but forget to set the key, it runs within your subscription. Decide which one you want before starting it.
 
 	To run within your subscription, start `claude` without creating `.claude/settings.json` and log in. If you already created it, delete that file to go back to login-based authentication.
+</Aside>
+
+<Aside type="note" title="If you see `Both claude.ai and ANTHROPIC_API_KEY set`">
+	If you set an API key on a machine already logged in to claude.ai, this warning appears at startup.
+
+	```
+	▲ Both claude.ai and ANTHROPIC_API_KEY set · auth may not work as expected
+	▲ claude.ai connectors are disabled because ANTHROPIC_API_KEY ...
+	```
+
+	**This is the expected state: the API key wins and everything works normally.** If the display at the top shows `API Usage Billing`, you are running on API credits.
 </Aside>
 
 ## Build your first thing

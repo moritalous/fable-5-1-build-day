@@ -27,9 +27,13 @@ cd ~/build-day
 <TabItem label="Windows">
 
 ```powershell
-mkdir $HOME\build-day
+mkdir -Force $HOME\build-day
 cd $HOME\build-day
 ```
+
+<Aside type="note" title="`-Force` を付けている理由">
+	PowerShellの`mkdir`は、フォルダが既にあるとエラーになります。`-Force`を付けておくと、2回目以降に実行してもエラーになりません。
+</Aside>
 
 </TabItem>
 
@@ -81,6 +85,10 @@ cd $HOME\build-day
     }
     ```
 
+    <Aside type="caution" title="手で打たず、かならずコピー＆ペーストしてください">
+    	テキストエディットは標準で「スマート引用符」が有効です。`"` を手入力すると別の文字に置き換わってJSONが壊れ、Claude Codeの起動時に分かりにくいエラーになります。
+    </Aside>
+
 </Steps>
 
 <Aside type="caution" title="このファイルは人に渡さないでください">
@@ -97,7 +105,24 @@ cd $HOME\build-day
     claude
     ```
 
-1. Claude Codeのプロンプトが表示されれば準備完了です。バージョン・使用中のモデル・作業ディレクトリが上部に出ています。**APIキーが設定されていればログインは求められません。**
+1. APIキーを使ってよいかの確認が表示されます。**`↑`キーで `Yes` を選んでEnter**を押してください。
+
+    ```
+    Detected a custom API key in your environment
+
+    ANTHROPIC_API_KEY: sk-ant-...FwAA
+
+    Do you want to use this API key?
+
+        Yes
+      ❯ No (recommended)
+
+    Enter to confirm · Esc to cancel
+    ```
+
+    **初期選択は `No (recommended)` です。** そのままEnterを押すと「No」が選ばれ、せっかく設定したAPIキーが使われません。一度答えると記録されるので、次回以降は聞かれません。
+
+1. Claude Codeのプロンプトが表示されれば準備完了です。バージョン・使用中のモデル・作業ディレクトリが上部に出ています。**APIキーが設定されていればログインは求められません**（上のAPIキーの確認だけ、初回に一度表示されます）。
 
 </Steps>
 
@@ -109,7 +134,7 @@ cd $HOME\build-day
 
 1. `/model` と入力してEnterを押します。
 
-1. 一覧から`Fable`（Fable 5.1）を選び、Enterを押します。
+1. 一覧から`Fable`（Fable 5.1）を選び、Enterを押します。Enterは既定のモデルとして設定、`s`はこのセッションだけ適用です。
 
     ![](images/2026-09-13-01-52-12.png)
 
@@ -125,6 +150,17 @@ APIキーはログイン情報より**優先**されます。起動中に `/usag
 	すでにPro/Maxプランでログインした状態のPCでAPIキーを設定すると、**キーのほうが優先されてAPIクレジットが消費されます**。逆に、APIクレジットを使いたいのにキーを設定し忘れると、サブスクリプションの枠で動いてしまいます。どちらで動かすか決めてから起動してください。
 
 	サブスクリプションの枠で動かしたい場合は、`.claude/settings.json`を作らずに `claude` を起動してログインしてください。すでに作ってしまった場合は、そのファイルを削除すればログイン側に戻ります。
+</Aside>
+
+<Aside type="note" title="`Both claude.ai and ANTHROPIC_API_KEY set` と出たとき">
+	claude.aiにログイン済みのPCでAPIキーを設定すると、起動時に次の警告が表示されます。
+
+	```
+	▲ Both claude.ai and ANTHROPIC_API_KEY set · auth may not work as expected
+	▲ claude.ai connectors are disabled because ANTHROPIC_API_KEY ...
+	```
+
+	**これは想定どおりの状態で、APIキー側が優先されて正常に動きます。** 画面上部の表示が `API Usage Billing` になっていれば、APIクレジットで動いています。
 </Aside>
 
 ## 最初の1つを作ってみる

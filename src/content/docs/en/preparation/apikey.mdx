@@ -21,11 +21,11 @@ API keys are issued per "workspace". Right after creating your account, only the
 
 1. Click the workspace selector in the top left of the screen, then click 「ワークスペースを作成」 (Create workspace).
 
-    ![](../../images/2026-07-04-06-06-12.png)
+    ![](../../images/2026-09-19-workspace-list.png)
 
-1. Enter a name (for example `build-day` — any name works) and click 「作成」 (Create). You can leave the color and workspace region at their defaults.
+1. Enter a name (for example `build-day` — any name works) and click 「ワークスペースを作成」 (Create workspace). You can leave the color and workspace region at their defaults.
 
-    ![](../../images/2026-07-04-06-07-52.png)
+    ![](../../images/2026-09-19-workspace-create.png)
 
 </Steps>
 
@@ -39,13 +39,23 @@ API keys are issued per "workspace". Right after creating your account, only the
 
 1. Select the 「APIキー」 (API keys) menu in the console and click 「キーを作成」 (Create Key). Make sure the workspace shown in the top left is the one you created in the previous step.
 
-    ![](../../images/2026-07-04-23-33-46.png)
+    ![](../../images/2026-09-19-apikey-list.png)
 
-1. Enter a name and click 「追加」 (Add). Make a note of the API key that is shown (a string starting with `sk-ant-`). **It is only shown at creation time.**
+1. If a screen saying 「ID連携を使用すれば、APIキーは不要です」 (You don't need API keys if you use identity federation) appears, click **「APIキーで続ける」 (Continue with API key)** at the bottom. The prominent 「ID連携を設定する」 (Set up identity federation) button above it is not used at Build Day.
 
-    ![](../../images/2026-07-04-23-36-09.png)
+    ![](../../images/2026-09-19-apikey-federation.png)
+
+1. Enter a name and click 「キーを作成」 (Create Key). 「スコープ」 (Scope) is filled in with the workspace you currently have selected. 「有効期限」 (Expiry, `30日間` / 30 days by default) and 「リンクされたアカウント」 (Linked account) can be left as they are.
+
+    ![](../../images/2026-09-19-apikey-dialog.png)
+
+1. Make a note of the API key that is shown (a string starting with `sk-ant-`). **It is only shown at creation time.**
 
 </Steps>
+
+<Aside type="note" title="Keys expire after 30 days by default">
+	That is fine for using it on the day, but if you finish your preparation well in advance, check that the key has not expired by the time of the event. If it has, just create a new one the same way.
+</Aside>
 
 <Aside type="caution" title="Handling your key">
 	An API key is the same as a password. Be careful not to write it directly in script code, commit it to GitHub, or show it to anyone. When you note it down, keep it somewhere safe such as a password manager.
